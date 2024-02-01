@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+
+class CustomInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String imagePath;
+  final String hintText;
+
+  CustomInputField({
+    required this.controller,
+    required this.imagePath,
+    required this.hintText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 328,
+      height: 62,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Color.fromRGBO(196, 196, 196, 0.2),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 8, bottom: 8, top: 11),
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderSide: BorderSide.none),
+            hintText: hintText,
+                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+
+            hintStyle: TextStyle(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              fontFamily: 'Mulish',
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
+            suffixIcon: Image.asset(imagePath),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
