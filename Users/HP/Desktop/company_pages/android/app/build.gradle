@@ -69,4 +69,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+        //  implementation 'com.github.pedrofsn:shared_preferences:0.8.2'
+
 }
