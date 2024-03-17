@@ -6,8 +6,10 @@ import com.senior.demo.Service.PumpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/custom_api")
+@RequestMapping("/api")
 public class PumpController {
 
     @Autowired
@@ -16,6 +18,21 @@ public class PumpController {
     @PostMapping("/pumps")
     public Pump addPump(@RequestBody PumpRequest newPumpRequest, @RequestParam String fuelType) {
         return pumpService.addPumpWithCustomId(fuelType, newPumpRequest.getName(), newPumpRequest.getStatus());
+    }
+
+    @GetMapping("/pumps")
+    public List<Pump> getAllPumps() {
+        return pumpService.getAllPumps();
+    }
+
+    @GetMapping("/pumps/{id}")
+    public Pump getPumpById(@PathVariable String id) {
+        return pumpService.getPumpById(id);
+    }
+
+    @DeleteMapping("/pumps/{id}")
+    public void deletePumpById(@PathVariable String id) {
+        pumpService.deletePumpById(id);
     }
 
     static class PumpRequest {

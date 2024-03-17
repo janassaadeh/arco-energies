@@ -22,8 +22,6 @@ public class Vehicle {
     @Field("model")
     private String model;
 
-    @Field("make")
-    private String make;
 
     @Field("plate_number")
     private String plateNumber;
@@ -34,17 +32,20 @@ public class Vehicle {
     @Field("type")
     private String type;
 
+    @Field("color")
+    private String color;
+
     @OneToMany(mappedBy = "pump", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<Transaction> transactions;
 
-    public Vehicle(String id, int year, String model, String make, String plateNumber, String driverName, String type) {
+    public Vehicle(String id, int year, String model, String plateNumber, String driverName, String type, String color) {
         this.id = id;
         this.year = year;
         this.model = model;
-        this.make = make;
         this.plateNumber = plateNumber;
         this.driverName = driverName;
         this.type = type;
+        this.color = color;
         this.transactions = new ArrayList<>();
     }
 
@@ -72,13 +73,6 @@ public class Vehicle {
         this.model = model;
     }
 
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
 
     public String getPlateNumber() {
         return plateNumber;
@@ -112,16 +106,24 @@ public class Vehicle {
         this.transactions = transactions;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +
                 "id='" + id + '\'' +
                 ", year=" + year +
                 ", model='" + model + '\'' +
-                ", make='" + make + '\'' +
                 ", plateNumber='" + plateNumber + '\'' +
                 ", driverName='" + driverName + '\'' +
                 ", type='" + type + '\'' +
+                ", color='" + color + '\'' +
                 ", transactions=" + transactions +
                 '}';
     }

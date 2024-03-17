@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PumpService {
@@ -22,6 +23,27 @@ public class PumpService {
     private FuelRepository fuelRepository;
 
     private static final String PUMP_ID_PREFIX = "PUMP";
+
+    public List<Pump> getAllPumps() {
+        return pumpRepository.findAll();
+    }
+
+    public Pump getPumpById(String id) {
+        Optional<Pump> optionalPump = pumpRepository.findById(id);
+        if (optionalPump.isPresent()) {
+            return optionalPump.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pump not found with id: " + id);
+        }
+    }
+
+    public void deletePumpById(String id) {
+        if (pumpRepository.existsById(id)) {
+            pumpRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pump not found with id: " + id);
+        }
+    }
 
     public Pump addPumpWithCustomId(String fuelType, String name, String status) {
 

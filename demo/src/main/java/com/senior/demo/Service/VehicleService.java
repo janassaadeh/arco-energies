@@ -3,9 +3,12 @@ package com.senior.demo.Service;
 import com.senior.demo.Collections.Vehicle;
 import com.senior.demo.Repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VehicleService {
@@ -14,10 +17,46 @@ public class VehicleService {
 
     private static final String VEHICLE_ID_PREFIX = "VEHICLE";
 
-    public Vehicle addVehicleWithCustomId(String type, int year, String model, String make, String plateNumber, String driverName) {
+    public List<Vehicle> getAllVehicles() {
+        return vehicleRepository.findAll();
+    }
+
+    public Vehicle getVehicleById(String id) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(id);
+        if (optionalVehicle.isPresent()) {
+            return optionalVehicle.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + id);
+        }
+    }
+
+    public Vehicle addVehicleWithCustomId(String type, int year, String model, String plateNumber, String driverName, String color) {
         String customId = generateCustomId();
-        Vehicle vehicle = new Vehicle(customId, year, model, make, plateNumber, driverName, type);
+        Vehicle vehicle = new Vehicle(customId, year, model, plateNumber, driverName, type, color);
         return vehicleRepository.save(vehicle);
+    }
+
+    public void deleteVehicleById(String id) {
+        if (vehicleRepository.existsById(id)) {
+            vehicleRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + id);
+        }
+    }
+
+    public Vehicle updateVehicle(String id, String type, int year, String model, String plateNumber, String driverName) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(id);
+        if (optionalVehicle.isPresent()) {
+            Vehicle vehicle = optionalVehicle.get();
+            vehicle.setType(type);
+            vehicle.setYear(year);
+            vehicle.setModel(model);
+            vehicle.setPlateNumber(plateNumber);
+            vehicle.setDriverName(driverName);
+            return vehicleRepository.save(vehicle);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found with id: " + id);
+        }
     }
 
     private synchronized String generateCustomId() {
