@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 // import 'AfterLogin/adminHome.dart'; //
 class CompanyHomePageLayout extends StatefulWidget {
-CompanyHomePageLayout({Key? key}) : super(key: key);
+const CompanyHomePageLayout({Key? key}) : super(key: key);
 
   @override
   State<CompanyHomePageLayout> createState() => _CompanyHomePageLayoutState();
@@ -24,12 +24,12 @@ var _currentIndex=0;
   
   @override
   Widget build(BuildContext context) {    
-    Widget _getBody() {
+    Widget getBody() {
     switch (_currentIndex) {
       case 0:
         return  HomeScreen();
       case 1:
-        return  RewardScreen();
+        return  const RewardScreen();
       case 2:
         return Profile();
       default:
@@ -53,14 +53,14 @@ var _currentIndex=0;
           ),
         ),
         backgroundColor: const Color(0xff003D5B),
-        actions: [const Padding(
+        actions: const [Padding(
           padding: EdgeInsets.only(right:8.0),
           child: Icon(Icons.notifications,size:37,color: Colors.white,),
         )],
       ),
       bottomNavigationBar: BottomNavigationBar(
       elevation:0.0,
-  selectedItemColor: Color(0xffD1495B), // Set the color for the selected item
+  selectedItemColor: const Color(0xffD1495B), // Set the color for the selected item
   unselectedItemColor: Colors.grey.shade600, 
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -69,20 +69,20 @@ var _currentIndex=0;
           });
         },
         items:  [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset("assets/images/Voucher.png",color: (_currentIndex==1)?Color(0xffD1495B):Colors.grey.shade600,),
+            icon: Image.asset("assets/images/Voucher.png",color: (_currentIndex==1)?const Color(0xffD1495B):Colors.grey.shade600,),
             label: 'Offers',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
       ),
       body: 
-       _getBody(),);}
+       getBody(),);}
       }

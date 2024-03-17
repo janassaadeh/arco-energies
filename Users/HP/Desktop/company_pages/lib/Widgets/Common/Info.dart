@@ -5,7 +5,7 @@ class Info extends StatelessWidget {
   final String title;
   final String content;
 
-  const Info({
+  const Info({super.key, 
     required this.imagePath,
     required this.title,
     required this.content,
@@ -33,7 +33,7 @@ class Info extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.left,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color.fromRGBO(0, 121, 140, 1),
               fontFamily: 'Inter',
               fontSize: 13,
@@ -43,7 +43,7 @@ class Info extends StatelessWidget {
           Text(
             content,
             textAlign: TextAlign.left,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color.fromRGBO(0, 0, 0, 1),
               fontFamily: 'Inter',
               fontSize: 18,

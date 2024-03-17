@@ -1,7 +1,6 @@
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Widgets/Common/CustomInputFieldSmall.dart';
-import 'package:company_pages/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../Services/Auth/RegisterService.dart';
@@ -20,13 +19,15 @@ class SignUp extends StatelessWidget {
   RegistrationService registrationService=RegistrationService();
   AuthenticationService authenticationService=AuthenticationService();
 
+  SignUp({super.key});
+
           @override
           Widget build(BuildContext context) {
             return Scaffold(
               body: Container(
                   width: 735,
                   height: 900,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       
               ),
                   child: Stack(
@@ -35,7 +36,7 @@ class SignUp extends StatelessWidget {
                         Positioned(
                     top: 0,
                     left: 0,
-                    child: Container(
+                    child: SizedBox(
                                     width: 709,
                                     height: 900,
                                     
@@ -47,7 +48,7 @@ class SignUp extends StatelessWidget {
                     child: Container(
                                     width: 709,
                                     height: 900,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                       
                                 ),
                                     child: Stack(
@@ -97,11 +98,11 @@ class SignUp extends StatelessWidget {
                         // Figma Flutter Generator Rectangle10Widget - RECTANGLE
                       SingleChildScrollView(
                         child: Padding(
-                          padding: EdgeInsets.only(left:20,right:20,top:45,bottom:20),
+                          padding: const EdgeInsets.only(left:20,right:20,top:45,bottom:20),
                           child: Container(
                             width: 380,
                             height: 780,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               borderRadius : BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
@@ -116,33 +117,33 @@ class SignUp extends StatelessWidget {
                           color : Color.fromRGBO(255, 255, 255, 1),
                                           )
                               ,child: Column(children: [
-                                SizedBox(height: 20,),
+                                const SizedBox(height: 20,),
                                           
-                                Text("Sign Up",style: TextStyle(
+                                const Text("Sign Up",style: TextStyle(
                                   fontSize: 27,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Mulish',
                                       
                                 ),),
-                                SizedBox(height: 5,),
+                                const SizedBox(height: 5,),
                                           
                                Image.asset("assets/images/Business Building.png",width: 90,height: 90,) ,
-                                SizedBox(height: 20,),
+                                const SizedBox(height: 20,),
                                
                                 CustomInputField(controller:nameController, imagePath: "assets/images/Business.png", hintText: "Name"),
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 CustomInputField(controller: contactNameController, imagePath: "assets/images/Customer.png", hintText: "Contact Name"),
-                                SizedBox(height: 15,), 
+                                const SizedBox(height: 15,), 
                                 CustomInputField(controller: emailController, imagePath: "assets/images/Envelope.png", hintText: "Email"),
-                                SizedBox(height: 15,),                                 
+                                const SizedBox(height: 15,),                                 
                                 CustomInputField(controller: phoneController, imagePath: "assets/images/iPhone 14 Pro.png", hintText: "Phone Number"),
-                                SizedBox(height: 15,),  
+                                const SizedBox(height: 15,),  
                                 CustomInputField(controller: passwordController, imagePath: "assets/images/Eye.png", hintText: "Password"),
-                                SizedBox(height: 15,), 
+                                const SizedBox(height: 15,), 
                                 CustomInputField(controller: confirmPasswordController, imagePath: "assets/images/Eye.png", hintText: "Confirm Password"),
-                                SizedBox(height: 15,),                                 
+                                const SizedBox(height: 15,),                                 
                                 CustomInputField(controller: locationController, imagePath: "assets/images/Map Pin.png", hintText: "Location"),
-                                SizedBox(height: 25,),      
+                                const SizedBox(height: 25,),      
                                 GestureDetector(
                                   onTap:()async{
                                               String name = nameController.text;
@@ -172,14 +173,14 @@ class SignUp extends StatelessWidget {
                   push(HomeScreen(), context);
                                     // push(SignUp(),context);
                                   } },
-                                  child: CustomButton(buttonText: "Sign up"))   ,
+                                  child: const CustomButton(buttonText: "Sign up"))   ,
                                             Padding(
                                       padding: const EdgeInsets.only(left:80.0,top:30),
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Row(
                                           children: [
-                                          Text(
+                                          const Text(
                                             'Already have an account? ',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
@@ -195,7 +196,7 @@ class SignUp extends StatelessWidget {
                                       
                                               push(LoginScreen(),context);
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Sign in',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(

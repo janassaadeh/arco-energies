@@ -1,30 +1,29 @@
 
-import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
 // 
 import 'package:flutter/material.dart';
 
-import '../../../Widgets/Home/recentTransaction.dart';
-import '../../../Widgets/profile/link.dart';
 
 
 
 class CompanyDetails extends StatelessWidget {
+  const CompanyDetails({super.key});
+
 
   @override
   Widget build(BuildContext context) {
     return 
           Scaffold(
   appBar: AppBar(
-                leading: Icon(Icons.arrow_back_ios,color: Colors.white,),
+                leading: const Icon(Icons.arrow_back_ios,color: Colors.white,),
 
-        title: Center(
+        title: const Center(
           child:  Text('Company Details',style: TextStyle(
                   color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
                 ),),
         ),
         backgroundColor: const Color(0xff003D5B),
-        actions: [const Padding(
+        actions: const [Padding(
           padding: EdgeInsets.only(right:8.0),
           child: Icon(Icons.notifications,size:37,color: Colors.white),
         )],
@@ -40,7 +39,7 @@ class CompanyDetails extends StatelessWidget {
                           color: Colors.white,
                           height: 600,
                         
-                        child: Column(
+                        child: const Column(
                           children: [
            
                            
@@ -55,20 +54,20 @@ class CompanyDetails extends StatelessWidget {
                         child: Container(
                                 height: 700,
                                 width:double.infinity,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                               ),
                                 child: Column(children: [
-                                        SizedBox(height: 90,),
-                Text('Apple', textAlign: TextAlign.center, style: TextStyle(
+                                        const SizedBox(height: 90,),
+                const Text('Apple', textAlign: TextAlign.center, style: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),
                   fontFamily: 'Inter',
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   height: 1
                 ),),
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.center,
               //   children: [
@@ -94,10 +93,10 @@ class CompanyDetails extends StatelessWidget {
               //       ),),
               //   ],
               // ),
-                SizedBox(height: 10,),
-                        Padding(
-              padding: const EdgeInsets.only(left:18,right:18.0),
-              child: const Align(
+                const SizedBox(height: 10,),
+                        const Padding(
+              padding: EdgeInsets.only(left:18,right:18.0),
+              child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text("Company Info",style: TextStyle(
                   fontSize: 18,
@@ -111,21 +110,21 @@ class CompanyDetails extends StatelessWidget {
                   width: 378,
                   height: 312,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xffC1BEBE)),
+                    border: Border.all(color: const Color(0xffC1BEBE)),
                     borderRadius: BorderRadius.circular(20)
                     
                   ),
-                  child: Stack(
+                  child: const Stack(
                     children: [
                       Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(right:0.0),
+                            padding: EdgeInsets.only(right:0.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                              Padding(
-                                               padding: const EdgeInsets.all(12.0),
+                                               padding: EdgeInsets.all(12.0),
                                                child: Info(
                                                imagePath: 'assets/images/Hashtaglarge.png',
                                                title: 'Company ID',
@@ -135,7 +134,7 @@ class CompanyDetails extends StatelessWidget {
 SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
 
                                              Padding(
-                                               padding: const EdgeInsets.only(left:12.0,right:12.0,top:10,),
+                                               padding: EdgeInsets.only(left:12.0,right:12.0,top:10,),
                                                child: Info(
                                                imagePath: 'assets/images/id.png',
                                                title: 'Contact Name',
@@ -145,7 +144,7 @@ SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
 SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
 
                                                                            Padding(
-                                               padding: const EdgeInsets.only(left:12.0,right:12.0,top:10,),
+                                               padding: EdgeInsets.only(left:12.0,right:12.0,top:10,),
                                                child: Info(
                                                imagePath: 'assets/images/phone_blue.png',
                                                title: 'Phone Number',
@@ -160,7 +159,7 @@ SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                            Padding(
-                                             padding: const EdgeInsets.all(12.0),
+                                             padding: EdgeInsets.all(12.0),
                                              child: Info(
                                              imagePath: 'assets/images/Dollar Coin blue.png',
                                              title: 'Balance',
@@ -169,7 +168,7 @@ SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
                                            ),
 SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
                                            Padding(
-                                             padding: const EdgeInsets.all(12.0),
+                                             padding: EdgeInsets.all(12.0),
                                              child: Info(
                                               
                                              imagePath: 'assets/images/blue pin.png',
@@ -178,7 +177,7 @@ SizedBox(width:180,child: Divider(color: Color(0xffffffff),)),
                                            ),
                                            ),
 Padding(
-                                             padding: const EdgeInsets.all(12.0),
+                                             padding: EdgeInsets.all(12.0),
                                              child: Info(
                                               
                                              imagePath: 'assets/images/Letter.png',
@@ -191,11 +190,11 @@ Padding(
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top:95.0),
+                        padding: EdgeInsets.only(top:95.0),
                         child: Divider(color: Color(0xffC1BEBE),),
                       ),
                                            Padding(
-                        padding: const EdgeInsets.only(top:200.0),
+                        padding: EdgeInsets.only(top:200.0),
                         child: Divider(color: Color(0xffC1BEBE),),
                       )
                     ],
@@ -232,7 +231,7 @@ Padding(
                         top:100,
                         right:140,
                         child: CircleAvatar(
-                        backgroundColor: Color(0xffC1BEBE),
+                        backgroundColor: const Color(0xffC1BEBE),
                         radius: 67,
                           child: Image.asset("assets/images/buisness_profile.png"),
                         

@@ -1,9 +1,8 @@
-
-import 'package:company_pages/Screens/Operator/Screens/Home/DashBoard/dashboard.dart';
-import 'package:company_pages/Screens/Operator/Screens/Profile/operator_profile.dart';
+import 'package:company_pages/Screens/Operator/Home/DashBoard/dashboard.dart';
+import 'package:company_pages/Screens/Operator/Profile/operator_profile.dart';
 import 'package:flutter/material.dart';
 
-import 'Screens/Transactions/new_transaction.dart';
+import 'Transactions/new_transaction.dart';
 
 class Operator extends StatefulWidget {
   const Operator({super.key});
@@ -76,9 +75,9 @@ class _OperatorState extends State<Operator> {
       case 0:
         return const DashBoard();
       case 1:
-        return NewTransaction();
+        return const NewTransaction();
       case 2:
-        return Profile(
+        return const Profile(
             // operator: operatorProvider.operator,
             );
       default:
@@ -86,4 +85,3 @@ class _OperatorState extends State<Operator> {
     }
   }
 }
-

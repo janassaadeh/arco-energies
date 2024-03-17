@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 
 class Cash extends StatelessWidget {
+  const Cash({super.key});
+
           @override
           Widget build(BuildContext context) {
           // Figma Flutter Generator Group2Widget - GROUP
             return Container(
             width: 403.64825439453125,
             height: 152,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
             borderRadius : BorderRadius.only(
             topLeft: Radius.circular(12),
             topRight: Radius.circular(12),
@@ -30,7 +32,7 @@ class Cash extends StatelessWidget {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              Text('Total', textAlign: TextAlign.center, style: TextStyle(

@@ -9,7 +9,7 @@ class AuthenticationService {
   Future<bool> authenticate(String email, String password) async {
     try {
       final response = await _dio.post(
-        'http://172.20.10.10:8080/api/v1/auth/authenticate',
+        'http://10.0.2.2:8080/api/v1/auth/authenticate',
         data: {'email': email, 'password': password},
       );
 
@@ -21,7 +21,7 @@ class AuthenticationService {
       return true;
     } catch (e) {
       print('Error during authentication: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -41,11 +41,15 @@ class AuthenticationService {
     return token != null;
   }
 
-Future<String?> getRole() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString(_roleKey);
-}
+  Future<String?> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_roleKey);
+  }
 
+  Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_tokenKey);
+  }
 
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

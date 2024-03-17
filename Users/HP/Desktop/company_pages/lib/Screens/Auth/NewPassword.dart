@@ -1,6 +1,5 @@
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
 
-import 'package:company_pages/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../Services/Auth/PassResetService.dart';
@@ -19,7 +18,7 @@ class NewPassword extends StatefulWidget {
 }
 
 class _NewPasswordState extends State<NewPassword> {
-          PasswordResetService _passwordResetService=PasswordResetService();
+          final PasswordResetService _passwordResetService=PasswordResetService();
           final TextEditingController newPasswordController = TextEditingController();
           final TextEditingController confirmPasswordController = TextEditingController();
 
@@ -30,7 +29,7 @@ class _NewPasswordState extends State<NewPassword> {
                 child: Container(
                     width: 735,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -39,7 +38,7 @@ class _NewPasswordState extends State<NewPassword> {
                           Positioned(
                       top: 0,
                       left: 0,
-                      child: Container(
+                      child: SizedBox(
                     width: 709,
                     height: 900,
                     
@@ -51,7 +50,7 @@ class _NewPasswordState extends State<NewPassword> {
                       child: Container(
                     width: 709,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -100,11 +99,11 @@ class _NewPasswordState extends State<NewPassword> {
                     Positioned(child: 
                           // Figma Flutter Generator Rectangle10Widget - RECTANGLE
                         Padding(
-                          padding: EdgeInsets.only(left:20,right:20,top:105,bottom:20),
+                          padding: const EdgeInsets.only(left:20,right:20,top:105,bottom:20),
                           child: Container(
                             width: 380,
                             height: 667,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               borderRadius : BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
@@ -119,9 +118,9 @@ class _NewPasswordState extends State<NewPassword> {
                           color : Color.fromRGBO(255, 255, 255, 1),
                                           )
                               ,child: Column(children: [
-                                SizedBox(height: 20,),
+                                const SizedBox(height: 20,),
                     
-                                Row(
+                                const Row(
                                   children: [
                                     SizedBox(width: 20,),
 
@@ -141,7 +140,7 @@ class _NewPasswordState extends State<NewPassword> {
                                 // SizedBox(height: 20,),
                                
 
-                                SizedBox(height: 20,), 
+                                const SizedBox(height: 20,), 
                                 // CustomInputField(controller: TextEditingController(), imagePath: "assets/images/Envelope.png", hintText: "Email"),
                                         CustomInputFieldLarge(controller: newPasswordController, imagePath: "assets/images/Eye.png", hintText: "New Password"),
           const SizedBox(height: 20),
@@ -158,7 +157,7 @@ class _NewPasswordState extends State<NewPassword> {
                                      }
                                     }
                                   } ,
-                                  child: CustomButton(buttonText: "Change"))   ,
+                                  child: const CustomButton(buttonText: "Change"))   ,
                                                                     
                               ]),
                           ),

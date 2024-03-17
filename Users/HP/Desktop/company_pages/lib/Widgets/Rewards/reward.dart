@@ -5,7 +5,7 @@ class RewardCard extends StatelessWidget {
   final String description;
   final int pointsText;
 
-  RewardCard({
+  const RewardCard({super.key, 
     required this.title,
     required this.description,
     required this.pointsText,
@@ -22,10 +22,10 @@ class RewardCard extends StatelessWidget {
             ),
             Positioned(
               child: Container(
-                decoration: BoxDecoration(),
-                padding: EdgeInsets.only(left: 72, right: 102, top: 22, bottom: 12),
+                decoration: const BoxDecoration(),
+                padding: const EdgeInsets.only(left: 72, right: 102, top: 22, bottom: 12),
                 child: Container(
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -34,7 +34,7 @@ class RewardCard extends StatelessWidget {
                         child: Text(
                           title,
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
                             fontFamily: 'Space Grotesk',
                             fontSize: 12,
@@ -43,13 +43,13 @@ class RewardCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           description,
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color.fromRGBO(141, 141, 141, 1),
                             fontFamily: 'Space Grotesk',
                             fontSize: 10,
@@ -82,7 +82,7 @@ class RewardCard extends StatelessWidget {
                       Text(
                         "$pointsText pts ",
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1),
                           fontFamily: 'Space Grotesk',
                           fontSize: 10,
@@ -96,8 +96,8 @@ class RewardCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 22.0),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 22.0),
                     child: Text(
                       'Claim',
                       textAlign: TextAlign.left,
@@ -115,7 +115,7 @@ class RewardCard extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(height:15)
+        const SizedBox(height:15)
       ],
     );
   }

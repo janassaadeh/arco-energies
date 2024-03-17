@@ -6,7 +6,7 @@ class CodeBox extends StatelessWidget {
   final FocusNode nextFocusNode;
   final FocusNode previousFocusNode;
 
-  CodeBox({
+  const CodeBox({super.key, 
     required this.controller,
     required this.focusNode,
     required this.nextFocusNode,
@@ -20,12 +20,12 @@ class CodeBox extends StatelessWidget {
       height: 62,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Color.fromRGBO(196, 196, 196, 0.2),
+        color: const Color.fromRGBO(196, 196, 196, 0.2),
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 8, bottom: 25),
+        padding: const EdgeInsets.only(left: 10, right: 8, bottom: 25),
         child: TextFormField(
-          cursorColor: Color.fromRGBO(243, 243, 243, 1),
+          cursorColor: const Color.fromRGBO(243, 243, 243, 1),
           controller: controller,
           focusNode: focusNode,
           keyboardType: TextInputType.number,
@@ -37,11 +37,11 @@ class CodeBox extends StatelessWidget {
               FocusScope.of(context).requestFocus(nextFocusNode);
             }
           },
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
           ),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(borderSide: BorderSide.none),
              counterText: '',
           ),

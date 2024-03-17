@@ -10,6 +10,8 @@ class Reward {
 }
 
 class RewardScreen extends StatelessWidget {
+  const RewardScreen({super.key});
+
 
 
   @override
@@ -24,7 +26,7 @@ class RewardScreen extends StatelessWidget {
               Container(
               width: 403.64825439453125,
               height: 152,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
               borderRadius : BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -52,7 +54,7 @@ class RewardScreen extends StatelessWidget {
  
               Row(
                 children: [
-                  Text('0', textAlign: TextAlign.center, style: TextStyle(
+                  const Text('0', textAlign: TextAlign.center, style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontFamily: 'Inter',
                         fontSize: 32,
@@ -60,7 +62,7 @@ class RewardScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         height: 0.75
                       ),),
-                  Text(' pts', textAlign: TextAlign.center, style: TextStyle(
+                  const Text(' pts', textAlign: TextAlign.center, style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontFamily: 'Inter',
                         fontSize: 32,
@@ -68,13 +70,13 @@ class RewardScreen extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         height: 0.75
                       ),),
-                      SizedBox(width: 12,),
+                      const SizedBox(width: 12,),
                   Image.asset("assets/images/s1.png")
                         
                 ],
               ),
-              SizedBox(height: 37,),
-                             Text('* Filling up 1 liter earns you 1 point.', textAlign: TextAlign.center, style: TextStyle(
+              const SizedBox(height: 37,),
+                             const Text('* Filling up 1 liter earns you 1 point.', textAlign: TextAlign.center, style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     fontFamily: 'Inter',
                     fontSize: 16,
@@ -99,17 +101,17 @@ class RewardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20,),
               
-              Container(
+              SizedBox(
                 height:800,
                 child: ListView(
                   children: [
-                    RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
-                    RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
-                    RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
-                    RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
-                   SizedBox(height: 20,),
+                    const RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
+                    const RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
+                    const RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
+                    const RewardCard(title: "Shine On Us Reward",description: "Indulge in free or discounted car washes as our token of gratitude.", pointsText: 50,),
+                   const SizedBox(height: 20,),
                     Divider(
-                  color: Color(0xffA9A7A7).withOpacity(0.5),height: 0.3,)
+                  color: const Color(0xffA9A7A7).withOpacity(0.5),height: 0.3,)
               
                   ],
                 ),

@@ -1,32 +1,40 @@
+import 'package:company_pages/Models/vehicle.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Company/CarDetails.dart';
+import 'package:company_pages/Screens/Operator/Transactions/pump_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CarCard extends StatelessWidget {
-  final String title;
-  final String subtitle1;
-  final String subtitle2;
-  final String subtitle3;
-  // final String imagePath;
+  final Vehicle vehicle;
 
   const CarCard({
-    Key? key,
-    required this.title,
-    required this.subtitle1,
-    required this.subtitle2,
-    required this.subtitle3,
-    // required this.imagePath,
-  }) : super(key: key);
+    super.key,
+    required this.vehicle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:25.0,right: 25,left: 25,bottom: 12),
+      padding:
+          const EdgeInsets.only(top: 25.0, right: 25, left: 25, bottom: 12),
       child: GestureDetector(
-        onTap:(){
-          push(CarDetails(), context);
+        onDoubleTap: () {
+          final String vehicleId = vehicle.id;
+          // Provider for preserving the id in order to use at the end of the transaction process
+          Provider.of<TransactionProvider>(context, listen: false)
+              .setSelectedVehicleId(vehicleId);
+          push(const PumpSelection(), context);
         },
-        child: Container(
+        onTap: () {
+          push(
+              CarDetails(
+                vehicle: vehicle,
+              ),
+              context);
+        },
+        child: SizedBox(
           height: 70,
           child: Row(
             children: [
@@ -37,24 +45,27 @@ class CarCard extends StatelessWidget {
                   height: 69.47300720214844,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
-                      colors: [Color.fromRGBO(209, 73, 91, 1), Color.fromRGBO(209, 73, 91, 0.5)],
+                      colors: [
+                        Color.fromRGBO(209, 73, 91, 1),
+                        Color.fromRGBO(209, 73, 91, 0.5)
+                      ],
                     ),
                   ),
                   child: Image.asset("assets/images/WhiteCar.png"),
                 ),
               ),
-              SizedBox(width: 30),
+              const SizedBox(width: 30),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    vehicle.model,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromRGBO(0, 61, 91, 1),
                       fontFamily: 'Inter',
                       fontSize: 18,
@@ -63,13 +74,13 @@ class CarCard extends StatelessWidget {
                       height: 1.28,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Row(
                     children: [
                       Text(
-                        subtitle1,
+                        vehicle.model,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xff72D4AB),
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -78,13 +89,13 @@ class CarCard extends StatelessWidget {
                           height: 1.28,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Image.asset('assets/images/dot.png'),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(
-                        subtitle2,
+                        vehicle.driverName,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xff777676),
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -95,11 +106,11 @@ class CarCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    subtitle3,
+                    vehicle.plateNumber,
                     textAlign: TextAlign.left,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 1),
                       fontFamily: 'Inter',
                       fontSize: 14,

@@ -3,10 +3,8 @@ import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
 import 'package:company_pages/Screens/Operator/operator_bottom_nav.dart';
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Screens/Auth/ForgotPassword.dart';
-import 'package:company_pages/Screens/Company/HomeScreen.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Screens/Auth/SignUp.dart';
-import 'package:company_pages/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widgets/Common/CustomInputFieldLarge.dart';
@@ -17,6 +15,8 @@ import '../../Widgets/Common/CustomInputFieldLarge.dart';
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  LoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     AuthenticationService authenticationService=AuthenticationService();
@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: 709,
               height: 420,
               child: Stack(
@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                           Positioned(
                             top: 200,
                             left: 160,
-                            child: Container(
+                            child: SizedBox(
                               width: 100,
                               height: 100,
                               child: Stack(
@@ -135,7 +135,7 @@ class LoginScreen extends StatelessWidget {
             GestureDetector(
               onTap:() {
                
-                push(ForgotPassword(), context);
+                push(const ForgotPassword(), context);
 
                 
               },
@@ -170,22 +170,22 @@ class LoginScreen extends StatelessWidget {
 
       // Handle the role accordingly
       if (role == 'COMPANY') {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyHomePageLayout()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyHomePageLayout()));
       } else if (role == 'OPERATOR') {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Operator()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Operator()));
       }
     }
   },
   
 
-              child: CustomButton(buttonText: "Sign In")),
+              child: const CustomButton(buttonText: "Sign In")),
             Padding(
               padding: const EdgeInsets.only(left:90.0,top:30),
               child: Align(
                 alignment: Alignment.center,
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       'Don\'t have an account? ',
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -202,7 +202,7 @@ class LoginScreen extends StatelessWidget {
                       push(SignUp(), context);
       
                                   },
-                      child: Text(
+                      child: const Text(
                         'Sign up',
                         textAlign: TextAlign.left,
                         style: TextStyle(

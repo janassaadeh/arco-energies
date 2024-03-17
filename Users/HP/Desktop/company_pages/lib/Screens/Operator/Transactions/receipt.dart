@@ -1,0 +1,250 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class ReceiptPage extends StatelessWidget {
+  const ReceiptPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
+    double receiptMaxWidth = screenSize.width;
+    double receiptMaxHeight = screenSize.height - 140;
+
+    Widget receiptDetailPositioned(
+        double top, String leftTxt, String rightTxt) {
+      return Positioned(
+        top: receiptMaxHeight * top,
+        left: 0,
+        right: 0,
+        child: receiptDetail(leftTxt, rightTxt),
+      );
+    }
+
+    Widget receiptDivider(double top) {
+      return Positioned(
+        top: receiptMaxHeight * top,
+        left: 0,
+        right: 0,
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 48.0),
+          child: Divider(),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 70,
+        title: const Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Text(
+                  'Receipt',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.abc,
+                color: Color(0xff003D5B),
+                size: 40,
+              )
+            ],
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        leading: GestureDetector(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 17),
+              child: Image.asset(
+                "assets/images/cancel.png",
+                width: 15,
+              )),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      backgroundColor: const Color.fromARGB(255, 250, 250, 250),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/receipt.png',
+                  width: receiptMaxWidth,
+                  height: receiptMaxHeight,
+                ),
+                Positioned(
+                  top: receiptMaxHeight * 0.12,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/logoBlue.png",
+                            width: 30,
+                          ),
+                          Text(
+                            'rco Energies',
+                            style: GoogleFonts.inter(
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: receiptMaxHeight * 0.18,
+                  left: 0,
+                  right: 0,
+                  child: Text(
+                    'Wed, May 27, 2020 • 9:27:53 AM',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.robotoMono(
+                      textStyle: const TextStyle(
+                        fontFamily: 'Roboto Mono',
+                        fontSize: 12,
+                        letterSpacing: -0.44999998807907104,
+                        fontWeight: FontWeight.normal,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+                receiptDetailPositioned(0.26, "Fuel Type", "95 Fuel"),
+                receiptDetailPositioned(0.285, "Quantity", "50.50 Liters"),
+                receiptDetailPositioned(
+                    .31, "Price Per Unit", "\$ 2.5 / Liter"),
+                receiptDivider(.335),
+                receiptDetailPositioned(0.36, "Driver Name", "Victor Shoaga"),
+                receiptDetailPositioned(0.385, "Company Name", "Bouche Sucree"),
+                receiptDetailPositioned(.41, "Company Address",
+                    "7953 Oakland St.\n Honolulu, HI 96815"),
+                receiptDivider(.445),
+                receiptDetailPositioned(.47, "Odometer Number", "120,000 km"),
+                receiptDivider(.495),
+                receiptDetailPositioned(.52, "Amount", "\$ 126.25"),
+                receiptDetailPositioned(.545, "Tax", "\$ 13.88"),
+                receiptDetailPositioned(.57, "Total", "\$ 140.13"),
+                receiptDivider(.595),
+                receiptDetailPositioned(.62, "Operator", "Achraf Samir"),
+                Positioned(
+                  top: receiptMaxHeight * .645,
+                  left: 0,
+                  right: 0,
+                  child: Image.asset("assets/images/code.png"),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 60.0),
+              child: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      begin: Alignment(1.5, 1),
+                      end: Alignment(-1.5, 1),
+                      colors: [
+                        Color.fromRGBO(237, 174, 73, 0.5),
+                        Color.fromRGBO(237, 174, 73, 1),
+                        Color.fromRGBO(237, 174, 73, 0.5)
+                      ],
+                    ),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Print",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontFamily: 'Inter',
+                        fontSize: 21,
+                        letterSpacing: -0.44,
+                        fontWeight: FontWeight.normal,
+                        height: 1.0952380952380953,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget receiptDetail(String leftTxt, String rightTxt) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 50.0),
+          child: Text(
+            leftTxt,
+            textAlign: TextAlign.left,
+            style: GoogleFonts.robotoMono(
+              textStyle: const TextStyle(
+                color: Color.fromRGBO(109, 114, 120, 1),
+                fontSize: 11,
+                letterSpacing: 0.45,
+                fontWeight: FontWeight.normal,
+                height: 1,
+              ),
+            ),
+          ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(right: 50.0),
+          child: Text(
+            rightTxt,
+            textAlign: TextAlign.right,
+            style: GoogleFonts.robotoMono(
+              textStyle: const TextStyle(
+                color: Color.fromRGBO(0, 0, 0, 1),
+                fontFamily: 'Roboto Mono',
+                fontSize: 11,
+                letterSpacing: 0.45,
+                fontWeight: FontWeight.normal,
+                height: 1,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

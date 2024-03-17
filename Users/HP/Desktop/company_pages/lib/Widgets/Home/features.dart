@@ -5,7 +5,7 @@ class Features extends StatelessWidget {
   final String imageAsset;
   final String text;
 
-  Features({required this.color, required this.imageAsset, required this.text});
+  const Features({super.key, required this.color, required this.imageAsset, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +15,8 @@ class Features extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
-          begin: Alignment(-1.1779649257659912, -1.3327655792236328),
-          end: Alignment(1.3327656984329224, -1.139451026916504),
+          begin: const Alignment(-1.1779649257659912, -1.3327655792236328),
+          end: const Alignment(1.3327656984329224, -1.139451026916504),
           colors: [color.withOpacity(1), color.withOpacity(0.5699999928474426)],
         ),
       ),
@@ -27,7 +27,7 @@ class Features extends StatelessWidget {
           children: [
             Text(
               text,
-              style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
+              style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

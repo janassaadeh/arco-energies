@@ -1,13 +1,14 @@
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Screens/Auth/NewPassword.dart';
 
-import 'package:company_pages/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widgets/ForgotPass/code.dart';
 import 'Login.dart';
 
 class VerifyEmail extends StatefulWidget {
+  const VerifyEmail({super.key});
+
   @override
   State<VerifyEmail> createState() => _VerifyEmailState();
 }
@@ -66,7 +67,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 child: Container(
                     width: 735,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -75,7 +76,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           Positioned(
                       top: 0,
                       left: 0,
-                      child: Container(
+                      child: SizedBox(
                     width: 709,
                     height: 900,
                     
@@ -87,7 +88,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       child: Container(
                     width: 709,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -136,11 +137,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     Positioned(child: 
                           // Figma Flutter Generator Rectangle10Widget - RECTANGLE
                         Padding(
-                          padding: EdgeInsets.only(left:20,right:20,top:105,bottom:20),
+                          padding: const EdgeInsets.only(left:20,right:20,top:105,bottom:20),
                           child: Container(
                             width: 380,
                             height: 667,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               borderRadius : BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
@@ -155,19 +156,19 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           color : Color.fromRGBO(255, 255, 255, 1),
                                           )
                               ,child: Column(children: [
-                                SizedBox(height: 20,),
+                                const SizedBox(height: 20,),
                     
                                 Row(
                                   children: [
-                                    SizedBox(width: 20,),
+                                    const SizedBox(width: 20,),
 
                                     GestureDetector(
                                       onTap:(){
                                             pop(context);
                                       },
-                                      child: Icon(Icons.arrow_back_ios_outlined)),
-                                    SizedBox(width: 70,),
-                                    Text("Verify Email",style: TextStyle(
+                                      child: const Icon(Icons.arrow_back_ios_outlined)),
+                                    const SizedBox(width: 70,),
+                                    const Text("Verify Email",style: TextStyle(
                                       fontSize: 27,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Mulish',
@@ -180,9 +181,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                Image.asset("assets/images/forgotPass1.gif",width: 380,height: 270,) ,
                                 // SizedBox(height: 20,),
                                
-                                  Center(
+                                  const Center(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left:30.0,right:30),
+                                      padding: EdgeInsets.only(left:30.0,right:30),
                                       child: Text('Please enter the verification code sent to jana@gmail.com .', textAlign: TextAlign.left, style: TextStyle(
                                         color: Color.fromRGBO(147, 147, 147, 1),
                                         fontFamily: 'Inter',
@@ -193,7 +194,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                       ),),
                                     ),
                                   ),
-                                SizedBox(height: 20,), 
+                                const SizedBox(height: 20,), 
                                 // CustomInputField(controller: TextEditingController(), imagePath: "assets/images/Envelope.png", hintText: "Email"),
                                 Padding(
                                   // padding: const EdgeInsets.all(8.0),
@@ -206,14 +207,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
               nextFocusNode: _focusNode2,
               previousFocusNode:_focusNode1
                                       ),
-                                  SizedBox(width: 20,), 
+                                  const SizedBox(width: 20,), 
                                     
                                       CodeBox(controller:_controller2,
                                          focusNode: _focusNode2,
               nextFocusNode: _focusNode3,
               previousFocusNode:_focusNode1
               ),
-                                  SizedBox(width: 20,), 
+                                  const SizedBox(width: 20,), 
                                 
                                       CodeBox(controller: _controller3,
                                          focusNode: _focusNode3,
@@ -221,7 +222,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               previousFocusNode:_focusNode2
               
                                       ),
-                                  SizedBox(width: 20,), 
+                                  const SizedBox(width: 20,), 
                                       
                                       CodeBox(controller:_controller4,
                                          focusNode: _focusNode4,
@@ -233,7 +234,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 20,),                                 
+                                const SizedBox(height: 20,),                                 
               
                                 GestureDetector(
                                   onTap:(){
@@ -246,14 +247,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                     }
 
                                   } ,
-                                  child: CustomButton(buttonText: "Verify"))   ,
+                                  child: const CustomButton(buttonText: "Verify"))   ,
                                             Padding(
                 padding: const EdgeInsets.only(left:80.0,top:30),
                 child: Align(
                   alignment: Alignment.center,
                   child: Row(
                     children: [
-                    Text(
+                    const Text(
                       'Didn’t receive code? ',
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -268,7 +269,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       onTap: (){
                         // push(LoginScreen(),context);
                       },
-                      child: Text(
+                      child: const Text(
                         'Resend',
                         textAlign: TextAlign.left,
                         style: TextStyle(

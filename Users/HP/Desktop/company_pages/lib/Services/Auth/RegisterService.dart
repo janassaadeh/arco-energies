@@ -29,7 +29,7 @@ class RegistrationService {
       return response.data;
     } catch (e) {
       print('Error during registration: $e');
-      throw e;
+      rethrow;
     }
   }
 }

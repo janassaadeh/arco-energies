@@ -2,22 +2,23 @@ import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Auth/VerifyEmail.dart';
 import 'package:company_pages/Services/Auth/PassResetService.dart';
-import 'package:company_pages/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widgets/Common/CustomInputFieldLarge.dart';
 
 class ForgotPassword extends StatelessWidget {
+  const ForgotPassword({super.key});
+
           @override
           Widget build(BuildContext context) {
-          PasswordResetService _passwordResetService=PasswordResetService();
+          PasswordResetService passwordResetService=PasswordResetService();
           final TextEditingController emailController = TextEditingController();
             return Scaffold(
               body: SingleChildScrollView(
                 child: Container(
                     width: 735,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -26,7 +27,7 @@ class ForgotPassword extends StatelessWidget {
                           Positioned(
                       top: 0,
                       left: 0,
-                      child: Container(
+                      child: SizedBox(
                     width: 709,
                     height: 900,
                     
@@ -38,7 +39,7 @@ class ForgotPassword extends StatelessWidget {
                       child: Container(
                     width: 709,
                     height: 900,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         
                 ),
                     child: Stack(
@@ -87,11 +88,11 @@ class ForgotPassword extends StatelessWidget {
                     Positioned(child: 
                           // Figma Flutter Generator Rectangle10Widget - RECTANGLE
                         Padding(
-                          padding: EdgeInsets.only(left:20,right:20,top:105,bottom:20),
+                          padding: const EdgeInsets.only(left:20,right:20,top:105,bottom:20),
                           child: Container(
                             width: 380,
                             height: 667,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               borderRadius : BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
@@ -106,9 +107,9 @@ class ForgotPassword extends StatelessWidget {
                           color : Color.fromRGBO(255, 255, 255, 1),
                                           )
                               ,child: Column(children: [
-                                SizedBox(height: 20,),
+                                const SizedBox(height: 20,),
                     
-                                Text("Forgot Password",style: TextStyle(
+                                const Text("Forgot Password",style: TextStyle(
                                   fontSize: 27,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Mulish',
@@ -119,9 +120,9 @@ class ForgotPassword extends StatelessWidget {
                                Image.asset("assets/images/forgotPass1.gif",width: 380,height: 270,) ,
                                 // SizedBox(height: 20,),
                                
-                                  Center(
+                                  const Center(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left:30.0,right:30),
+                                      padding: EdgeInsets.only(left:30.0,right:30),
                                       child: Text('Please enter your email address to receive a verification code.', textAlign: TextAlign.left, style: TextStyle(
                                         color: Color.fromRGBO(147, 147, 147, 1),
                                         fontFamily: 'Inter',
@@ -132,27 +133,27 @@ class ForgotPassword extends StatelessWidget {
                                       ),),
                                     ),
                                   ),
-                                SizedBox(height: 20,), 
+                                const SizedBox(height: 20,), 
                                 CustomInputFieldLarge(controller: emailController, imagePath: "assets/images/Envelope.png", hintText: "Email"),
-                                SizedBox(height: 20,),                                 
+                                const SizedBox(height: 20,),                                 
               
                                 GestureDetector(
                                   onTap:()async{
                                     if(emailController.text.isNotEmpty){
-                                    push(VerifyEmail(),context);
-                                    await _passwordResetService.initiatePasswordReset(emailController.text);
+                                    push(const VerifyEmail(),context);
+                                    await passwordResetService.initiatePasswordReset(emailController.text);
               
                                     }
               
                                   } ,
-                                  child: CustomButton(buttonText: "Send"))   ,
+                                  child: const CustomButton(buttonText: "Send"))   ,
                                             Padding(
                 padding: const EdgeInsets.only(left:80.0,top:30),
                 child: Align(
                   alignment: Alignment.center,
                   child: Row(
                     children: [
-                    Text(
+                    const Text(
                       'Remember Password? ',
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -167,7 +168,7 @@ class ForgotPassword extends StatelessWidget {
                       onTap: (){
                         push(LoginScreen(),context);
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign in',
                         textAlign: TextAlign.left,
                         style: TextStyle(

@@ -23,13 +23,12 @@ class Link extends StatelessWidget {
             children: [
               Image.asset(
                 imagePath,
-               
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               Text(
                 buttonText,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),
                   fontFamily: 'Inter',
                   fontSize: 17,
@@ -39,7 +38,7 @@ class Link extends StatelessWidget {
               ),
             ],
           ),
-          Icon(Icons.arrow_forward_ios_outlined, size: 20),
+          // Icon(Icons.arrow_forward_ios_outlined, size: 20),
         ],
       ),
     );
