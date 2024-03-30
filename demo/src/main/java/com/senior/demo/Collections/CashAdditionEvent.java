@@ -1,5 +1,7 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.AdminResponse;
+import com.senior.demo.Responses.CompanyResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -12,9 +14,9 @@ import java.time.LocalDateTime;
 public class CashAdditionEvent {
     @Id
     private String id;
-    private String companyId;
-//    private String adminId;
-
+    private CompanyResponse company;
+    private AdminResponse admin;
+    private String paymentMethod;
     private double cashAmount;
     private LocalDateTime timestamp;
 

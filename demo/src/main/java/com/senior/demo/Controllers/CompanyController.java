@@ -26,17 +26,6 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @PostMapping("/addCash")
-    public ResponseEntity<Object> addCashToCompany(@RequestBody AddCashRequestDTO requestDTO) {
-      try{
-        double newBalance = companyService.addCashAndSendEmail(requestDTO.getCompanyId(), requestDTO.getCashAmount());
-        CashAdditionResponse response = new CashAdditionResponse(newBalance, "Cash added successfully");
-        return ResponseEntity.status(HttpStatus.OK).body(response);}
-      catch (Exception e){
-              ErrorResponse errorResponse = new ErrorResponse("Failed to add cash and send email: " + e.getMessage());
-              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-      }
-    }
 
     @GetMapping("/all")
     public ResponseEntity<List<CompanyResponse>> getAllCompanies() {

@@ -77,5 +77,16 @@ public class UserService {
         }
         return null;
     }
+    public AdminResponse getAdmin(Authentication authentication) {
+//        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User)
+            User user = (User) authentication.getPrincipal();
+
+                Admin admin = adminRepository.findByEmail(user.getUsername());
+                return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob());
+
+
+
+    }
+    
 
 }
