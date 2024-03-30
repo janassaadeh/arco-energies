@@ -13,19 +13,23 @@ import java.util.List;
 public class Pump {
 
     @Id
-    @Field("_id")
     private String id;
 
     @Field("name")
     private String name;
+
+    @Field("petrol_type")
+    private String petrolType;
+
+    @Field("currency")
+    private String currency;
     @Field("status")
     private String status;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "fuel_id", referencedColumnName = "id")
+    // ManyToOne
     private Fuel fuel;
 
-    @OneToMany(mappedBy = "pump", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    // OneToMany
     private List<Transaction> transactions;
 
     public Fuel getFuel() {
@@ -36,10 +40,12 @@ public class Pump {
         this.fuel = fuel;
     }
 
-    public Pump(String id, String name, String status) {
+    public Pump(String id, String name, String status, String petrolType, String currency) {
         this.id = id;
         this.name = name;
         this.status = status;
+        this.petrolType = petrolType;
+        this.currency = currency;
         this.transactions = new ArrayList<>();
     }
 
@@ -71,9 +77,26 @@ public class Pump {
         return transactions;
     }
 
+    public String getPetrolType() {
+        return petrolType;
+    }
+
+    public void setPetrolType(String petrolType) {
+        this.petrolType = petrolType;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
+
 
     @Override
     public String toString() {
@@ -81,6 +104,8 @@ public class Pump {
                 " id = "+ id+
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
+                ", petrol_type='" + petrolType + '\'' +
+                ", currency='" + currency + '\'' +
                 '}';
     }
 }

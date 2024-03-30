@@ -45,18 +45,21 @@ public class PumpService {
         }
     }
 
-    public Pump addPumpWithCustomId(String fuelType, String name, String status) {
+    public Pump addPumpWithCustomId(String fuelType, String name, String status, String petrolType, String currency) {
 
         // Retrieve the Fuel entity by its type
         Fuel fuel = fuelRepository.findByType(fuelType);
+        System.out.println("1"+fuel);
         if (fuel == null) {
             // Handle case where Fuel with given type doesn't exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel type '" + fuelType + "' not found");
         }
-
+        System.out.println("2"+fuel);
         // Create a new Pump Object
         String customId = generateCustomId();
-        Pump pump = new Pump(customId, name, status);
+        Pump pump = new Pump(customId, name, status, petrolType, currency);
+        System.out.println("3"+fuel);
+//        pump.setFuel(fuel);
 
         // Add the new Pump to the list of pumps associated with the Fuel
         List<Pump> pumps = fuel.getPumps();

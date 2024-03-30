@@ -1,5 +1,6 @@
 package com.senior.demo.Collections;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -16,16 +17,14 @@ import java.util.List;
 public class Fuel {
 
     @Id
-    @Field("_id")
-    @JsonProperty("id")
     private String id;
     private String type;
     private String description;
 
-    @OneToMany(mappedBy = "fuel", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    //OneToMany
     private List<FuelPrice> prices;
 
-    @OneToMany(mappedBy = "fuel", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    //OneToMany
     private List<Pump> pumps;
 
     public List<Pump> getPumps() {

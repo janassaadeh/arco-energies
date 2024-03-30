@@ -15,7 +15,6 @@ import java.time.LocalDate;
 public class FuelPrice {
 
     @Id
-    @Field("_id")
     private String id;
 
     @Field("price")
@@ -24,8 +23,7 @@ public class FuelPrice {
     @Field("created_date")
     private LocalDate createdDate;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "fuel_id", referencedColumnName = "id")
+    // ManyToOne
     private Fuel fuel;
 
     public FuelPrice(String id, double price, LocalDate createdDate) {

@@ -13,7 +13,6 @@ import java.util.List;
 public class Vehicle {
 
     @Id
-    @Field("_id")
     private String id;
 
     @Field("year")
@@ -35,7 +34,7 @@ public class Vehicle {
     @Field("color")
     private String color;
 
-    @OneToMany(mappedBy = "pump", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    // OneToMany
     private List<Transaction> transactions;
 
     public Vehicle(String id, int year, String model, String plateNumber, String driverName, String type, String color) {
