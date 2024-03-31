@@ -1,5 +1,7 @@
 package com.senior.demo.Collections;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,6 +22,8 @@ public class Company extends User {
     @DBRef
     private List<Reward> rewards = new ArrayList<>();
 
+//    @DBRef
+    private List<Vehicle> vehicles=new ArrayList<>();
     // Constructor, getters, setters...
 
 
@@ -46,6 +50,7 @@ public class Company extends User {
         return balance;
     }
 
+
     public String getContactName() {
         return contactName;
     }
@@ -53,7 +58,15 @@ public class Company extends User {
     public String getLocation() {
         return location;
     }
+    public void addVehicle(Vehicle vehicle) {
+        vehicles.add(vehicle);
+    }
 
+    // Method to remove a vehicle
+    public void removeVehicle(Vehicle vehicle) {
+        vehicles.remove(vehicle);
+//        vehicle.setCompany(null); // Remove the reference to the company from the vehicle
+    }
     // Builder class
     public static class Builder {
         private String id;

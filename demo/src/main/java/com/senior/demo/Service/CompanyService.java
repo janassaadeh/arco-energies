@@ -25,6 +25,7 @@ public class CompanyService {
     private final CashAdditionEventRepository cashAdditionEventRepository;
     private final MongoTemplate mongoTemplate;
 
+
     @Autowired
     public CompanyService(CompanyRepository companyRepository, EmailService emailService, CashAdditionEventRepository cashAdditionEventRepository, MongoTemplate mongoTemplate) {
         this.companyRepository = companyRepository;

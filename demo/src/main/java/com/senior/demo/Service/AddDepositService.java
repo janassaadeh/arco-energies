@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -38,6 +39,15 @@ public class AddDepositService {
         return cashAdditionEvent;
 
     }
+    public List<CashAdditionEvent> getCashAdditionEventsByCompanyId(String companyId) {
+        return cashAdditionEventRepository.findByCompanyId(companyId);
+    }
+
+    // Method to get cash addition events by admin ID
+    public List<CashAdditionEvent> getCashAdditionEventsByAdminId(String adminId) {
+        return cashAdditionEventRepository.findByAdminId(adminId);
+    }
+
     public Map<String, Object> addCashAndSendEmail(String companyId, double cashAmount, String paymentMethod, Authentication authentication) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));

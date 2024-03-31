@@ -1,7 +1,9 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.CompanyResponse;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -32,6 +34,8 @@ public class Vehicle {
 
     @Field("color")
     private String color;
+//    @DBRef
+    private CompanyResponse company;
 
     // OneToMany
     private List<Transaction> transactions;
@@ -54,6 +58,10 @@ public class Vehicle {
     public void setId(String id) {
         this.id = id;
     }
+    public void setCompany(CompanyResponse company) {
+        this.company = company;
+    }
+
 
     public int getYear() {
         return year;
@@ -66,6 +74,10 @@ public class Vehicle {
     public String getModel() {
         return model;
     }
+    public CompanyResponse getCompany() {
+        return company;
+    }
+
 
     public void setModel(String model) {
         this.model = model;

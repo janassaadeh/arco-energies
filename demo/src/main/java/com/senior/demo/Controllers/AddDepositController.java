@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,7 +40,16 @@ public class AddDepositController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<List<CashAdditionEvent>> getCashAdditionEventsByCompanyId(@PathVariable String companyId) {
+        List<CashAdditionEvent> cashEvents = addDepositService.getCashAdditionEventsByCompanyId(companyId);
+        return new ResponseEntity<>(cashEvents, HttpStatus.OK);
+    }
+    @GetMapping("/admin/{adminId}")
+    public ResponseEntity<List<CashAdditionEvent>> getCashAdditionEventsByAdminId(@PathVariable String adminId) {
+        List<CashAdditionEvent> cashEvents = addDepositService.getCashAdditionEventsByAdminId(adminId);
+        return new ResponseEntity<>(cashEvents, HttpStatus.OK);
+    }
     @GetMapping("/receipt/{id}")
     public ResponseEntity<Object> getReceiptById(@PathVariable String id) {
         try {
