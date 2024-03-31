@@ -34,50 +34,50 @@ public class AuthenticationService {
     private final AuthenticationFacade authenticationFacade;
     private final UserService userService;
 
-public RegistrationResponse registerAdmin(Admin u) {
-    // Check if the user already exists
-    if (userRepository.findByEmail(u.getEmail()) != null) {
+    public RegistrationResponse registerAdmin(Admin u) {
+        // Check if the user already exists
         // User already exists, handle this case by throwing an exception
-        throw new ForbiddenException("User with this email already exists");
+        if (userRepository.findByEmail(u.getEmail()) != null) {
+            throw new ForbiddenException("User with this email already exists");
+        }
+
+        // User doesn't exist, proceed with registration
+        String id=userService.generateUniqueUserId();
+        var user = User.builder()
+                .id(id)
+
+                .phone(u.getPhone())
+                .email(u.getEmail())
+                .name(u.getName())
+                .password(passwordEncoder.encode(u.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+
+        userRepository.save(user);
+
+        // Save the admin
+        Admin admin = new Admin.Builder()
+                .id(id)
+
+                .phone(u.getPhone())
+                .email(u.getEmail())
+                .name(u.getName())
+                .dob(u.getDob())
+                .password(passwordEncoder.encode(u.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+
+        adminRepository.save(admin);
+
+        // Generate JWT token
+        var jwtToken = jwtService.generateToken(user);
+
+        // Return AuthenticationResponse with token
+        return RegistrationResponse.builder()
+                .token(jwtToken)
+                .message("Admin "+u.getName()+" registered successfully !")
+                .build();
     }
-
-    // User doesn't exist, proceed with registration
-    String id=userService.generateUniqueUserId();
-    var user = User.builder()
-            .id(id)
-
-            .phone(u.getPhone())
-            .email(u.getEmail())
-            .name(u.getName())
-            .password(passwordEncoder.encode(u.getPassword()))
-            .role(Role.ADMIN)
-            .build();
-
-    userRepository.save(user);
-
-    // Save the admin
-    Admin admin = new Admin.Builder()
-            .id(id)
-
-            .phone(u.getPhone())
-            .email(u.getEmail())
-            .name(u.getName())
-            .dob(u.getDob())
-            .password(passwordEncoder.encode(u.getPassword()))
-            .role(Role.ADMIN)
-            .build();
-
-    adminRepository.save(admin);
-
-    // Generate JWT token
-    var jwtToken = jwtService.generateToken(user);
-
-    // Return AuthenticationResponse with token
-    return RegistrationResponse.builder()
-            .token(jwtToken)
-            .message("Admin "+u.getName()+" registered successfully !")
-            .build();
-}
     public RegistrationResponse registerCompany(Company u) {
         // Check if the user already exists
         if (userRepository.findByEmail(u.getEmail()) != null) {
@@ -100,7 +100,7 @@ public RegistrationResponse registerAdmin(Admin u) {
 
         Company company = new Company.Builder()
                 .id(id)
-
+                .pts(0)
                 .phone(u.getPhone())
                 .email(u.getEmail())
                 .name(u.getName())
@@ -119,7 +119,7 @@ public RegistrationResponse registerAdmin(Admin u) {
         // Return AuthenticationResponse with token
         return RegistrationResponse.builder()
                 .token(jwtToken)
-                .message("Company "+u.getName()+" registered successfully !")
+                .message(id)
 
                 .build();
     }
@@ -129,7 +129,7 @@ public RegistrationResponse registerAdmin(Admin u) {
             // User already exists, handle this case by throwing an exception
             throw new ForbiddenException("User with this email already exists");
         }
-String id=userService.generateUniqueUserId();
+        String id=userService.generateUniqueUserId();
         // User doesn't exist, proceed with registration
         var user = User.builder()
                 .id(id)

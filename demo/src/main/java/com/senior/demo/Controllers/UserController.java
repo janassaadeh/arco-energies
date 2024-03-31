@@ -4,6 +4,7 @@ import com.senior.demo.Collections.Admin;
 import com.senior.demo.Collections.Company;
 import com.senior.demo.Collections.Role;
 import com.senior.demo.Collections.User;
+import com.senior.demo.Collections.*;
 import com.senior.demo.Repository.AdminRepository;
 import com.senior.demo.Repository.CompanyRepository;
 import com.senior.demo.Repository.OperatorRepository;
@@ -109,6 +110,10 @@ public class UserController {
                 } else {
                     if (user.getRole() == Role.OPERATOR) return operatorRepository.findByEmail(user.getEmail())
                             ;
+
+//                    Operator u = operatorRepository.findByEmail(user.getEmail());
+//                    OperatorResponse operator = new CompanyResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getBalance(),u.getContactName(),u.getLocation());
+//                    return company;
                 }
             }
         } else {

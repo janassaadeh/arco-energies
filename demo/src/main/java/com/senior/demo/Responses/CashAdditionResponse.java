@@ -5,8 +5,10 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class CashAdditionResponse {
+    private String id;
     private double newBalance;
     private String message;
+
 
     // Constructors, getters, and setters
 }

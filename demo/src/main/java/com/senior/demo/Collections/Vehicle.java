@@ -21,7 +21,6 @@ public class Vehicle {
     @Field("model")
     private String model;
 
-
     @Field("plate_number")
     private String plateNumber;
 
