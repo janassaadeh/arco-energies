@@ -24,7 +24,7 @@ public class FuelPrice {
     private LocalDate createdDate;
 
     // ManyToOne
-    private Fuel fuel;
+//    private Fuel fuel;
 
     public FuelPrice(String id, double price, LocalDate createdDate) {
         this.id = id;
@@ -56,11 +56,11 @@ public class FuelPrice {
         this.createdDate = createdDate;
     }
 
-    public Fuel getFuel() {
-        return fuel;
-    }
-
-    public void setFuel(Fuel fuel) {
-        this.fuel = fuel;
-    }
+//    public Fuel getFuel() {
+//        return fuel;
+//    }
+//
+//    public void setFuel(Fuel fuel) {
+//        this.fuel = fuel;
+//    }
 }

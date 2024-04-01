@@ -1,5 +1,6 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.FuelResponse;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,33 +19,29 @@ public class Pump {
     @Field("name")
     private String name;
 
-    @Field("petrol_type")
-    private String petrolType;
-
     @Field("currency")
     private String currency;
     @Field("status")
     private String status;
 
     // ManyToOne
-    private Fuel fuel;
+    private FuelResponse fuel;
 
     // OneToMany
     private List<Transaction> transactions;
 
-    public Fuel getFuel() {
+    public FuelResponse getFuel() {
         return fuel;
     }
 
-    public void setFuel(Fuel fuel) {
+    public void setFuel(FuelResponse fuel) {
         this.fuel = fuel;
     }
 
-    public Pump(String id, String name, String status, String petrolType, String currency) {
+    public Pump(String id, String name, String status, String currency) {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.petrolType = petrolType;
         this.currency = currency;
         this.transactions = new ArrayList<>();
     }
@@ -77,14 +74,6 @@ public class Pump {
         return transactions;
     }
 
-    public String getPetrolType() {
-        return petrolType;
-    }
-
-    public void setPetrolType(String petrolType) {
-        this.petrolType = petrolType;
-    }
-
     public String getCurrency() {
         return currency;
     }
@@ -104,7 +93,6 @@ public class Pump {
                 " id = "+ id+
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
-                ", petrol_type='" + petrolType + '\'' +
                 ", currency='" + currency + '\'' +
                 '}';
     }

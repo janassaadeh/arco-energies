@@ -17,7 +17,7 @@ public class PumpController {
 
     @PostMapping("/pumps")
     public Pump addPump(@RequestBody PumpRequest newPumpRequest, @RequestParam String fuelType) {
-        return pumpService.addPumpWithCustomId(fuelType, newPumpRequest.getName(), newPumpRequest.getStatus(), newPumpRequest.getPetrolType(), newPumpRequest.getCurrency());
+        return pumpService.addPumpWithCustomId(fuelType, newPumpRequest.getName(), newPumpRequest.getStatus(), newPumpRequest.getCurrency());
     }
 
     @GetMapping("/pumps")
@@ -39,8 +39,6 @@ public class PumpController {
         private String name;
         private String status;
 
-        private String petrolType;
-
         private String currency;
 
         public String getName() {
@@ -57,14 +55,6 @@ public class PumpController {
 
         public void setStatus(String status) {
             this.status = status;
-        }
-
-        public String getPetrolType() {
-            return petrolType;
-        }
-
-        public void setPetrolType(String petrolType) {
-            this.petrolType = petrolType;
         }
 
         public String getCurrency() {

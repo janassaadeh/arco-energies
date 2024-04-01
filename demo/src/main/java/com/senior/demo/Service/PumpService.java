@@ -1,10 +1,15 @@
 package com.senior.demo.Service;
 
 
+import com.senior.demo.Collections.Company;
 import com.senior.demo.Collections.Fuel;
 import com.senior.demo.Collections.Pump;
 import com.senior.demo.Repository.FuelRepository;
 import com.senior.demo.Repository.PumpRepository;
+import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.FuelResponse;
+import com.senior.demo.Responses.PumpResponse;
+import com.senior.demo.Responses.VehicleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,9 @@ public class PumpService {
 
     @Autowired
     private FuelRepository fuelRepository;
+
+    @Autowired
+    private FuelService fuelService;
 
     private static final String PUMP_ID_PREFIX = "PUMP";
 
@@ -45,21 +53,22 @@ public class PumpService {
         }
     }
 
-    public Pump addPumpWithCustomId(String fuelType, String name, String status, String petrolType, String currency) {
+    public Pump addPumpWithCustomId(String fuelType, String name, String status, String currency) {
 
         // Retrieve the Fuel entity by its type
         Fuel fuel = fuelRepository.findByType(fuelType);
-        System.out.println("1"+fuel);
+
         if (fuel == null) {
             // Handle case where Fuel with given type doesn't exist
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel type '" + fuelType + "' not found");
         }
-        System.out.println("2"+fuel);
+        FuelResponse fuelResponse = fuelService.getFuelResponseById(fuel.getId());
+
         // Create a new Pump Object
         String customId = generateCustomId();
-        Pump pump = new Pump(customId, name, status, petrolType, currency);
-        System.out.println("3"+fuel);
-//        pump.setFuel(fuel);
+        Pump pump = new Pump(customId, name, status, currency);
+
+        pump.setFuel(fuelResponse);
 
         // Add the new Pump to the list of pumps associated with the Fuel
         List<Pump> pumps = fuel.getPumps();
@@ -96,5 +105,11 @@ public class PumpService {
 
         // Generate the next custom ID
         return PUMP_ID_PREFIX + nextId;
+    }
+
+    public PumpResponse getPumpResponseById(String id) {
+        Pump pump=pumpRepository.findById(id).orElse(null);
+        PumpResponse pumpResponse=new PumpResponse(pump.getId(), pump.getName(), pump.getCurrency(),pump.getStatus(),pump.getFuel());
+        return pumpResponse;
     }
 }

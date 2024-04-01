@@ -2,7 +2,11 @@ package com.senior.demo.Service;
 
 
 import com.senior.demo.Collections.Fuel;
+import com.senior.demo.Collections.FuelPrice;
+import com.senior.demo.Collections.Pump;
 import com.senior.demo.Repository.FuelRepository;
+import com.senior.demo.Responses.FuelResponse;
+import com.senior.demo.Responses.PumpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -62,5 +66,32 @@ public class FuelService {
 
         // Generate the next custom ID
         return FUEL_ID_PREFIX + nextId;
+    }
+
+    public FuelResponse getFuelResponseById(String id) {
+        // Retrieve the Fuel object by its ID
+        Optional<Fuel> optionalFuel = fuelRepository.findById(id);
+        if (!optionalFuel.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel with id: '" + id + "' not found");
+        }
+        Fuel fuel = optionalFuel.get();
+
+        // Get the prices list from the Fuel object
+        List<FuelPrice> prices = fuel.getPrices();
+
+        // Check if prices list is empty
+        if (prices.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel prices list is empty for fuel with id: '" + id + "'");
+        }
+
+        // Get the last added FuelPrice object from the prices list
+        FuelPrice lastFuelPrice = prices.get(prices.size() - 1);
+
+        // Get the price field from the last added FuelPrice object
+        double fuelPrice = lastFuelPrice.getPrice();
+
+        // Create and return a FuelResponse object
+        FuelResponse fuelResponse = new FuelResponse(fuel.getId(), fuel.getType(), fuel.getDescription(), fuelPrice);
+        return fuelResponse;
     }
 }

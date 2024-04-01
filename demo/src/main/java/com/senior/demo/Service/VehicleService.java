@@ -1,10 +1,13 @@
 package com.senior.demo.Service;
 
 import com.senior.demo.Collections.Company;
+import com.senior.demo.Collections.Pump;
 import com.senior.demo.Collections.Vehicle;
 import com.senior.demo.Repository.CompanyRepository;
 import com.senior.demo.Repository.VehicleRepository;
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.PumpResponse;
+import com.senior.demo.Responses.VehicleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -198,5 +201,11 @@ public class VehicleService {
         int nextId = maxId + 1;
 
         return VEHICLE_ID_PREFIX + nextId;
+    }
+
+    public VehicleResponse getVehicleResponseById(String id) {
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        VehicleResponse vehicleResponse = new VehicleResponse(vehicle.getId(), vehicle.getYear(), vehicle.getModel(),vehicle.getPlateNumber(),vehicle.getDriverName(), vehicle.getType(), vehicle.getColor(), vehicle.getCompany());
+        return vehicleResponse;
     }
 }

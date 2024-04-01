@@ -1,5 +1,7 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.PumpResponse;
+import com.senior.demo.Responses.VehicleResponse;
 import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,6 +25,12 @@ public class Transaction {
 
     @Field("date")
     private LocalDate date;
+
+    @Field("pump")
+    private PumpResponse pump;
+
+    @Field("vehicle")
+    private VehicleResponse vehicle;
 
     public Transaction(String id, double quantity, double odometer, LocalDate date) {
         this.id = id;
@@ -61,6 +69,22 @@ public class Transaction {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public PumpResponse getPump() {
+        return pump;
+    }
+
+    public void setPump(PumpResponse pump) {
+        this.pump = pump;
+    }
+
+    public VehicleResponse getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(VehicleResponse vehicle) {
+        this.vehicle = vehicle;
     }
 }
 
