@@ -1,17 +1,15 @@
 package com.senior.demo.Service;
 
 
-import com.senior.demo.Collections.Pump;
-import com.senior.demo.Collections.Transaction;
-import com.senior.demo.Collections.Vehicle;
+import com.senior.demo.Collections.*;
+import com.senior.demo.Repository.OperatorRepository;
 import com.senior.demo.Repository.PumpRepository;
 import com.senior.demo.Repository.TransactionRepository;
 import com.senior.demo.Repository.VehicleRepository;
-import com.senior.demo.Responses.CompanyResponse;
-import com.senior.demo.Responses.PumpResponse;
-import com.senior.demo.Responses.VehicleResponse;
+import com.senior.demo.Responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,9 +35,14 @@ public class TransactionService {
     @Autowired
     private VehicleService vehicleService;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private OperatorRepository operatorRepository;
+
     private static final String TRANSACTION_ID_PREFIX = "TRANSACTION";
 
-    public Transaction addTransactionWithCustomId(String pumpId, String vehicleId, double quantity, double odometer, LocalDate date) {
+    public Transaction addTransactionWithCustomId(String pumpId, String vehicleId, double quantity, double odometer, LocalDate date,Authentication authentication) {
 
         // Retrieve the Fuel entity by its type
         Optional<Pump> optionalPump = pumpRepository.findById(pumpId);
@@ -62,6 +65,13 @@ public class TransactionService {
         transaction.setPump(pumpResponse);
         transaction.setVehicle(vehicleResponse);
 
+        OperatorResponse operator = userService.getOperator(authentication);
+        System.out.println(operator.getEmail());
+        if (operator == null) {
+            throw new RuntimeException("Operator not found");
+        }
+        transaction.setOperator(operator);
+
         // Add the new Transaction to the list of transactions associated with the Pump
         List<Transaction> transactions = pump.getTransactions();
         transactions.add(transaction);
@@ -73,7 +83,10 @@ public class TransactionService {
         vehicle.setTransactions(vehicleTransactions);
 
         Transaction savedTransaction = transactionRepository.save(transaction);
-
+        Operator operator1 = operatorRepository.findById(operator.getId())
+                .orElseThrow(() -> new RuntimeException("Operator not found with id: " + operator.getId()));
+        operator1.addTransaction(savedTransaction);
+        operatorRepository.save(operator1);
         pumpRepository.save(pump);
         vehicleRepository.save(vehicle);
 

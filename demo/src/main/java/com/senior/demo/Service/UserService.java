@@ -6,6 +6,7 @@ import com.senior.demo.Repository.CompanyRepository;
 import com.senior.demo.Repository.OperatorRepository;
 import com.senior.demo.Responses.AdminResponse;
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.OperatorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.core.Authentication;
@@ -72,7 +73,7 @@ public class UserService {
                 return new CompanyResponse(user.getId(), company.getEmail(), company.getPhone(), company.getName(), company.getBalance(), company.getContactName(), company.getLocation());
             } else if (user.getAuthorities().contains(Role.OPERATOR)) {
                 Operator operator = operatorRepository.findByEmail(user.getUsername());
-//                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName());
+                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName());
             }
         }
         return null;
@@ -87,6 +88,15 @@ public class UserService {
 
 
     }
+    public OperatorResponse getOperator(Authentication authentication) {
+//        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User)
+        User user = (User) authentication.getPrincipal();
 
+        Operator operator = operatorRepository.findByEmail(user.getUsername());
+        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getDob());
+
+
+
+    }
 
 }

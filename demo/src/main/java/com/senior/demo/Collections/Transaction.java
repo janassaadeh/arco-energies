@@ -1,5 +1,6 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.OperatorResponse;
 import com.senior.demo.Responses.PumpResponse;
 import com.senior.demo.Responses.VehicleResponse;
 import jakarta.persistence.Entity;
@@ -32,6 +33,8 @@ public class Transaction {
     @Field("vehicle")
     private VehicleResponse vehicle;
 
+    private OperatorResponse operator;
+
     public Transaction(String id, double quantity, double odometer, LocalDate date) {
         this.id = id;
         this.quantity = quantity;
@@ -42,6 +45,10 @@ public class Transaction {
     public String getId() {
         return id;
     }
+    public OperatorResponse setOperator(OperatorResponse operatorResponse) {
+        return operator=operatorResponse;
+    }
+
 
     public void setId(String id) {
         this.id = id;
@@ -66,6 +73,10 @@ public class Transaction {
     public LocalDate getDate() {
         return date;
     }
+    public OperatorResponse getOperator() {
+        return operator;
+    }
+
 
     public void setDate(LocalDate date) {
         this.date = date;

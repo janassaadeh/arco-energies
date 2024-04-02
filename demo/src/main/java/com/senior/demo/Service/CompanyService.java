@@ -2,9 +2,11 @@ package com.senior.demo.Service;
 
 import com.senior.demo.Collections.Admin;
 import com.senior.demo.Collections.CashAdditionEvent;
+import com.senior.demo.Collections.Vehicle;
 import com.senior.demo.Repository.CashAdditionEventRepository;
 import com.senior.demo.Collections.Company;
 import com.senior.demo.Repository.CompanyRepository;
+import com.senior.demo.Repository.VehicleRepository;
 import com.senior.demo.Responses.AdminResponse;
 import com.senior.demo.Responses.CompanyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,14 @@ public class CompanyService {
     private final CashAdditionEventRepository cashAdditionEventRepository;
     private final MongoTemplate mongoTemplate;
 
-
+    private final VehicleRepository vehicleRepository;
     @Autowired
-    public CompanyService(CompanyRepository companyRepository, EmailService emailService, CashAdditionEventRepository cashAdditionEventRepository, MongoTemplate mongoTemplate) {
+    public CompanyService(CompanyRepository companyRepository, EmailService emailService, CashAdditionEventRepository cashAdditionEventRepository, MongoTemplate mongoTemplate, VehicleRepository vehicleRepository) {
         this.companyRepository = companyRepository;
         this.emailService = emailService;
         this.cashAdditionEventRepository = cashAdditionEventRepository;
         this.mongoTemplate = mongoTemplate;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public double addCashAndSendEmail(String companyId, double cashAmount) {
@@ -99,8 +102,19 @@ public class CompanyService {
             existingCompany.setEmail(company.getEmail());
             existingCompany.setPhone(company.getPhone());
 
+            CompanyResponse exists=new CompanyResponse(existingCompany.getId(),existingCompany.getEmail(),existingCompany.getPhone(),existingCompany.getName(),
+                    existingCompany.getBalance(),existingCompany.getContactName(),existingCompany.getLocation());
+
             // Save the updated company
-            companyRepository.save(existingCompany);
+            existingCompany = companyRepository.save(existingCompany);
+
+            // Iterate over each vehicle associated with the company
+            for (Vehicle vehicle : existingCompany.getVehicles()) {
+                // Update the company information for each vehicle
+                vehicle.setCompany(exists);
+                // Save the updated vehicle back to the repository
+                vehicleRepository.save(vehicle);
+            }
 
             // Convert the updated Company to CompanyResponse
             return new CompanyResponse(
@@ -108,9 +122,7 @@ public class CompanyService {
                     existingCompany.getEmail(),
                     existingCompany.getPhone(),
                     existingCompany.getName(),
-
                     existingCompany.getBalance(),
-
                     existingCompany.getContactName(),
                     existingCompany.getLocation()
             );

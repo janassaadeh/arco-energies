@@ -3,11 +3,16 @@ package com.senior.demo.Collections;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document(collection = "Operator")
 @Data
 public class Operator extends User {
     private String dob;
     private String address;
+    private List<Transaction> transactions=new ArrayList<>();
+
 
     public Operator(String id,String email, String password, Role role, String phone, String name, String dob, String address) {
         super(id,email, password, role, phone, name);
@@ -16,7 +21,14 @@ public class Operator extends User {
     }
 
 
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
 
+
+    public void removeTransaction(Transaction transaction) {
+        transactions.remove(transaction);
+    }
 
     public String getDob() {
         return dob;

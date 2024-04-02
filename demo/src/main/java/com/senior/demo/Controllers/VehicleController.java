@@ -79,4 +79,5 @@ public class VehicleController {
         vehicleService.deleteVehicleForCompany(companyId, vehicleId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
