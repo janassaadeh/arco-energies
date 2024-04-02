@@ -1,4 +1,5 @@
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/edit_prices_pop_up.dart';
+import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../Models/fuel_price.dart';
@@ -11,6 +12,7 @@ class DashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticationService authenticationService = AuthenticationService();
     final List<FuelPrice> fuelPrices = [
       FuelPrice("Fuel 95", "Last modified: 2023-10-25", 2.50),
       FuelPrice("Fuel 98", "Last modified: 2023-10-25", 2.70),
@@ -48,12 +50,17 @@ class DashBoard extends StatelessWidget {
                     context),
               ),
               const SizedBox(width: 25),
-              gradientBox(
-                  'Start A New Transaction',
-                  'assets/images/cars.png',
-                  const Color.fromRGBO(232, 169, 69, 1),
-                  const Color.fromRGBO(237, 165, 49, .6),
-                  context),
+              GestureDetector(
+                onTap: () async {
+                  await authenticationService.logout();
+                },
+                child: gradientBox(
+                    'Start A New Transaction',
+                    'assets/images/cars.png',
+                    const Color.fromRGBO(232, 169, 69, 1),
+                    const Color.fromRGBO(237, 165, 49, .6),
+                    context),
+              ),
             ],
           ),
           const SizedBox(height: 15),

@@ -1,3 +1,4 @@
+import 'package:company_pages/Models/fuel_response.dart';
 import 'package:company_pages/Models/transaction.dart';
 
 class Pump {
@@ -5,12 +6,14 @@ class Pump {
   final String name;
   final String status;
   final List<Transaction> transactions;
+  final FuelResponse fuel;
 
   Pump({
     required this.id,
     required this.name,
     required this.status,
     required this.transactions,
+    required this.fuel,
   });
 
   factory Pump.fromJson(Map<String, dynamic> json) {
@@ -28,6 +31,7 @@ class Pump {
       name: json['name'],
       status: json['status'],
       transactions: transactions,
+      fuel: FuelResponse.fromJson(json['fuel']), // Parse fuel from JSON
     );
   }
 }

@@ -25,10 +25,10 @@ class CustomCarSearch extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.normal,
             ),
-            suffixIcon: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Image.asset('assets/images/red-slider.png'),
-            ),
+            // suffixIcon: Padding(
+            //   padding: const EdgeInsets.only(bottom: 8.0),
+            //   child: Image.asset('assets/images/red-slider.png'),
+            // ),
             prefixIcon: Padding(
               // padding: const EdgeInsets.all(8.0),
               padding: const EdgeInsets.only(bottom: 8.0),

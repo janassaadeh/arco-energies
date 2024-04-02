@@ -1,5 +1,8 @@
-import 'package:company_pages/Screens/Company/MyCars.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Screens/Operator/Transactions/cars_list.dart';
 import 'package:company_pages/Screens/Operator/Transactions/pump_selection.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Widgets/Operator/next_button.dart';
 import 'package:company_pages/Widgets/Operator/second_text.dart';
@@ -7,6 +10,7 @@ import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CarAccess extends StatelessWidget {
   const CarAccess({super.key});
@@ -14,10 +18,11 @@ class CarAccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController searchComtroller = TextEditingController();
+    Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: screenSize.height * .1,
         title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -47,6 +52,8 @@ class CarAccess extends StatelessWidget {
                 width: 15,
               )),
           onTap: () {
+            Provider.of<TransactionProvider>(context, listen: false)
+                .resetTransactionValues();
             Navigator.pop(context);
           },
         ),
@@ -55,7 +62,7 @@ class CarAccess extends StatelessWidget {
         children: [
           Container(
             color: const Color(0xff003D5B),
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            padding: EdgeInsets.symmetric(vertical: screenSize.height * .02),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -88,7 +95,7 @@ class CarAccess extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyCars(),
+                            builder: (context) => CarsList(),
                           ),
                         );
                       },
@@ -108,10 +115,24 @@ class CarAccess extends StatelessWidget {
                         "Automatically fill this field upon NFC tag scan. Manually search for issues if encountered."),
                     const SizedBox(height: 20),
                     nextButton(
-                      const PumpSelection(),
-                      context,
                       "Next",
-                      fn: () {},
+                      fn: () {
+                        if (Provider.of<TransactionProvider>(context,
+                                    listen: false)
+                                .selectedVehicleId ==
+                            "") {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const ErrorPopUp(
+                                text: "Make sure you have selected a car!",
+                              );
+                            },
+                          );
+                        } else {
+                          push(const PumpSelection(), context);
+                        }
+                      },
                     )
                   ],
                 ),

@@ -33,7 +33,7 @@ Widget buildInput(String hintText, Widget widgetAtLeft, bool withBorder,
                       fontSize: 14,
                     ),
                   )
-                : TextField(
+                : TextFormField(
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: hintText,

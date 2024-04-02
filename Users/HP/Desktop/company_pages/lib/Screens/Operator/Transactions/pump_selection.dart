@@ -1,3 +1,5 @@
+import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,7 @@ import 'package:company_pages/Services/Operator/pump_service.dart';
 import 'package:company_pages/Widgets/Operator/pump_option.dart';
 
 class PumpSelection extends StatefulWidget {
-  const PumpSelection({Key? key}) : super(key: key);
+  const PumpSelection({super.key});
 
   @override
   State<PumpSelection> createState() => _PumpSelectionState();
@@ -30,7 +32,21 @@ class _PumpSelectionState extends State<PumpSelection> {
 
   Future<List<Pump>> _fetchPumps() async {
     try {
-      return await pumpService.getPumps();
+      // Use provider to get the cached pumps
+      List<Pump> cachedPumps =
+          Provider.of<TransactionProvider>(context, listen: false).cachedPumps;
+
+      // If cached pumps are available, return them
+      if (cachedPumps.isNotEmpty) {
+        return cachedPumps;
+      } else {
+        // Fetch pumps from the backend
+        final List<Pump> pumps = await pumpService.getPumps();
+        // Cache fetched pumps
+        Provider.of<TransactionProvider>(context, listen: false).cachedPumps =
+            pumps;
+        return pumps;
+      }
     } catch (e) {
       throw Exception('Failed to fetch pumps: $e');
     }
@@ -42,7 +58,7 @@ class _PumpSelectionState extends State<PumpSelection> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: screenSize.height * .1,
         title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +89,8 @@ class _PumpSelectionState extends State<PumpSelection> {
             ),
           ),
           onTap: () {
+            Provider.of<TransactionProvider>(context, listen: false)
+                .resetTransactionValues();
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -82,7 +100,7 @@ class _PumpSelectionState extends State<PumpSelection> {
         children: [
           Container(
             color: const Color(0xff003D5B),
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            padding: EdgeInsets.symmetric(vertical: screenSize.height * .02),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -93,7 +111,7 @@ class _PumpSelectionState extends State<PumpSelection> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: screenSize.height * .02),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
@@ -113,44 +131,63 @@ class _PumpSelectionState extends State<PumpSelection> {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
                         final List<Pump> pumps = snapshot.data!;
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(20),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: 1,
-                          ),
-                          itemCount: pumps.length,
-                          itemBuilder: (context, index) {
-                            final Pump pump = pumps[index];
-                            return PumpOption(
-                              pump: pump,
-                              isSelected: pump == _selectedPump,
-                              onSelect: (selectedPump) {
-                                setState(() {
-                                  _selectedPump = selectedPump;
-                                });
-                                if (pump == _selectedPump) {
-                                  final String pumpId = pump.id;
-                                  Provider.of<TransactionProvider>(context,
-                                          listen: false)
-                                      .setSelectedPumpId(pumpId);
-                                }
-                              },
-                            );
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            await _refreshPumps();
                           },
+                          color: const Color(0xff003D5B),
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(20),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: pumps.length,
+                            itemBuilder: (context, index) {
+                              final Pump pump = pumps[index];
+                              return PumpOption(
+                                pump: pump,
+                                isSelected: pump == _selectedPump,
+                                onSelect: (selectedPump) {
+                                  setState(() {
+                                    _selectedPump = selectedPump;
+                                  });
+                                  if (pump == _selectedPump) {
+                                    final String pumpId = pump.id;
+                                    Provider.of<TransactionProvider>(context,
+                                            listen: false)
+                                        .setSelectedPumpId(pumpId);
+                                  }
+                                },
+                              );
+                            },
+                          ),
                         );
                       }
                     },
                   ),
                 ),
                 nextButton(
-                  const OdometerValueEntry(),
-                  context,
                   "Next",
-                  fn: () {},
+                  fn: () {
+                    if (Provider.of<TransactionProvider>(context, listen: false)
+                            .selectedPumpId ==
+                        "") {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ErrorPopUp(
+                            text: "Make sure you have selected a pump!",
+                          );
+                        },
+                      );
+                    } else {
+                      push(const OdometerValueEntry(), context);
+                    }
+                  },
                 )
               ],
             ),
@@ -212,5 +249,11 @@ class _PumpSelectionState extends State<PumpSelection> {
         ),
       ],
     );
+  }
+
+  Future<void> _refreshPumps() async {
+    setState(() {
+      _pumpsFuture = pumpService.getPumps();
+    });
   }
 }

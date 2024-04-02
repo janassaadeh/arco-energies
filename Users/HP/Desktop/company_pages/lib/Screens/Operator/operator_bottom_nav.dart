@@ -32,6 +32,11 @@ class _OperatorState extends State<Operator> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const Icon(
+                Icons.abc,
+                color: Color(0xff003D5B),
+                size: 40,
+              )
             ],
           ),
         ),

@@ -1,5 +1,8 @@
+import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import '../../../Widgets/Operator/next_button.dart';
 import '../../../Widgets/Operator/second_text.dart';
 import 'package:company_pages/Screens/Operator/Transactions/receipt.dart';
@@ -11,16 +14,24 @@ import 'package:company_pages/Widgets/Operator/title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LitersValueEntry extends StatelessWidget {
-  const LitersValueEntry({super.key});
+class LitersValueEntry extends StatefulWidget {
+  const LitersValueEntry({Key? key}) : super(key: key);
+
+  @override
+  _LitersValueEntryState createState() => _LitersValueEntryState();
+}
+
+class _LitersValueEntryState extends State<LitersValueEntry> {
+  TextEditingController litersController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController litersController = TextEditingController();
+    Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: screenSize.height * .1,
         title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -44,12 +55,15 @@ class LitersValueEntry extends StatelessWidget {
         backgroundColor: const Color(0xff003D5B),
         leading: GestureDetector(
           child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 17),
-              child: Image.asset(
-                "assets/images/cancel.png",
-                width: 15,
-              )),
+            padding: const EdgeInsets.only(top: 8.0, left: 17),
+            child: Image.asset(
+              "assets/images/cancel.png",
+              width: 15,
+            ),
+          ),
           onTap: () {
+            Provider.of<TransactionProvider>(context, listen: false)
+                .resetTransactionValues();
             Navigator.pop(context);
             Navigator.pop(context);
             Navigator.pop(context);
@@ -57,93 +71,183 @@ class LitersValueEntry extends StatelessWidget {
           },
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            color: const Color(0xff003D5B),
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          SingleChildScrollView(
+            child: Column(
               children: [
-                _buildPathPoint("  Car  ", false, true),
-                // _buildPathLine(),
-                _buildPathPoint("Pump", false, true),
-                // _buildPathLine(),
-                _buildPathPoint("Odometer", false, true),
-                // _buildPathLine(),
-                _buildPathPoint("Liter", true, false),
+                Container(
+                  color: const Color(0xff003D5B),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenSize.height * .02,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildPathPoint("  Car  ", false, true),
+                      _buildPathPoint("Pump", false, true),
+                      _buildPathPoint("Odometer", false, true),
+                      _buildPathPoint("Liter", true, false),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      buildTitleWidget("Enter Fuel Quantity", "4"),
+                      const SizedBox(height: 10),
+                      buildText(
+                          "Input the fuel's quantity in liters into the text field."),
+                      const SizedBox(height: 20),
+                      buildImageContainer("assets/images/drop.png", true),
+                      const SizedBox(height: 30),
+                      buildInput(
+                        "Fuel Quantity",
+                        const Text(
+                          "Liters (L)",
+                          style: TextStyle(
+                            color: Color.fromRGBO(114, 212, 171, 1),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        true,
+                        litersController,
+                      ),
+                      const SizedBox(height: 20),
+                      buildSecondText(
+                          "Double-check the fuel quantity to ensure it is in liters to avoid errors."),
+                      const SizedBox(height: 20),
+                      _isLoading
+                          ? Container(
+                              width: 342,
+                              height: 62,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                gradient: const LinearGradient(
+                                  begin: Alignment(1.5, 1),
+                                  end: Alignment(-1.5, 1),
+                                  colors: [
+                                    Color.fromRGBO(237, 174, 73, 0.5),
+                                    Color.fromRGBO(237, 174, 73, 1),
+                                    Color.fromRGBO(237, 174, 73, 0.5)
+                                  ],
+                                ),
+                              ),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xff003D5B),
+                                ),
+                              ),
+                            )
+                          : nextButton(
+                              _isLoading ? "Loading..." : "Next",
+                              fn: () async {
+                                if (_isLoading) return;
+
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                final startTime = DateTime.now();
+
+                                await Future.delayed(
+                                    const Duration(seconds: 3));
+
+                                if (litersController.text.isEmpty) {
+                                  _showErrorDialog("Please enter a value!");
+                                  return;
+                                }
+
+                                final numericValue =
+                                    double.tryParse(litersController.text);
+                                if (numericValue == null) {
+                                  _showErrorDialog(
+                                      "Please enter a valid value!");
+                                  return;
+                                }
+
+                                String pumpId =
+                                    Provider.of<TransactionProvider>(context,
+                                            listen: false)
+                                        .selectedPumpId;
+                                String vehicleId =
+                                    Provider.of<TransactionProvider>(context,
+                                            listen: false)
+                                        .selectedVehicleId;
+                                double liters =
+                                    double.parse(litersController.text);
+                                double odometer = double.parse(
+                                    Provider.of<TransactionProvider>(context,
+                                            listen: false)
+                                        .enteredOdometerValue);
+                                String date = "2024-03-17";
+                                Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .resetTransactionValues();
+                                Future<Transaction> generatedTransaction =
+                                    TransactionService().addTransaction(
+                                  pumpId,
+                                  vehicleId,
+                                  liters,
+                                  odometer,
+                                  date,
+                                );
+                                Transaction transaction =
+                                    await generatedTransaction;
+                                Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .storeGeneratedTransaction(transaction);
+                                final endTime = DateTime.now();
+                                final elapsedTime = endTime
+                                    .difference(startTime)
+                                    .inMilliseconds;
+
+                                // Calculate the remaining time to display the loading widget
+                                final remainingTime = Duration(seconds: 3) -
+                                    Duration(milliseconds: elapsedTime);
+
+                                // Ensure the loading widget is displayed for at least 1 second
+                                if (remainingTime > Duration(seconds: 1)) {
+                                  await Future.delayed(
+                                      Duration(milliseconds: elapsedTime));
+                                }
+
+                                _navigateToReceipt();
+                              },
+                            ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          Column(
-            children: [
-              // const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Column(
-                  children: [
-                    buildTitleWidget("Enter Fuel Quantity", "4"),
-                    const SizedBox(height: 10),
-                    buildText(
-                        "Input the fuel's quantity in liters into the text field."),
-                    const SizedBox(height: 20),
-                    buildImageContainer("assets/images/drop.png", true),
-                    const SizedBox(height: 30),
-                    buildInput(
-                      "Fuel Quantity",
-                      const Text(
-                        "Liters (L)",
-                        style: TextStyle(
-                          color: Color.fromRGBO(114, 212, 171, 1),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      true,
-                      litersController,
-                    ),
-                    const SizedBox(height: 20),
-                    buildSecondText(
-                        "Double-check the fuel quantity to ensure it is in liters to avoid errors."),
-                    const SizedBox(height: 20),
-                    nextButton(
-                      const ReceiptPage(),
-                      context,
-                      "Next",
-                      fn: () {
-                        // Provider.of<TransactionProvider>(context, listen: false)
-                        //     .setLitersValue(litersController.text);
-                        String pumpId = Provider.of<TransactionProvider>(
-                                context,
-                                listen: false)
-                            .selectedPumpId;
-                        String vehicleId = Provider.of<TransactionProvider>(
-                                context,
-                                listen: false)
-                            .selectedVehicleId;
-
-                        double liters = double.parse(litersController.text);
-                        double odometer = double.parse(
-                            Provider.of<TransactionProvider>(context,
-                                    listen: false)
-                                .enteredOdometerValue);
-
-                        TransactionService().addTransaction(
-                          pumpId,
-                          vehicleId,
-                          liters,
-                          odometer,
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ),
-            ],
           ),
         ],
       ),
     );
+  }
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorPopUp(
+          text: errorMessage,
+        );
+      },
+    ).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  void _navigateToReceipt() {
+    push(const ReceiptPage(), context);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Widget _buildPathPoint(String name, bool isActive, bool isCompleted) {
@@ -186,7 +290,7 @@ class LitersValueEntry extends StatelessWidget {
                     ),
                   ),
                 )
-              : null, // If not completed, don't render anything inside the circle
+              : null,
         ),
         const SizedBox(height: 5),
         Text(
@@ -197,14 +301,6 @@ class LitersValueEntry extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPathLine() {
-    return Container(
-      height: 2,
-      width: 20,
-      color: Colors.white,
     );
   }
 }

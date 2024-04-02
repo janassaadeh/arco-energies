@@ -25,7 +25,7 @@ class RegistrationService {
           'location': location,
         },
       );
-      
+
       return response.data;
     } catch (e) {
       print('Error during registration: $e');

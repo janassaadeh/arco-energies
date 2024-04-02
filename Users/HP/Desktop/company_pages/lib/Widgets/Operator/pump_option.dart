@@ -1,9 +1,7 @@
 import 'package:company_pages/Models/pump.dart';
-import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class PumpOption extends StatefulWidget {
+class PumpOption extends StatelessWidget {
   final Pump pump;
   final bool isSelected;
   final Function(Pump) onSelect;
@@ -16,17 +14,12 @@ class PumpOption extends StatefulWidget {
   });
 
   @override
-  State<PumpOption> createState() => _PumpOptionState();
-}
-
-class _PumpOptionState extends State<PumpOption> {
-  @override
   Widget build(BuildContext context) {
     // Size screenSize = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: () {
-        widget.onSelect(widget.pump);
+        onSelect(pump);
       },
       child: Column(
         children: [
@@ -39,7 +32,7 @@ class _PumpOptionState extends State<PumpOption> {
                 begin:
                     const Alignment(-1.1779649257659912, -1.3327655792236328),
                 end: const Alignment(1.3327656984329224, -1.139451026916504),
-                colors: widget.isSelected
+                colors: isSelected
                     ? [
                         const Color.fromRGBO(94, 181, 149, 1),
                         const Color.fromRGBO(94, 181, 149, 0.57)
@@ -49,7 +42,7 @@ class _PumpOptionState extends State<PumpOption> {
                         const Color.fromRGBO(114, 212, 171, 0.57)
                       ],
               ),
-              boxShadow: widget.isSelected
+              boxShadow: isSelected
                   ? [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.25),
@@ -71,9 +64,9 @@ class _PumpOptionState extends State<PumpOption> {
           // const SizedBox(height: 5),
           Expanded(
             child: Text(
-              widget.pump.name,
+              pump.name,
               style: TextStyle(
-                color: widget.isSelected
+                color: isSelected
                     ? Colors.black
                     : const Color.fromRGBO(0, 61, 91, 1),
                 fontFamily: 'Inter',

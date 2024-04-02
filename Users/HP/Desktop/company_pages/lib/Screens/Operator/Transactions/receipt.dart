@@ -1,5 +1,8 @@
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ReceiptPage extends StatelessWidget {
   const ReceiptPage({super.key});
@@ -33,9 +36,13 @@ class ReceiptPage extends StatelessWidget {
       );
     }
 
+    TransactionProvider transactionProvider =
+        Provider.of<TransactionProvider>(context);
+    Transaction? transaction = transactionProvider.generatedTransaction;
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 70,
+        toolbarHeight: screenSize.height * .1,
         title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -68,6 +75,8 @@ class ReceiptPage extends StatelessWidget {
                 width: 15,
               )),
           onTap: () {
+            Provider.of<TransactionProvider>(context, listen: false)
+                .resetTransactionValues();
             Navigator.pop(context);
             Navigator.pop(context);
             Navigator.pop(context);
@@ -136,21 +145,28 @@ class ReceiptPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                receiptDetailPositioned(0.26, "Fuel Type", "95 Fuel"),
-                receiptDetailPositioned(0.285, "Quantity", "50.50 Liters"),
+                receiptDetailPositioned(
+                    0.26, "Fuel Type", transaction!.pump.fuel.type),
+                receiptDetailPositioned(
+                    0.285, "Quantity", "${transaction.quantity} Liters"),
                 receiptDetailPositioned(
                     .31, "Price Per Unit", "\$ 2.5 / Liter"),
                 receiptDivider(.335),
-                receiptDetailPositioned(0.36, "Driver Name", "Victor Shoaga"),
-                receiptDetailPositioned(0.385, "Company Name", "Bouche Sucree"),
+                receiptDetailPositioned(
+                    0.36, "Driver Name", transaction.vehicle.driverName),
+                receiptDetailPositioned(
+                    0.385, "Company Name", transaction.vehicle.company.name),
                 receiptDetailPositioned(.41, "Company Address",
-                    "7953 Oakland St.\n Honolulu, HI 96815"),
+                    transaction.vehicle.company.location),
                 receiptDivider(.445),
-                receiptDetailPositioned(.47, "Odometer Number", "120,000 km"),
+                receiptDetailPositioned(
+                    .47, "Odometer Number", transaction.odometer.toString()),
                 receiptDivider(.495),
-                receiptDetailPositioned(.52, "Amount", "\$ 126.25"),
-                receiptDetailPositioned(.545, "Tax", "\$ 13.88"),
-                receiptDetailPositioned(.57, "Total", "\$ 140.13"),
+                receiptDetailPositioned(.52, "Amount",
+                    "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice}"),
+                // receiptDetailPositioned(.545, "Tax", "\$ 13.88"),
+                receiptDetailPositioned(.57, "Total",
+                    "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice}"),
                 receiptDivider(.595),
                 receiptDetailPositioned(.62, "Operator", "Achraf Samir"),
                 Positioned(

@@ -1,5 +1,8 @@
+import 'package:company_pages/Models/fuel_response.dart';
 import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/pump_response.dart';
 import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Models/vehicle_response.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:dio/dio.dart';
 
@@ -30,6 +33,7 @@ class PumpService {
           String id = pumpJson['id'];
           String name = pumpJson['name'];
           String status = pumpJson['status'];
+          FuelResponse fuel = FuelResponse.fromJson(pumpJson['fuel']);
           List<Transaction> transactions = [];
 
           // Map transaction data if available
@@ -45,6 +49,8 @@ class PumpService {
                 quantity: quantity,
                 odometer: odometer,
                 date: date,
+                pump: PumpResponse.fromJson(transactionJson['pump']),
+                vehicle: VehicleResponse.fromJson(transactionJson['vehicle']),
               ));
             });
           }
@@ -53,6 +59,7 @@ class PumpService {
             name: name,
             status: status,
             transactions: transactions,
+            fuel: fuel,
           ));
         }
         print(pumps);

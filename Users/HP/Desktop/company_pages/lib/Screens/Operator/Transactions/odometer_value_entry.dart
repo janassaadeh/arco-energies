@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Screens/Operator/Transactions/liters_value_entry.dart';
@@ -7,75 +10,78 @@ import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
 import 'package:company_pages/Widgets/Operator/second_text.dart';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 class OdometerValueEntry extends StatelessWidget {
-  const OdometerValueEntry({super.key});
+  const OdometerValueEntry({Key? key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController odometerController = TextEditingController();
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: const Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'New Transaction',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+    Size screenSize = MediaQuery.of(context).size;
+
+    return GestureDetector(
+      onTap: () {
+        // Dismiss keyboard when tapping outside of the text field
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: screenSize.height * .1,
+          title: const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'New Transaction',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.abc,
-                color: Color(0xff003D5B),
-                size: 40,
-              )
-            ],
+                Icon(
+                  Icons.abc,
+                  color: Color(0xff003D5B),
+                  size: 40,
+                )
+              ],
+            ),
           ),
-        ),
-        backgroundColor: const Color(0xff003D5B),
-        leading: GestureDetector(
-          child: Padding(
+          backgroundColor: const Color(0xff003D5B),
+          leading: GestureDetector(
+            child: Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 17),
               child: Image.asset(
                 "assets/images/cancel.png",
                 width: 15,
-              )),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: const Color(0xff003D5B),
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildPathPoint("  Car  ", false, true),
-                // _buildPathLine(),
-                _buildPathPoint("Pump", false, true),
-                // _buildPathLine(),
-                _buildPathPoint("Odometer", true, false),
-                // _buildPathLine(),
-                _buildPathPoint("Liter", false, false),
-              ],
+              ),
             ),
+            onTap: () {
+              Provider.of<TransactionProvider>(context, listen: false)
+                  .resetTransactionValues();
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
           ),
-          const SizedBox(height: 20),
-          Column(
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
-              // const SizedBox(height: 10),
+              Container(
+                color: const Color(0xff003D5B),
+                padding:
+                    EdgeInsets.symmetric(vertical: screenSize.height * .02),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildPathPoint("  Car  ", false, true),
+                    _buildPathPoint("Pump", false, true),
+                    _buildPathPoint("Odometer", true, false),
+                    _buildPathPoint("Liter", false, false),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Column(
@@ -104,19 +110,49 @@ class OdometerValueEntry extends StatelessWidget {
                         "Double-check the odometer reading to avoid errors."),
                     const SizedBox(height: 20),
                     nextButton(
-                      const LitersValueEntry(),
-                      context,
                       "Next",
-                      fn: () => Provider.of<TransactionProvider>(context,
-                              listen: false)
-                          .setOdometerValue(odometerController.text),
+                      fn: () {
+                        String odometerValue = odometerController.text;
+                        if (odometerValue.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const ErrorPopUp(
+                                text: "Please enter a value!",
+                              );
+                            },
+                          );
+                        } else {
+                          try {
+                            double.parse(odometerValue);
+                            Provider.of<TransactionProvider>(context,
+                                    listen: false)
+                                .setOdometerValue(odometerValue);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LitersValueEntry(),
+                              ),
+                            );
+                          } catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const ErrorPopUp(
+                                  text: "Please enter a valid value!",
+                                );
+                              },
+                            );
+                          }
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -172,14 +208,6 @@ class OdometerValueEntry extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPathLine() {
-    return Container(
-      height: 2,
-      width: 20,
-      color: Colors.white,
     );
   }
 }

@@ -85,8 +85,9 @@ class MyCars extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25))),
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      )),
                 ),
               ),
               const Padding(
