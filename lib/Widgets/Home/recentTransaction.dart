@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../Screens/Auth/Login.dart';
-import '../../Screens/Company/RewardScreen.dart';
 
 class Transactions extends StatelessWidget {
   final String id;

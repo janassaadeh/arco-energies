@@ -1,5 +1,6 @@
 
 import 'package:company_pages/Screens/Admin/New%20Deposit/deposit_receipt.dart';
+import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Screens/Operator/Transactions/liters_value_entry.dart';
@@ -9,7 +10,7 @@ import 'package:company_pages/Widgets/Operator/second_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Services/deposit_service.dart';
-import '../../../Widgets/Common/j_next_button.dart';
+// import '../../../Widgets/Common/j_next_button.dart';
 
 
 
@@ -59,7 +60,9 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
               buildSecondText(
                   "Double-check the cash amount to avoid errors."),
               const SizedBox(height: 40),
-       nextButton(context, "Next", fn: () async {
+
+  GestureDetector(
+                onTap:  () async {
   try {
     var id = await depositService.addCashRequest(
       double.parse(cashController.text),
@@ -87,7 +90,11 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
     print('Error occurred: $e');
     // Optionally, you can show an error message to the user
   }
-})
+},
+                child: CustomButton(buttonText: 'Next')),
+    
+       
+
 
             ],
           ),

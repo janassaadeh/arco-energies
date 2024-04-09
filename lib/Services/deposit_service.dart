@@ -1,6 +1,5 @@
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:dio/dio.dart';
-import 'dart:convert';
 
 class DepositService {
   final Dio _dio=Dio();
@@ -63,7 +62,7 @@ class DepositService {
 
       if (response.statusCode == 200) {
         print(response.data);
-          DepositReceipt receipt = DepositReceipt.fromJson(response.data);
+          // DepositReceipt receipt = DepositReceipt.fromJson(response.data);
         return response.data;
         
       } else {

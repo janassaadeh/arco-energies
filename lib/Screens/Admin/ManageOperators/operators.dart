@@ -63,7 +63,11 @@ class _MyOperatorsState extends State<Operators> with SingleTickerProviderStateM
 
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+         leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
         title: Center(
           child:  Text('All Operators',style: TextStyle(
                   color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold

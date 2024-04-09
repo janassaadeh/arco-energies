@@ -83,194 +83,200 @@ String formatDateTime(String inputDateTimeString) {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 70,
-        title: const Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Text(
-                  'Receipt',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+    return     WillPopScope(
+        onWillPop: () async {
+          // Prevent back button press
+          return false;
+        },
+            child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 70,
+          title: const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    'Receipt',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Icon(
-                Icons.abc,
-                color: Color(0xff003D5B),
-                size: 40,
-              )
-            ],
+                Icon(
+                  Icons.abc,
+                  color: Color(0xff003D5B),
+                  size: 40,
+                )
+              ],
+            ),
+          ),
+          backgroundColor: const Color(0xff003D5B),
+          leading: GestureDetector(
+            child: Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 17),
+                child: Image.asset(
+                  "assets/images/cancel.png",
+                  width: 15,
+                )),
+            onTap: () async{
+              final receipt=await receiptFuture;
+              print(receipt.adminDob);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context,receipt);
+        
+    
+    
+            },
           ),
         ),
-        backgroundColor: const Color(0xff003D5B),
-        leading: GestureDetector(
-          child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 17),
-              child: Image.asset(
-                "assets/images/cancel.png",
-                width: 15,
-              )),
-          onTap: () async{
-            final receipt=await receiptFuture;
-            print(receipt.adminDob);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context,receipt);
-      
-
-
-          },
-        ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 250, 250, 250),
-      body: 
-      
-     FutureBuilder<DepositReceipt>(
-      future: receiptFuture,
-      builder: (context, snapshot) {
-         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container();
-        }
-       else {
-            final receipt = snapshot.data!;
-            // depositProvider.addDeposit(receipt);
-
+        backgroundColor: const Color.fromARGB(255, 250, 250, 250),
+        body: 
         
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/receipt.png',
-                      width: receiptMaxWidth,
-                      height: receiptMaxHeight,
-                    ),
-                    Positioned(
-                      top: receiptMaxHeight * 0.12,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/images/logoBlue.png",
-                                width: 30,
-                              ),
-                              Text(
-                                'rco Energies',
-                                style: GoogleFonts.inter(
-                                  textStyle: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+       FutureBuilder<DepositReceipt>(
+        future: receiptFuture,
+        builder: (context, snapshot) {
+           if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+         else {
+              final receipt = snapshot.data!;
+              // depositProvider.addDeposit(receipt);
+    
+          
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/receipt.png',
+                        width: receiptMaxWidth,
+                        height: receiptMaxHeight,
+                      ),
+                      Positioned(
+                        top: receiptMaxHeight * 0.12,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/images/logoBlue.png",
+                                  width: 30,
+                                ),
+                                Text(
+                                  'rco Energies',
+                                  style: GoogleFonts.inter(
+                                    textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: receiptMaxHeight * 0.18,
+                        left: 0,
+                        right: 0,
+                        child: Text(
+                         formatDateTime(receipt.timestamp),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.robotoMono(
+                            textStyle: const TextStyle(
+                              fontFamily: 'Roboto Mono',
+                              fontSize: 12,
+                              letterSpacing: -0.44999998807907104,
+                              fontWeight: FontWeight.normal,
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      receiptDetailPositioned(0.26, "Contact Name", receipt.companyContactName),
+                      receiptDetailPositioned(0.289, "Company Name", receipt.companyName),
+                      receiptDetailPositioned(
+                          .318, "Company Address",receipt.companyLocation),
+                      receiptDivider(.364),
+                  receiptDetailPositioned(0.4, "Admin Name", receipt.adminName),
+                      receiptDetailPositioned(0.435, "Admin ID", receipt.adminId),
+                      receiptDetailPositioned(
+                          .466, "Admin Contact", receipt.adminPhone),
+                      receiptDivider(.5),
+    
+    
+                                  receiptDetailPositioned(0.539, "Deposit Amount", receipt.cashAmount.toString()),
+                      receiptDetailPositioned(0.575, "Company Balance", receipt.companyBalance.toString()),
+                      receiptDetailPositioned(
+                          .615, "Payment Method", receipt.paymentMethod),
+                      receiptDivider(.65),
+                    
+                      Positioned(
+                        top: receiptMaxHeight * .675,
+                        left: 0,
+                        right: 0,
+                        child: Image.asset("assets/images/code.png"),
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    child: SizedBox(
+                      width: 200,
+                      height: 50,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            begin: Alignment(1.5, 1),
+                            end: Alignment(-1.5, 1),
+                            colors: [
+                              Color.fromRGBO(237, 174, 73, 0.5),
+                              Color.fromRGBO(237, 174, 73, 1),
+                              Color.fromRGBO(237, 174, 73, 0.5)
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      top: receiptMaxHeight * 0.18,
-                      left: 0,
-                      right: 0,
-                      child: Text(
-                       formatDateTime(receipt.timestamp),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.robotoMono(
-                          textStyle: const TextStyle(
-                            fontFamily: 'Roboto Mono',
-                            fontSize: 12,
-                            letterSpacing: -0.44999998807907104,
-                            fontWeight: FontWeight.normal,
-                            height: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                    receiptDetailPositioned(0.26, "Contact Name", receipt.companyContactName),
-                    receiptDetailPositioned(0.289, "Company Name", receipt.companyName),
-                    receiptDetailPositioned(
-                        .318, "Company Address",receipt.companyLocation),
-                    receiptDivider(.364),
-                receiptDetailPositioned(0.4, "Admin Name", receipt.adminName),
-                    receiptDetailPositioned(0.435, "Admin ID", receipt.adminId),
-                    receiptDetailPositioned(
-                        .466, "Admin Contact", receipt.adminPhone),
-                    receiptDivider(.5),
-
-
-                                receiptDetailPositioned(0.539, "Deposit Amount", receipt.cashAmount.toString()),
-                    receiptDetailPositioned(0.575, "Company Balance", receipt.companyBalance.toString()),
-                    receiptDetailPositioned(
-                        .615, "Payment Method", receipt.paymentMethod),
-                    receiptDivider(.65),
-                  
-                    Positioned(
-                      top: receiptMaxHeight * .675,
-                      left: 0,
-                      right: 0,
-                      child: Image.asset("assets/images/code.png"),
-                    ),
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 60.0),
-                  child: SizedBox(
-                    width: 200,
-                    height: 50,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: const LinearGradient(
-                          begin: Alignment(1.5, 1),
-                          end: Alignment(-1.5, 1),
-                          colors: [
-                            Color.fromRGBO(237, 174, 73, 0.5),
-                            Color.fromRGBO(237, 174, 73, 1),
-                            Color.fromRGBO(237, 174, 73, 0.5)
-                          ],
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Print",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color.fromRGBO(255, 255, 255, 1),
-                            fontFamily: 'Inter',
-                            fontSize: 21,
-                            letterSpacing: -0.44,
-                            fontWeight: FontWeight.normal,
-                            height: 1.0952380952380953,
+                        child: const Center(
+                          child: Text(
+                            "Print",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              fontFamily: 'Inter',
+                              fontSize: 21,
+                              letterSpacing: -0.44,
+                              fontWeight: FontWeight.normal,
+                              height: 1.0952380952380953,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          );}
-        }
+              ],
+            );}
+          }
+        ),
       ),
     );
   }

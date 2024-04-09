@@ -93,7 +93,7 @@ class _CarDetailsState extends State<CarDetails> {
                               ),
                                 child: Column(children: [
                                         SizedBox(height: 90,),
-                Text('Company Name', textAlign: TextAlign.center, style: TextStyle(
+                Text(widget.company.name, textAlign: TextAlign.center, style: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),
                   fontFamily: 'Inter',
                   fontSize: 22,

@@ -1,5 +1,6 @@
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
+import 'package:company_pages/Screens/Admin/admin_profile.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
 import 'package:company_pages/Services/deposit_service.dart';
@@ -134,7 +135,7 @@ Future<void> _getDepositList() async {
       case 1:
         return  NewDeposit(deposits:depositList);
       case 2:
-        return Container();
+        return AdminProfile();
       default:
         return Container();
     }
