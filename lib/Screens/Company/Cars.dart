@@ -1,16 +1,12 @@
 import 'package:company_pages/Screens/Admin/CarCard.dart';
 
-import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
 import 'package:company_pages/Screens/Company/Car_Details.dart';
 // import 'package:company_pages/Screens/CarDetails.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../Models/vehicle.dart';
-import '../../../Widgets/cars/CustomCarSearch.dart';
 
 
 

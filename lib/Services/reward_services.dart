@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
 
 import '../Screens/Company/RewardScreen.dart';
 import 'Auth/AuthenticationService.dart';

@@ -1,5 +1,4 @@
-import 'package:company_pages/Screens/Auth/Login.dart';
-import 'package:company_pages/Screens/CarDetails.dart';
+
 import 'package:flutter/material.dart';
 
 class CompanyCard extends StatelessWidget {

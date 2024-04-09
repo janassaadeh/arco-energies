@@ -7,7 +7,8 @@ import 'package:company_pages/Widgets/Operator/second_text.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
 
-import '../../../Widgets/Common/j_next_button.dart';
+import '../../../Widgets/Common/CustomButton.dart';
+// import '../../../Widgets/Common/j_next_button.dart';
 import '../../../Widgets/Common/select.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 
@@ -77,7 +78,16 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
               buildSecondText(
                   "Verify your selected payment method to ensure accuracy."),
               const SizedBox(height: 40),
-              nextButton(CashAmountValueEntry(selectedCompany: widget.selectedCompany ,selectedPaymentMethod:_PaymentMethodController.text ), "Next",fn:(){})
+
+
+               GestureDetector(
+                onTap: (){
+                   Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>CashAmountValueEntry(selectedCompany: widget.selectedCompany ,selectedPaymentMethod:_PaymentMethodController.text )),
+            );
+                },
+                child: CustomButton(buttonText: 'Next')),
             ],
           ),
         ),

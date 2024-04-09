@@ -149,7 +149,7 @@ class AddCompany extends StatelessWidget {
     RegistrationService registrationService = RegistrationService();
     
     // Register the new company
-    RegistrationResponse response = await registrationService.registerCompany(
+    RegistrationResponse response = await registrationService.registerCompanyByAdmin(
       name: _nameController.text,
       balance: 0.0,
       email: _emailController.text,

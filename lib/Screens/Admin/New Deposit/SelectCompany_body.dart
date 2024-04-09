@@ -10,7 +10,8 @@ import 'package:company_pages/Widgets/Operator/image_container.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/input_field.dart';
 
 // import '../../../Widgets/Operator/next_button.dart';
-import '../../../Widgets/Common/j_next_button.dart';
+import '../../../Widgets/Common/CustomButton.dart';
+// import '../../../Widgets/Common/j_next_button.dart';
 import '../Manage Companies/Company_Model.dart';
 import '../../../Provider/company_provider.dart';
 
@@ -73,7 +74,14 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
               buildSecondText(
                   "Verify your selected payment method to ensure accuracy."),
               const SizedBox(height: 40),
-              nextButton(PaymentMethodEntry(selectedCompany: idController.text), "Next", fn: () {},)
+               GestureDetector(
+                onTap: (){
+                   Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PaymentMethodEntry(selectedCompany: idController.text)),
+            );
+                },
+                child: CustomButton(buttonText: 'Next')),
             ],
           ),
         ),

@@ -44,108 +44,114 @@ class _MyCompaniesState extends State<SelectCompanies>  {
   Widget build(BuildContext context) {
     final filteredCompanies = filterCompanies(); // Filtered list of companies
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: Container(),
-        title: Center(
-          child:  Text('All Companies',style: TextStyle(
-                  color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
-                ),),
-        ),
-        backgroundColor: const Color(0xff003D5B),
-       
-        ),
-        backgroundColor: Color(0xff003D58),
-        body: SingleChildScrollView(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                children: [
-                  Container(
-                    height: 120,
-                    color:Color(0xff003D58)),
-                  Container(
-                    color: Colors.white,
-                    height: 652,
-                    child: ListView.builder(
-                      itemCount: filteredCompanies.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            GestureDetector(
-                              onTap:  ()  {
-                                Navigator.pop(context,filteredCompanies[index].id);
-                              },
-                              child: CompanyCard(
-                                title: filteredCompanies[index].name,
-                                subtitle1: filteredCompanies[index].email,
-                                subtitle2: filteredCompanies[index].contactName,
-                                // subtitle3: '#${cars[index].carId}',
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:100.0),
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+    return     WillPopScope(
+        onWillPop: () async {
+          // Prevent back button press
+          return false;
+        },
+            child: Scaffold(
+        appBar: AppBar(
+          leading: Container(),
+          title: Center(
+            child:  Text('All Companies',style: TextStyle(
+                    color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
                   ),),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                child: Container(
-                  // width: 328,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                    child: TextFormField(
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Companies ...",
-                        hintStyle: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
+          ),
+          backgroundColor: const Color(0xff003D5B),
+         
+          ),
+          backgroundColor: Color(0xff003D58),
+          body: SingleChildScrollView(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: 120,
+                      color:Color(0xff003D58)),
+                    Container(
+                      color: Colors.white,
+                      height: 652,
+                      child: ListView.builder(
+                        itemCount: filteredCompanies.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap:  ()  {
+                                  Navigator.pop(context,filteredCompanies[index].id);
+                                },
+                                child: CompanyCard(
+                                  title: filteredCompanies[index].name,
+                                  subtitle1: filteredCompanies[index].email,
+                                  subtitle2: filteredCompanies[index].contactName,
+                                  // subtitle3: '#${cars[index].carId}',
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:100.0),
+                  child: Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                    ),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+                  child: Container(
+                    // width: 328,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10, right: 8, top: 12),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(borderSide: BorderSide.none),
+                          // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+                          hintText: "Search Companies ...",
+                          hintStyle: TextStyle(
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                            fontFamily: 'Mulish',
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(bottom:8.0),
+                            child: Image.asset('assets/images/red-slider.png'),
+                          ),
+                          prefixIcon: Padding(
+                            // padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(bottom:8.0),
+    
+                            child: Image.asset('assets/images/green-search.png'),
+                          ),
+    
                         ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Image.asset('assets/images/red-slider.png'),
-                        ),
-                        prefixIcon: Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.only(bottom:8.0),
-
-                          child: Image.asset('assets/images/green-search.png'),
-                        ),
-
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        )
+              ],
+            ),
+          )
+      ),
     );
   }
 }

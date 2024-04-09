@@ -43,26 +43,7 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
     );
     filteredCars=filterCars();
   }
-  // final List<Car> cars = [
-  //   Car(
-  //     model: "Toyota",
-  //     plateNumber: "ABC123",
-  //     year: 2020,
-  //     color: "Red",
-  //     driverName: "John Doe",
-  //     modelName: "Camry",
-  //     carId: 1,
-  //   ),
-  //   Car(
-  //     model: "Honda",
-  //     plateNumber: "XYZ789",
-  //     year: 2018,
-  //     color: "Blue",
-  //     driverName: "Jane Smith",
-  //     modelName: "Accord",
-  //     carId: 2,
-  //   ),
-  // ];
+  
   // Method to filter companies based on search query
   List<Vehicle> filterCars() {
     return widget.cars.where((car) {
@@ -81,9 +62,13 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+      leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
         title: Center(
-          child:  Text('All Cars',style: TextStyle(
+          child:  Text('${widget.company.name}\'s Cars',style: TextStyle(
                   color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
                 ),),
         ),

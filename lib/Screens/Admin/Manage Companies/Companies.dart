@@ -56,7 +56,11 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
 
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
         title: Center(
           child:  Text('All Companies',style: TextStyle(
                   color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold

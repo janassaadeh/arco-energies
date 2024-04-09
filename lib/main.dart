@@ -1,5 +1,6 @@
 import 'package:company_pages/Provider/deposit_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Screens/Admin/AdminHomeLayout.dart';
 import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
 import 'package:company_pages/Screens/Operator/operator_bottom_nav.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,11 @@ class MyApp extends StatelessWidget {
                       return const CompanyHomePageLayout();
                     } else if (role == "OPERATOR") {
                       return const Operator();
-                    } else {
+                    } 
+                    else if (role == "ADMIN") {
+                      return  AdminHomePageLayout();
+                    } 
+                    else {
                       // Unknown role, redirect to login
                       return LoginScreen();
                     }
