@@ -149,8 +149,8 @@ class ReceiptPage extends StatelessWidget {
                     0.26, "Fuel Type", transaction!.pump.fuel.type),
                 receiptDetailPositioned(
                     0.285, "Quantity", "${transaction.quantity} Liters"),
-                receiptDetailPositioned(
-                    .31, "Price Per Unit", "\$ 2.5 / Liter"),
+                receiptDetailPositioned(.31, "Price Per Unit",
+                    "${transaction.pump.currency} ${transaction.pump.fuel.fuelPrice} Liter"),
                 receiptDivider(.335),
                 receiptDetailPositioned(
                     0.36, "Driver Name", transaction.vehicle.driverName),

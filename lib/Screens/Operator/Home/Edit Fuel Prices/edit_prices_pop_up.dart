@@ -18,11 +18,11 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
   TextEditingController fuel98Controller = TextEditingController();
   TextEditingController dieselController = TextEditingController();
 
-  final List<FuelPrice> fuelPrices = [
-    FuelPrice("Fuel 95", "Last modified: 2023-10-25", 2.50),
-    FuelPrice("Fuel 98", "Last modified: 2023-10-25", 2.70),
-    FuelPrice("Diesel", "Last modified: 2023-10-25", 2.20),
-  ];
+  // final List<FuelPrice> fuelPrices = [
+  //   FuelPrice("Fuel 95", 2.50, "Last modified: 2023-10-25"),
+  //   FuelPrice("Fuel 98", 2.70, "Last modified: 2023-10-25"),
+  //   FuelPrice("Diesel", 2.20, "Last modified: 2023-10-25"),
+  // ];
 
   @override
   void dispose() {
@@ -32,13 +32,13 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    fuel95Controller.text = fuelPrices[0].price.toString();
-    fuel98Controller.text = fuelPrices[1].price.toString();
-    dieselController.text = fuelPrices[2].price.toString();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   fuel95Controller.text = fuelPrices[0].price.toString();
+  //   fuel98Controller.text = fuelPrices[1].price.toString();
+  //   dieselController.text = fuelPrices[2].price.toString();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

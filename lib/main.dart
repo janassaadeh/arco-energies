@@ -3,15 +3,22 @@ import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Admin/AdminHomeLayout.dart';
 import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
 import 'package:company_pages/Screens/Operator/operator_bottom_nav.dart';
+import 'package:company_pages/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Provider/company_provider.dart';
+import 'Provider/fuel_prices_provider.dart';
 import 'Screens/Auth/Login.dart';
 import 'Services/Auth/AuthenticationService.dart';
 
-void main() {
+void main() async{
   final AuthenticationService authService = AuthenticationService();
+    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
@@ -25,6 +32,8 @@ void main() {
         ChangeNotifierProvider<DepositProvider>(
           create: (_) => DepositProvider(),
         ),
+         
+        ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
       ],
       child: MyApp(
         authService: authService,
@@ -68,7 +77,7 @@ class MyApp extends StatelessWidget {
                         snapshot.data ?? ""; // Use empty string as default
                     if (role == "COMPANY") {
                       return const CompanyHomePageLayout();
-                    } else if (role == "OPERATOR") {
+                    } else if (role == "OPEATOR") {
                       return const Operator();
                     } 
                     else if (role == "ADMIN") {

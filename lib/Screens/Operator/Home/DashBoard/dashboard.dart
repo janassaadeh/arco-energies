@@ -13,11 +13,11 @@ class DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthenticationService authenticationService = AuthenticationService();
-    final List<FuelPrice> fuelPrices = [
-      FuelPrice("Fuel 95", "Last modified: 2023-10-25", 2.50),
-      FuelPrice("Fuel 98", "Last modified: 2023-10-25", 2.70),
-      FuelPrice("Diesel", "Last modified: 2023-10-25", 2.20),
-    ];
+    // final List<FuelPrice> fuelPrices = [
+    //   FuelPrice("Fuel 95", 2.50, "Last modified: 2023-10-25"),
+    //   FuelPrice("Fuel 98", 2.70, "Last modified: 2023-10-25"),
+    //   FuelPrice("Diesel", 2.20, "Last modified: 2023-10-25"),
+    // ];
 
     return Scaffold(
         body: Padding(
@@ -68,7 +68,7 @@ class DashBoard extends StatelessWidget {
           // const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: fuelPrices.length,
+              // itemCount: fuelPrices.length,
               itemBuilder: (context, index) {
                 return Card(
                   color: Colors.white,
@@ -96,9 +96,11 @@ class DashBoard extends StatelessWidget {
                             child: Icon(
                               Icons.water_drop,
                               size: 24,
-                              color: fuelPrices[index].type.contains("Fuel")
-                                  ? const Color.fromARGB(255, 74, 136, 76)
-                                  : const Color.fromARGB(255, 204, 113, 79),
+                              color:
+                                  //  fuelPrices[index].id.contains("Fuel")
+                                  //     ? const Color.fromARGB(255, 74, 136, 76)
+                                  // :
+                                  const Color.fromARGB(255, 204, 113, 79),
                             ),
                           ),
                         ),
@@ -107,7 +109,7 @@ class DashBoard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              fuelPrices[index].type,
+                              "fuelPrices[index].id",
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
@@ -117,7 +119,7 @@ class DashBoard extends StatelessWidget {
                               height: 5,
                             ),
                             Text(
-                              fuelPrices[index].lastModified,
+                              "fuelPrices[index].id",
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,
@@ -129,7 +131,7 @@ class DashBoard extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              '${fuelPrices[index].price.toStringAsFixed(2)} \$/liter',
+                              '${"fuelPrices[index].price.toStringAsFixed(2)"} \$/liter',
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 1, 14, 72),
                                 fontWeight: FontWeight.bold,

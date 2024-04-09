@@ -12,7 +12,7 @@ Widget buildInput(String hintText, Widget widgetAtLeft, bool withBorder,
               color: Colors.black,
               width: 1,
             )
-          : const Border(
+          :  Border(
               bottom: BorderSide(
                 color: Colors.black,
                 width: 1,
