@@ -1,20 +1,32 @@
+import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
 import 'package:company_pages/Screens/Operator/operator_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:company_pages/firebase_options.dart';
 
 import 'Screens/Auth/Login.dart';
 import 'Services/Auth/AuthenticationService.dart';
 
-void main() {
+void main() async {
   final AuthenticationService authService = AuthenticationService();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TransactionProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
+      ],
       child: MyApp(
-        authService: authService,
-      ),
+          authService:
+              authService), // Pass your authentication service to MyApp
     ),
   );
 }

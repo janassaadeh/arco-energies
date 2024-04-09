@@ -2,6 +2,7 @@ import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/transaction.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +19,20 @@ class _NewTransactionState extends State<NewTransaction> {
   late Future<List<Transaction>> _transactionsFuture;
   final TransactionService transactionService = TransactionService();
 
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    final token = await fcm.getToken();
+    print(token);
+  }
+
   @override
   void initState() {
     super.initState();
     _transactionsFuture = _fetchTransactions();
+    setupPushNotifications();
   }
 
   Future<List<Transaction>> _fetchTransactions() async {
