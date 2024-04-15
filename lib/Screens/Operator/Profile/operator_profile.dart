@@ -103,13 +103,13 @@ class Profile extends StatelessWidget {
                         Divider(
                           color: const Color(0xff9E9C9C).withOpacity(0.7),
                         ),
-                        const Link(
-                          imagePath: "assets/images/calendar.png",
-                          buttonText: "1980-4-23",
-                        ),
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
+                        // const Link(
+                        //   imagePath: "assets/images/calendar.png",
+                        //   buttonText: "1980-4-23",
+                        // ),
+                        // Divider(
+                        //   color: const Color(0xff9E9C9C).withOpacity(0.7),
+                        // ),
                       ],
                     ),
                   )

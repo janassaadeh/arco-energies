@@ -215,6 +215,7 @@ Padding(
                             onTap: ()async{
                               VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
                               final cars=await vehicleCompanyService.getVehiclesForCompany(widget.company.id);
+                              
         Navigator.push(context, MaterialPageRoute(builder: (context) => Cars(cars:cars,company: widget.company,)));
                               
                             },

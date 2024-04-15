@@ -15,6 +15,7 @@ class TransactionProvider extends ChangeNotifier {
   List<Vehicle> cachedVehicles = [];
   List<Transaction> cachedTransactions = [];
   Transaction? _generatedTransaction;
+  int isIdTriggeredByNFC = 0;
 
   String get selectedVehicleId => _selectedVehicleId;
   String get selectedPumpId => _selectedPumpId;
@@ -62,6 +63,16 @@ class TransactionProvider extends ChangeNotifier {
   void storeGeneratedTransaction(Transaction transaction) {
     _generatedTransaction = transaction;
     notifyListeners();
+  }
+
+  void isTriggeredByNfc() {
+    isIdTriggeredByNFC++;
+    print(isIdTriggeredByNFC);
+  }
+
+  void isTriggeredBySearch() {
+    isIdTriggeredByNFC = 0;
+    print(isIdTriggeredByNFC);
   }
 
   Future<List<Pump>> getPumps() async {

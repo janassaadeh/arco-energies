@@ -77,6 +77,16 @@ class ReceiptPage extends StatelessWidget {
           onTap: () {
             Provider.of<TransactionProvider>(context, listen: false)
                 .resetTransactionValues();
+            if (Provider.of<TransactionProvider>(context, listen: false)
+                    .isIdTriggeredByNFC >
+                0) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
             Navigator.pop(context);
             Navigator.pop(context);
             Navigator.pop(context);

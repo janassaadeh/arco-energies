@@ -91,8 +91,16 @@ class _PumpSelectionState extends State<PumpSelection> {
           onTap: () {
             Provider.of<TransactionProvider>(context, listen: false)
                 .resetTransactionValues();
-            Navigator.pop(context);
-            Navigator.pop(context);
+            if (Provider.of<TransactionProvider>(context, listen: false)
+                    .isIdTriggeredByNFC >
+                0) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
           },
         ),
       ),

@@ -1,5 +1,5 @@
-import 'package:company_pages/Models/fuel_response.dart';
-import 'package:company_pages/Models/transaction.dart';
+import 'transaction.dart';
+import 'fuel_response.dart';
 
 class Pump {
   final String id;
@@ -20,18 +20,25 @@ class Pump {
     List<Transaction> transactions = [];
     if (json['transactions'] != null) {
       transactions = List<Transaction>.from(
-        json['transactions'].map(
-          (transactionJson) => Transaction.fromJson(transactionJson),
+        (json['transactions'] as List<dynamic>).map(
+          (transactionJson) =>
+              Transaction.fromJson(transactionJson as Map<String, dynamic>),
         ),
       );
     }
 
     return Pump(
-      id: json['id'],
-      name: json['name'],
-      status: json['status'],
+      id: json['id'] as String,
+      name: json['name'] as String,
+      status: json['status'] as String,
       transactions: transactions,
-      fuel: FuelResponse.fromJson(json['fuel']), // Parse fuel from JSON
+      fuel: json['fuel'] != null
+          ? FuelResponse.fromJson(json['fuel'] as Map<String, dynamic>)
+          : FuelResponse(
+              id: '',
+              type: '',
+              description: '',
+              fuelPrice: 0.0), // Provide default value or handle nullable case
     );
   }
 }

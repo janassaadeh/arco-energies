@@ -1,4 +1,5 @@
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/fuel_price.dart';
 import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
@@ -16,22 +17,32 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
 
   final FuelPricesService fuelPricesService = FuelPricesService();
 
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    final token = await fcm.getToken();
+    print(token);
+  }
+
   @override
   void initState() {
     super.initState();
     fuelPricesFuture = _fetchVehicles();
+    setupPushNotifications();
   }
 
   Future<List<FuelPrice>> _fetchVehicles() async {
     try {
-      List cachedVehicles =
+      List<FuelPrice> cachedVehicles =
           Provider.of<FuelPricesProvider>(context, listen: false)
               .cachedFuelPrices;
 
       if (cachedVehicles.isNotEmpty) {
         return cachedVehicles;
       } else {
-        final List vehicles =
+        final List<FuelPrice> vehicles =
             await fuelPricesService.getFuelPrices();
         // Cache fetched pumps
         Provider.of<FuelPricesProvider>(context, listen: false)
@@ -60,7 +71,7 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
   }
 
   Widget _buildFuelPricesList() {
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<List<FuelPrice>>(
       future: fuelPricesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,7 +83,7 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
             child: Text('Failed to fetch fuel prices: ${snapshot.error}'),
           );
         } else if (snapshot.hasData) {
-          List<dynamic> fuelPrices = snapshot.data!;
+          List<FuelPrice> fuelPrices = snapshot.data!;
           return RefreshIndicator(
             onRefresh: () async {
               await _refreshFuelPrices();

@@ -11,9 +11,64 @@ import 'package:company_pages/Widgets/Operator/title.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:ndef/ndef.dart' as ndef;
 
-class CarAccess extends StatelessWidget {
-  const CarAccess({super.key});
+class CarAccess extends StatefulWidget {
+  const CarAccess({Key? key}) : super(key: key);
+
+  @override
+  State<CarAccess> createState() => _CarAccessState();
+}
+
+class _CarAccessState extends State<CarAccess> {
+  late NFCTag _tag;
+  String _nfcResult = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initNFC();
+    Provider.of<TransactionProvider>(context, listen: false)
+        .isTriggeredBySearch();
+  }
+
+  Future<void> _initNFC() async {
+    try {
+      NFCTag tag = await FlutterNfcKit.poll();
+      _tag = tag;
+
+      if (_tag.ndefAvailable ?? false) {
+        List<ndef.NDEFRecord> records = await FlutterNfcKit.readNDEFRecords();
+        for (var record in records) {
+          if (record is ndef.TextRecord) {
+            String nfcText = record.text ?? '';
+            // Set the selected vehicle ID using TransactionProvider
+            Provider.of<TransactionProvider>(context, listen: false)
+                .setSelectedVehicleId(nfcText);
+            setState(() {
+              _nfcResult = nfcText;
+            });
+            break;
+          }
+        }
+      } else {
+        setState(() {
+          _nfcResult = 'NDEF records not available.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _nfcResult = 'Error: $e';
+      });
+    } finally {
+      await FlutterNfcKit.finish(); // Finish NFC operations
+    }
+  }
+
+  Future<void> _handleRefresh() async {
+    await _initNFC();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,88 +113,112 @@ class CarAccess extends StatelessWidget {
           },
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: const Color(0xff003D5B),
-            padding: EdgeInsets.symmetric(vertical: screenSize.height * .02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: const Color(0xff003D5B),
+              padding: EdgeInsets.symmetric(vertical: screenSize.height * .02),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildPathPoint("  Car  ", true, () {}),
+                  // _buildPathLine(),
+                  _buildPathPoint("Pump", false, () {}),
+                  // _buildPathLine(),
+                  _buildPathPoint("Odometer", false, () {}),
+                  // _buildPathLine(),
+                  _buildPathPoint("Liter", false, () {}),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Column(
               children: [
-                _buildPathPoint("  Car  ", true, () {}),
-                // _buildPathLine(),
-                _buildPathPoint("Pump", false, () {}),
-                // _buildPathLine(),
-                _buildPathPoint("Odometer", false, () {}),
-                // _buildPathLine(),
-                _buildPathPoint("Liter", false, () {}),
+                // const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      // const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          _handleRefresh();
+                        },
+                        child: Row(
+                          children: [
+                            buildTitleWidget("Tap NFC Card", "1"),
+                            const Icon(
+                              Icons.refresh,
+                              size: 25,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      buildText('Tap the NFC tag on the car with your device.'),
+                      const SizedBox(height: 20),
+                      _buildGifImage('assets/images/nfc gif.gif', context),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          Provider.of<TransactionProvider>(context,
+                                  listen: false)
+                              .isTriggeredByNfc();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CarsList(),
+                            ),
+                          );
+                        },
+                        child: buildInput(
+                          Provider.of<TransactionProvider>(context,
+                                          listen: false)
+                                      .selectedVehicleId ==
+                                  ""
+                              ? '  Search...'
+                              : _nfcResult,
+                          Image.asset(
+                            "assets/images/Search.png",
+                            width: 25,
+                          ),
+                          true,
+                          searchComtroller,
+                          isPressable: true,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      buildSecondText(
+                          "Automatically fill this field upon NFC tag scan. Manually search for issues if encountered."),
+                      const SizedBox(height: 20),
+                      nextButton(
+                        "Next",
+                        fn: () {
+                          if (Provider.of<TransactionProvider>(context,
+                                      listen: false)
+                                  .selectedVehicleId ==
+                              "") {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const ErrorPopUp(
+                                  text: "Make sure you have selected a car!",
+                                );
+                              },
+                            );
+                          } else {
+                            push(const PumpSelection(), context);
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          Column(
-            children: [
-              // const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Column(
-                  children: [
-                    buildTitleWidget("Tap NFC Card", "1"),
-                    const SizedBox(height: 10),
-                    buildText('Tap the NFC tag on the car with your device.'),
-                    const SizedBox(height: 20),
-                    _buildGifImage('assets/images/nfc gif.gif', context),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CarsList(),
-                          ),
-                        );
-                      },
-                      child: buildInput(
-                        '  Search...',
-                        Image.asset(
-                          "assets/images/Search.png",
-                          width: 25,
-                        ),
-                        true,
-                        searchComtroller,
-                        isPressable: true,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    buildSecondText(
-                        "Automatically fill this field upon NFC tag scan. Manually search for issues if encountered."),
-                    const SizedBox(height: 20),
-                    nextButton(
-                      "Next",
-                      fn: () {
-                        if (Provider.of<TransactionProvider>(context,
-                                    listen: false)
-                                .selectedVehicleId ==
-                            "") {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const ErrorPopUp(
-                                text: "Make sure you have selected a car!",
-                              );
-                            },
-                          );
-                        } else {
-                          push(const PumpSelection(), context);
-                        }
-                      },
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

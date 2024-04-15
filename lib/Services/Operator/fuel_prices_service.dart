@@ -1,6 +1,5 @@
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:dio/dio.dart';
-// import 'package:company_pages/Models/fuel_price.dart';
 import 'package:company_pages/Models/fuel_price.dart';
 
 class FuelPricesService {
@@ -85,16 +84,15 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       for (var fuelPrice in fuelPrices) {
-        // Prepare notification message
         final notificationMessage = {
-          'receiptToken': '<RECEIPT_TOKEN_HERE>',
-          'title': 'New Fuel Price',
+          'receiptToken':
+              'faFA4_8mR7Sx9jkQBL29xk:APA91bFMAQPcAUht3ze2zhVHY8NV8RjMA4Ox6yKduMWt47Ix50dugV8l3M6uj3eOwQbvOVVBHbbEze_jc0KTsrrNoqdDMHtlOKPiIcv8t_sVLi8NEaGgbf7PBsT5u4gJFAlUjHgVxvkS',
+          'title': 'New Fuel Prices List',
           'body': 'The price of ${fuelPrice.id} is ${fuelPrice.price}',
         };
 
-        // Make HTTP POST request to send push notification
         final response = await dio.post(
-          'http://10.0.2.2:8080/api/notifications',
+          'http://172.20.10.2:8080/api/notifications',
           data: notificationMessage,
         );
 

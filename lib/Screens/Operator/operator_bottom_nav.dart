@@ -18,6 +18,8 @@ class _OperatorState extends State<Operator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
+
         toolbarHeight: 80,
         title: Center(
           child: Row(

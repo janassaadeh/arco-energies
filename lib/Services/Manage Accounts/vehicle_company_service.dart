@@ -60,8 +60,9 @@ Future<List<Vehicle>> getVehiclesForCompany(String companyId) async {
         List<Vehicle> vehicles = [];
         for (var vehicleJson in responseData) {
           vehicles.add(Vehicle.fromJson(vehicleJson));
+          
         }
-        print(vehicles);
+        print(vehicles.length);
         return vehicles;
       } else {
         throw Exception('Failed to load vehicles');

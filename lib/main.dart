@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
                         snapshot.data ?? ""; // Use empty string as default
                     if (role == "COMPANY") {
                       return const CompanyHomePageLayout();
-                    } else if (role == "OPEATOR") {
+                    } else if (role == "OPERATOR") {
                       return const Operator();
                     } 
                     else if (role == "ADMIN") {

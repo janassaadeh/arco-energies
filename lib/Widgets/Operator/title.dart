@@ -31,6 +31,7 @@ Widget buildTitleWidget(String title, String number) {
           fontWeight: FontWeight.bold,
         ),
       ),
+      const SizedBox(width: 10),
     ],
   );
 }

@@ -1,16 +1,16 @@
-import 'package:company_pages/Models/fuel_response.dart';
+import 'fuel_response.dart';
 
 class FuelPrice {
   final String id;
   final double price;
   final String createdDate;
-  final FuelResponse fuelResponse;
+  FuelResponse? fuelResponse; // Allow fuelResponse to be nullable
 
   FuelPrice({
     required this.id,
     required this.price,
     required this.createdDate,
-    required this.fuelResponse,
+    this.fuelResponse,
   });
 
   factory FuelPrice.fromJson(Map<String, dynamic> json) {
@@ -18,7 +18,9 @@ class FuelPrice {
       id: json['id'] as String,
       price: (json['price'] as num).toDouble(),
       createdDate: json['createdDate'] as String,
-      fuelResponse: FuelResponse.fromJson(json['fuel'] as Map<String, dynamic>),
+      fuelResponse: json['fuel'] != null
+          ? FuelResponse.fromJson(json['fuel'] as Map<String, dynamic>)
+          : null, // Handle nullable case
     );
   }
 }

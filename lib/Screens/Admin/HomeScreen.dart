@@ -1,5 +1,6 @@
 
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
+import 'package:company_pages/Screens/Admin/NFC_Car_Wrte.dart';
 import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Screens/Admin/qr_code.dart';
@@ -115,8 +116,19 @@ class AdminHomeScreen extends StatelessWidget {
                       text: "Scan QR for company rewards.",
                                       ),
                     ),
+                    
                         SizedBox(width: 18,),
-
+                        GestureDetector(
+                      onTap:(){
+                          push(WriteCarId(), context);
+                      },
+                      child: Features(
+                      color: const Color.fromRGBO(237, 174, 73, 1),
+                      imageAsset: "assets/images/Budget.png",
+                      text: "Write Car ID To NFC",
+                                  ),
+                    ),
+                  const SizedBox(width: 10,),
                       ],
                     ),
                       

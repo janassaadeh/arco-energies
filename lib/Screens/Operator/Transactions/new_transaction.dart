@@ -94,7 +94,7 @@ class _NewTransactionState extends State<NewTransaction> {
                             child: Row(
                               children: [
                                 Image.asset(
-                                  "assets/images/Fullstop.png",
+                                  "assets/images/FullStop.png",
                                   width: 20,
                                 ),
                                 const SizedBox(width: 15),

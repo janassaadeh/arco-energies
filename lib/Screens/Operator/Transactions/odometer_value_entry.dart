@@ -10,12 +10,18 @@ import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
 import 'package:company_pages/Widgets/Operator/second_text.dart';
 
-class OdometerValueEntry extends StatelessWidget {
+class OdometerValueEntry extends StatefulWidget {
   const OdometerValueEntry({Key? key});
 
   @override
+  State<OdometerValueEntry> createState() => _OdometerValueEntryState();
+}
+
+class _OdometerValueEntryState extends State<OdometerValueEntry> {
+  TextEditingController odometerController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    TextEditingController odometerController = TextEditingController();
     Size screenSize = MediaQuery.of(context).size;
 
     return GestureDetector(
@@ -58,9 +64,18 @@ class OdometerValueEntry extends StatelessWidget {
             onTap: () {
               Provider.of<TransactionProvider>(context, listen: false)
                   .resetTransactionValues();
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
+              if (Provider.of<TransactionProvider>(context, listen: false)
+                      .isIdTriggeredByNFC >
+                  0) {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
             },
           ),
         ),
