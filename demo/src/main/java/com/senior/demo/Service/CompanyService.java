@@ -6,6 +6,7 @@ import com.senior.demo.Collections.Vehicle;
 import com.senior.demo.Repository.CashAdditionEventRepository;
 import com.senior.demo.Collections.Company;
 import com.senior.demo.Repository.CompanyRepository;
+import com.senior.demo.Repository.UserRepository;
 import com.senior.demo.Repository.VehicleRepository;
 import com.senior.demo.Responses.AdminResponse;
 import com.senior.demo.Responses.CompanyResponse;
@@ -28,13 +29,16 @@ public class CompanyService {
     private final MongoTemplate mongoTemplate;
 
     private final VehicleRepository vehicleRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    public CompanyService(CompanyRepository companyRepository, EmailService emailService, CashAdditionEventRepository cashAdditionEventRepository, MongoTemplate mongoTemplate, VehicleRepository vehicleRepository) {
+    public CompanyService(CompanyRepository companyRepository, EmailService emailService, CashAdditionEventRepository cashAdditionEventRepository, MongoTemplate mongoTemplate, VehicleRepository vehicleRepository, UserRepository userRepository) {
         this.companyRepository = companyRepository;
         this.emailService = emailService;
         this.cashAdditionEventRepository = cashAdditionEventRepository;
         this.mongoTemplate = mongoTemplate;
         this.vehicleRepository = vehicleRepository;
+        this.userRepository = userRepository;
     }
 
     public double addCashAndSendEmail(String companyId, double cashAmount) {
@@ -80,14 +84,36 @@ public class CompanyService {
     public List<CompanyResponse> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
         return companies.stream()
-                .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation()))
+                .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
+                company.getPts()
+
+                ))
                 .collect(Collectors.toList());
     }
+    public List<CompanyResponse> getAllActivatedCompanies() {
+        List<Company> companies = companyRepository.findByActivated(true);
+        return companies.stream()
+                .map(company -> new CompanyResponse(
+                        company.getId(),
+                        company.getEmail(),
+                        company.getPhone(),
+                        company.getName(),
+                        company.getBalance(),
+                        company.getContactName(),
+                        company.getLocation(),
+                        company.getPts()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     // Method to get an admin by ID
     public CompanyResponse getCompanyById(String id) {
         Company company=companyRepository.findById(id).orElse(null);
-        CompanyResponse companyResponse=new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation());
+        CompanyResponse companyResponse=new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
+                company.getPts()
+
+        );
         return companyResponse;
     }
 
@@ -101,9 +127,14 @@ public class CompanyService {
             existingCompany.setLocation(company.getLocation());
             existingCompany.setEmail(company.getEmail());
             existingCompany.setPhone(company.getPhone());
+            existingCompany.setPts(company.getPts());
+
 
             CompanyResponse exists=new CompanyResponse(existingCompany.getId(),existingCompany.getEmail(),existingCompany.getPhone(),existingCompany.getName(),
-                    existingCompany.getBalance(),existingCompany.getContactName(),existingCompany.getLocation());
+                    existingCompany.getBalance(),existingCompany.getContactName(),existingCompany.getLocation(),
+                    company.getPts()
+
+            );
 
             // Save the updated company
             existingCompany = companyRepository.save(existingCompany);
@@ -124,7 +155,10 @@ public class CompanyService {
                     existingCompany.getName(),
                     existingCompany.getBalance(),
                     existingCompany.getContactName(),
-                    existingCompany.getLocation()
+                    existingCompany.getLocation(),
+                    existingCompany.getPts()
+
+
             );
         } else {
             return null; // Return null if company with given ID doesn't exist
@@ -135,6 +169,7 @@ public class CompanyService {
     // Method to delete an admin by ID
     public void deleteCompany(String id) {
         companyRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
 }
 

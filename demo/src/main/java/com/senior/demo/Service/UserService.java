@@ -70,7 +70,10 @@ public class UserService {
                 return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob());
             } else if (user.getAuthorities().contains(Role.COMPANY)) {
                 Company company = companyRepository.findByEmail(user.getUsername());
-                return new CompanyResponse(user.getId(), company.getEmail(), company.getPhone(), company.getName(), company.getBalance(), company.getContactName(), company.getLocation());
+                System.out.println(company.getPts());
+                return new CompanyResponse(user.getId(), company.getEmail(), company.getPhone(), company.getName(), company.getBalance(), company.getContactName(), company.getLocation()
+                ,company.getPts()
+                );
             } else if (user.getAuthorities().contains(Role.OPERATOR)) {
                 Operator operator = operatorRepository.findByEmail(user.getUsername());
                 return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName());

@@ -4,6 +4,8 @@ import com.senior.demo.Collections.Company;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import com.senior.demo.Collections.User;
 
+import java.util.List;
+
 
 public interface CompanyRepository extends MongoRepository<Company, String> {
 
@@ -12,4 +14,5 @@ public interface CompanyRepository extends MongoRepository<Company, String> {
     User findByResetToken(String resetToken);
 
 
+    List<Company> findByActivated(boolean b);
 }

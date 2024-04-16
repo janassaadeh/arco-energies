@@ -15,8 +15,8 @@ public class RewardController {
     private RewardService rewardService;
 
     @PostMapping("/assign/{userId}")
-    public void assignRewardsToUser(@PathVariable String userId, @RequestBody Reward reward) {
-        rewardService.addRewardToUser(userId, reward);
+    public void assignRewardsToUser(@PathVariable String userId, @RequestBody String rewardId) {
+        rewardService.addRewardToUser(userId, rewardId);
     }
 
     @PostMapping("/assign/all")
@@ -33,10 +33,6 @@ public class RewardController {
         return rewardService.getUserRewards(userId);
     }
 
-    @GetMapping("/available")
-    public List<Reward> getAvailableRewards() {
-        return rewardService.getAvailableRewards();
-    }
 
     @PutMapping("/update")
     public void updateReward(@RequestBody Reward updatedReward) {
@@ -49,32 +45,17 @@ public class RewardController {
     }
 
     @PostMapping("/redeem/{userId}")
-    public void redeemReward(@PathVariable String userId, @RequestBody Reward redeemedReward) {
-        rewardService.redeemReward(userId, redeemedReward);
+    public void redeemReward(@PathVariable String userId, @RequestParam String rewardId) {
+        rewardService.redeemReward(userId, rewardId);
+    }
+
+    @DeleteMapping("/delete-all")
+    public void deleteRewards() {
+        rewardService.removeAllRewardsFromAllUsers();
     }
 
     @GetMapping("/validate")
     public boolean validateReward(@RequestBody Reward reward) {
         return rewardService.validateReward(reward);
-    }
-//
-//    @GetMapping("/search")
-//    public List<Reward> searchRewards(@RequestParam String keyword) {
-//        return rewardService.searchRewards(keyword);
-//    }
-//
-//    @GetMapping("/sort")
-//    public List<Reward> sortRewardsByNameAsc() {
-//        return rewardService.sortRewardsByNameAsc();
-//    }
-//
-//    @GetMapping("/filter")
-//    public List<Reward> filterRewardsByCategory(@RequestParam String category) {
-//        return rewardService.filterRewardsByCategory(category);
-//    }
-//
-//    @GetMapping("/export")
-//    public void exportRewardsToCSV() {
-//        rewardService.exportRewardsToCSV();
-//    }
-}
+    }}
+

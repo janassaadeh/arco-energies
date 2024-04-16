@@ -102,8 +102,9 @@ public class UserController {
             } else {
                 if (user.getRole() == Role.COMPANY) {
 //                    return companyRepository.findByEmail(user.getEmail())
+
                     Company u = companyRepository.findByEmail(user.getEmail());
-                    CompanyResponse company = new CompanyResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getBalance(),u.getContactName(),u.getLocation());
+                    CompanyResponse company = new CompanyResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getBalance(),u.getContactName(),u.getLocation(),u.getPts());
                     return company;
 
 

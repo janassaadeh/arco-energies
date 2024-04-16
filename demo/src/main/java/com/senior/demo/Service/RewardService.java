@@ -1,20 +1,26 @@
 package com.senior.demo.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.demo.Collections.Company;
 import com.senior.demo.Collections.Reward;
-import com.senior.demo.Collections.User;
 import com.senior.demo.Repository.CompanyRepository;
 import com.senior.demo.Repository.RewardRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RewardService {
@@ -27,12 +33,55 @@ public class RewardService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+    private boolean canRedeemReward(Company company, Reward reward) {
+        // Check if the company has enough balance to redeem the reward
+        if (company.getPts() < reward.getPts()) {
+            return false; // Insufficient balance
+        }
 
-    // Method to retrieve all rewards associated with a specific user
+        // Check if the reward has already been redeemed by the company
+        if (company.hasRedeemedReward(reward.getId())) {
+            return false; // Reward already redeemed
+        }
+
+        // Add any other custom conditions you want to enforce
+
+        return true; // Reward can be redeemed
+    }
+
+
+    public boolean redeemReward(String companyId, String rewardId) {
+        System.out.println(rewardId);
+        // Retrieve the company from the database
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        // Retrieve the reward from the database
+        Reward reward = rewardRepository.findById(rewardId)
+                .orElseThrow(() -> new RuntimeException("Reward not found"));
+
+        // Check if the reward can be redeemed (custom logic here, e.g., sufficient balance, not already redeemed)
+        if (canRedeemReward(company, reward)) {
+            reward.setRedemptionTime(Instant.now());
+
+            // Add the reward to the company's redeemed rewards
+            company.getRedeemedRewards().add(reward);
+            // Update any necessary data, e.g., subtract points, update balance, etc.
+            // Save the updated company to the database
+
+            company.setPts(company.getPts()-reward.getPts());
+            companyRepository.save(company);
+            return true; // Redemption successful
+        } else {
+            return false; // Redemption failed
+        }
+    }
+
     public void addRewardToAllUsers(Reward reward) {
+        reward.setId(generateUniqueRewardId());
+
         // Save the reward to the Reward collection
         rewardRepository.save(reward);
-        reward.setId(generateUniqueRewardId());
         // Retrieve all users
         List<Company> users = companyRepository.findAll();
 
@@ -44,6 +93,8 @@ public class RewardService {
         // Save each user back to the database
         companyRepository.saveAll(users);
     }
+
+
     public String generateUniqueRewardId() {
         long id = 1000; // Start from 1000
         while (IdExists("REWARD"+id)) {
@@ -57,16 +108,16 @@ public class RewardService {
         return mongoTemplate.exists(query, Reward.class);
     }
 
-    public void addRewardToUser(String userId, Reward reward) {
+    public void addRewardToUser(String userId, String rewardId) {
         // Fetch the user from the database
         Optional<Company> optionalUser = companyRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Company company = optionalUser.get();
-            rewardRepository.save(reward);
-            reward.setId(generateUniqueRewardId());
-            // Add the reward to the user's list of rewards
-            company.getRewards().add(reward);
-
+            Optional<Reward> optionalReward = rewardRepository.findById(rewardId);
+            if (optionalReward.isPresent()) {
+                Reward reward = optionalReward.get();
+                company.getRewards().add(reward);
+            }
             // Save the user back to the database
             companyRepository.save(company);
         } else {
@@ -75,18 +126,42 @@ public class RewardService {
         }
     }
 
+    private String getJsonResponse(String status, String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status);
+        response.put("message", message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"status\":\"error\",\"message\":\"Error generating JSON response.\"}";
+        }
+    }
+
+
+    private boolean isRedeemable(Map<String, LocalDateTime> redemptionTimestamps, String rewardId) {
+        LocalDateTime lastRedemptionTimestamp = redemptionTimestamps.get(rewardId);
+        if (lastRedemptionTimestamp == null) {
+            // Reward has not been redeemed before, so it's redeemable
+            return true;
+        }
+
+        // Calculate the duration since the last redemption
+        LocalDateTime now = LocalDateTime.now();
+        long cooldownDurationInDays = 1; // Change as needed
+//        LocalDateTime redeemableTimestamp = lastRedemptionTimestamp.plusDays(cooldownDurationInDays);
+        LocalDateTime redeemableTimestamp = lastRedemptionTimestamp.plusMinutes(5);
+
+        // Check if the reward is redeemable based on the cooldown period
+        return now.isAfter(redeemableTimestamp);
+    }
     public List<Reward> getUserRewards(String userId) {
         Company user = companyRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getRewards();
     }
 
-    // Method to retrieve all available rewards
-    public List<Reward> getAvailableRewards() {
-        return rewardRepository.findAll();
-    }
-
-    // Method to update the details of a reward
     public void updateReward(Reward updatedReward) {
         rewardRepository.save(updatedReward);
     }
@@ -97,10 +172,7 @@ public class RewardService {
     }
 
     // Method to redeem a reward for a specific user
-    public void redeemReward(String userId, Reward redeemedReward) {
-        removeRewardFromUser(userId, redeemedReward);
-        // Other logic for redeeming the reward (e.g., sending confirmation email)
-    }
+
 
     // Method to validate whether a specific reward is valid for redemption
     public boolean validateReward(Reward reward) {
@@ -108,36 +180,6 @@ public class RewardService {
         return reward.getPts() <= 1000; // Example threshold of 1000 points
     }
 
-//    // Method to search for rewards based on criteria
-//    public List<Reward> searchRewards(String keyword) {
-//        // Example search by reward name or description
-//        return rewardRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(keyword, keyword);
-//    }
-//
-//    // Method to sort rewards based on criteria
-//    // Example: Sort rewards by name in ascending order
-//    public List<Reward> sortRewardsByNameAsc() {
-//        return rewardRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-//    }
-//
-//    // Method to filter rewards based on criteria
-//    // Example: Filter rewards by category
-//    public List<Reward> filterRewardsByCategory(String category) {
-//        return rewardRepository.findByCategoryIgnoreCase(category);
-//    }
-//
-//    // Method to export reward data to a file format
-//    // Example: Export rewards to CSV
-//    public void exportRewardsToCSV() {
-//        // Implement CSV export logic
-//    }
-
-    // Method to remove multiple rewards from a user
-    private void removeRewardsFromUser(String userId, List<Reward> rewardsToRemove) {
-        Query query = new Query(Criteria.where("_id").is(userId));
-        Update update = new Update().pullAll("rewards", rewardsToRemove.toArray());
-        mongoTemplate.updateFirst(query, update, Company.class);
-    }
 
     // Method to remove a single reward from a user
     private void removeRewardFromUser(String userId, Reward rewardToRemove) {
@@ -154,10 +196,12 @@ public class RewardService {
     }
 
     // Method to remove all rewards from all users
-    private void removeAllRewardsFromAllUsers() {
+    public void removeAllRewardsFromAllUsers() {
         Query query = new Query();
         Update update = new Update().unset("rewards");
         mongoTemplate.updateMulti(query, update, Company.class);
+        rewardRepository.deleteAll();
+
     }
     public void addRewardsToUser(String userId, List<Reward> rewards) {
         Company company = companyRepository.findById(userId)

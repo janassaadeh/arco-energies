@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+
 @Document(collection = "Reward")
 @Data
 @AllArgsConstructor
@@ -14,16 +16,43 @@ public class Reward {
     private String id;
 
     private String name;
+    private Instant redemptionTime; // New field to track redemption time
+
+    public Reward(String name, int pts, String description, String category) {
+        this.name = name;
+        this.pts = pts;
+        this.description = description;
+        this.category = category;
+    }
 
     private int pts;
     private String description;
+    private String category;
 
-    public Reward(int pts, String description) {
-        this.pts = pts;
-        this.description = description;
+    public Instant getRedemptionTime() {
+        return redemptionTime;
     }
 
-    // Getters and Setters
+    public void setRedemptionTime(Instant redemptionTime) {
+        this.redemptionTime = redemptionTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getPts() {
         return pts;
     }
@@ -40,12 +69,11 @@ public class Reward {
         this.description = description;
     }
 
-    // toString method to represent Reward object as String
-    @Override
-    public String toString() {
-        return "Reward{" +
-                "pts=" + pts +
-                ", description='" + description + '\'' +
-                '}';
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

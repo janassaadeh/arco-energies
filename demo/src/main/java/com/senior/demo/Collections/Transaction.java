@@ -35,6 +35,7 @@ public class Transaction {
 
     private OperatorResponse operator;
 
+
     public Transaction(String id, double quantity, double odometer, LocalDate date) {
         this.id = id;
         this.quantity = quantity;
