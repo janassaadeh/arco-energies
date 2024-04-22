@@ -92,7 +92,7 @@ class FuelPricesService {
         };
 
         final response = await dio.post(
-          'http://172.20.10.2:8080/api/notifications',
+          'http://10.0.2.2:8080/api/notifications',
           data: notificationMessage,
         );
 
