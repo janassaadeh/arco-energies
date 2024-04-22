@@ -59,40 +59,42 @@ class CashAmountValueEntry extends StatelessWidget {
             },
           ),
         ),
-        body: Column(
-          children: [
-            Container(
-              color: const Color(0xff003D5B),
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildPathPoint("  Company  ", true, true),
-                      // _buildPathLine(),
-                      _buildPathPoint("Payment Method", true, true),
-                      // _buildPathLine(),
-                      _buildPathPoint("Cash Amount", true, false),
-                      // _buildPathLine(),
-                    ],
-                    
-                  ),
-                                      Positioned(
-                        left:85,
-                        top:10,
-                        child: _buildPathLine(103,true)),
-                        Positioned(
-                        left:210,
-                        top:10,
-                        child: _buildPathLine(110,true)),
-    
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: const Color(0xff003D5B),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildPathPoint("  Company  ", true, true),
+                        // _buildPathLine(),
+                        _buildPathPoint("Payment Method", true, true),
+                        // _buildPathLine(),
+                        _buildPathPoint("Cash Amount", true, false),
+                        // _buildPathLine(),
+                      ],
+                      
+                    ),
+                                        Positioned(
+                          left:85,
+                          top:10,
+                          child: _buildPathLine(103,true)),
+                          Positioned(
+                          left:210,
+                          top:10,
+                          child: _buildPathLine(110,true)),
+            
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-             CashAmountValueEntryBody(selectedCompany:selectedCompany,selectedPaymentMethod: selectedPaymentMethod,),
-          ],
+              const SizedBox(height: 20),
+               CashAmountValueEntryBody(selectedCompany:selectedCompany,selectedPaymentMethod: selectedPaymentMethod,),
+            ],
+          ),
         ),
       ),
     );

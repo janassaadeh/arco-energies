@@ -86,13 +86,13 @@ class FuelPricesService {
       for (var fuelPrice in fuelPrices) {
         final notificationMessage = {
           'receiptToken':
-              'faFA4_8mR7Sx9jkQBL29xk:APA91bFMAQPcAUht3ze2zhVHY8NV8RjMA4Ox6yKduMWt47Ix50dugV8l3M6uj3eOwQbvOVVBHbbEze_jc0KTsrrNoqdDMHtlOKPiIcv8t_sVLi8NEaGgbf7PBsT5u4gJFAlUjHgVxvkS',
+              'cfmNH1LzRMmctSfIpnB_g6:APA91bGq_A1eJzplNxo8DP40oYnI-wApFx5ExOtWf1sR8PK36scoYfUbpTfdruUkeV4qibho45zKGqiL8ujkON0b4UXW6XzGzxhTohTHDPsFXaP_S9-c26VMjxeZ9DpgmAQn_MGid2KK',
           'title': 'New Fuel Prices List',
           'body': 'The price of ${fuelPrice.id} is ${fuelPrice.price}',
         };
 
         final response = await dio.post(
-          'http://172.20.10.2:8080/api/notifications',
+          'http://10.0.2.2:8080/api/notifications',
           data: notificationMessage,
         );
 

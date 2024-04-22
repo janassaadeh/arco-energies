@@ -53,39 +53,41 @@ class SelectCompany extends StatelessWidget {
             },
           ),
         ),
-        body: Column(
-          children: [
-            Container(
-              color: const Color(0xff003D5B),
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildPathPoint("  Company  ", true, false),
-                      // _buildPathLine(),
-                      _buildPathPoint("Payment Method", false, false),
-                      // _buildPathLine(),
-                      _buildPathPoint("Cash Amount", false, false),
-                      // _buildPathLine(),
-                    ],
-                  ),
-                                      Positioned(
-                        left:83.2,
-                        top:10,
-                        child: _buildPathLine(103,true)),
-                        Positioned(
-                        left:210,
-                        top:10,
-                        child: _buildPathLine(110,false)),
-    
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: const Color(0xff003D5B),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildPathPoint("  Company  ", true, false),
+                        // _buildPathLine(),
+                        _buildPathPoint("Payment Method", false, false),
+                        // _buildPathLine(),
+                        _buildPathPoint("Cash Amount", false, false),
+                        // _buildPathLine(),
+                      ],
+                    ),
+                                        Positioned(
+                          left:83.2,
+                          top:10,
+                          child: _buildPathLine(103,true)),
+                          Positioned(
+                          left:210,
+                          top:10,
+                          child: _buildPathLine(110,false)),
+            
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const SelectCompanyBody(),
-          ],
+              const SizedBox(height: 20),
+              const SelectCompanyBody(),
+            ],
+          ),
         ),
       ),
     );

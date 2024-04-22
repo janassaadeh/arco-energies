@@ -1,11 +1,13 @@
+import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 
 import 'package:company_pages/Widgets/Operator/link.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+   Profile({super.key});
 
-// AuthenticationService authenticationService=AuthenticationService();
+AuthenticationService authenticationService=AuthenticationService();
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +112,18 @@ class Profile extends StatelessWidget {
                         // Divider(
                         //   color: const Color(0xff9E9C9C).withOpacity(0.7),
                         // ),
+
+                 GestureDetector(
+                            onTap: () async {
+                              await authenticationService.logout();
+                                       Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>LoginScreen()));
+                            },
+                            child: const Link(
+                              imagePath: "assets/images/logout.png",
+                              buttonText: "Logout",
+                            )),
                       ],
                     ),
                   )

@@ -12,7 +12,7 @@ class Cash extends StatelessWidget {
           // Figma Flutter Generator Group2Widget - GROUP
             return Container(
             width: 403.64825439453125,
-            height: 152,
+            height: 132,
             decoration: const BoxDecoration(
             borderRadius : BorderRadius.only(
             topLeft: Radius.circular(12),
@@ -50,7 +50,7 @@ class Cash extends StatelessWidget {
             Text('\$ ${cashBalance}', textAlign: TextAlign.center, style: TextStyle(
                   color: Color.fromRGBO(255, 255, 255, 1),
                   fontFamily: 'Inter',
-                  fontSize: 32,
+                  fontSize: 27,
                   letterSpacing: -0.3199999928474426,
                   fontWeight: FontWeight.bold,
                   height: 0.75
@@ -59,8 +59,8 @@ class Cash extends StatelessWidget {
         ),
         
         Padding(
-          padding: const EdgeInsets.only(top:20.0),
-          child: Image.asset("assets/images/Cash1.png",width: 80,height: 80,),
+          padding: const EdgeInsets.only(top:10.0),
+          child: Image.asset("assets/images/Cash1.png",width: 100,height: 100,),
         )
       ],
     ),

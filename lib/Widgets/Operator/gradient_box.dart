@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 Widget gradientBox(
     String txt, String imgPath, Color lightColor, Color darkColor, context) {
-  var width = (MediaQuery.of(context).size.width / 2.4);
+  var width = (MediaQuery.of(context).size.width / 2.41);
   return SizedBox(
     width: width,
     height: 150,

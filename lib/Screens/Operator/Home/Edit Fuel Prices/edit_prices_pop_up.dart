@@ -96,7 +96,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
             child: buildInput(
               "Enter Fuel 98 Price",
               dollarText(),
-              false,
+              true,
               fuel98Controller,
             ),
           ),
@@ -106,7 +106,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
             child: buildInput(
               "Enter Fuel 95 Price",
               dollarText(),
-              false,
+              true,
               fuel95Controller,
             ),
           ),
@@ -116,7 +116,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
             child: buildInput(
               "Enter Diesel Price",
               dollarText(),
-              false,
+              true,
               dieselController,
             ),
           ),

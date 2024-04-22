@@ -7,6 +7,7 @@ class Company {
   String email;
   String phone;
   double balance;
+  String imageId;
 
   Company({
     required this.id,
@@ -16,6 +17,7 @@ class Company {
     required this.email,
     required this.phone,
     required this.balance,
+    required this.imageId
   });
 
   factory Company.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,8 @@ class Company {
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       balance: json['balance'] ?? 0,
+      imageId: json['imageId'] ?? '',
+
     );
   }
 
