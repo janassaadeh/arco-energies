@@ -149,6 +149,7 @@ class EditCompany extends StatelessWidget {
       email: _emailController.text,
       phone: _phoneController.text,
       balance: double.tryParse(_balanceController.text) ?? 0.0,
+      imageId: company.imageId
     );
     CompanyService _companyService=CompanyService();
     try {

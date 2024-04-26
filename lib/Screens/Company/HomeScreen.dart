@@ -2,6 +2,8 @@ import 'package:company_pages/Screens/Company/Cars.dart';
 // import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Services/deposit_service.dart';
+import 'package:company_pages/Widgets/image_slider.dart';
+import 'package:company_pages/Widgets/images_carousel.dart';
 import 'package:flutter/material.dart';
 
 import '../../Services/Auth/AuthenticationService.dart';
@@ -25,10 +27,27 @@ class HomeScreen extends StatelessWidget {
      SingleChildScrollView(
       child: Column(
         children: [
-           Padding(
-            padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-            child: Cash(cashBalance:company.balance.toString()),
+          //  Padding(
+          //   padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
+          //   child: Cash(cashBalance:company.balance.toString()),
+          // ),
+          // const SizedBox(
+          //   height: 30,
+          // ),
+          
+          //       Padding(
+          //   padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
+          //   child: ImageCarouselWidget(),
+          // ),
+          
+          // const SizedBox(
+          //   height: 30,
+          // ),
+                   Padding(
+            padding: EdgeInsets.only(top:45),
+            child: SlideShow(),
           ),
+          
           const SizedBox(
             height: 30,
           ),

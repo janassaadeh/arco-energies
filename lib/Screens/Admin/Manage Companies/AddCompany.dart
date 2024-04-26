@@ -170,7 +170,8 @@ class AddCompany extends StatelessWidget {
       location: _locationController.text,
       email: _emailController.text,
       phone: _phoneController.text,
-      balance: 0.0, // Setting balance to 0.0 as it's not provided by the user
+      balance: 0.0,
+      imageId: '' 
     );
 
     // If registration is successful, navigate back with the new company object

@@ -41,7 +41,7 @@ class NotificationService {
     }
   }
 
-  Future<Notification> addNotification(Notification notification) async {
+  Future<Notification> addNotification(NotificationBody notification) async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
       if (!isLoggedIn) {
@@ -52,7 +52,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/notifications',
+        'http://10.0.2.2:8080/api/notifications/add',
         data: notification.toJson(),
       );
 

@@ -1,4 +1,5 @@
 import 'package:company_pages/Models/fuel_response.dart';
+import 'package:company_pages/Models/operator_response.dart';
 import 'package:company_pages/Models/pump.dart';
 import 'package:company_pages/Models/pump_response.dart';
 import 'package:company_pages/Models/transaction.dart';
@@ -51,6 +52,7 @@ class PumpService {
                 date: date,
                 pump: PumpResponse.fromJson(transactionJson['pump']),
                 vehicle: VehicleResponse.fromJson(transactionJson['vehicle']),
+                // operator: OperatorResponse.fromJson(transactionJson['operator'])
               ));
             });
           }

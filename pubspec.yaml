@@ -45,6 +45,10 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.10
   flutter_nfc_kit: ^3.4.2
+  image_picker: ^1.0.7
+  skeletonizer: ^1.1.1
+  shimmer: ^3.0.0
+  carousel_slider: ^4.2.1
 
   
   # firebase_core: ^2.27.0
@@ -86,6 +90,9 @@ flutter:
     - assets/images/FullStop.png
     - assets/images/CustomerW.png
     - assets/images/Qr Code.png
+    - assets/images/image1.png
+    - assets/images/image 2.png
+    - assets/images/image 3.jpg
 
 
 

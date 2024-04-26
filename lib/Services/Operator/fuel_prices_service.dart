@@ -73,6 +73,51 @@ class FuelPricesService {
     }
   }
 
+  // Future<void> sendPushNotifications(List<FuelPrice> fuelPrices) async {
+  //   try {
+  //     final bool isLoggedIn = await authService.isLoggedIn();
+  //     if (!isLoggedIn) {
+  //       throw Exception('User is not logged in');
+  //     }
+
+  //     final String? token = await authService.getToken();
+  //     dio.options.headers['Authorization'] = 'Bearer $token';
+
+  //     final List<Map<String, dynamic>> fuelPriceDetails = fuelPrices
+  //         .map((fuelPrice) => {
+  //               'id': fuelPrice.id,
+  //               'price': fuelPrice.price,
+  //             })
+  //         .toList();
+
+  //     String fuelPricesDetails = '';
+  //     for (var fuelPrice in fuelPrices) {
+  //       fuelPricesDetails +=
+  //           '${fuelPrice.id}: ${fuelPrice.price.toStringAsFixed(2)}\n';
+  //     }
+
+  //     final notificationMessage = {
+  //       'receiptToken':
+  //           'faFA4_8mR7Sx9jkQBL29xk:APA91bFMAQPcAUht3ze2zhVHY8NV8RjMA4Ox6yKduMWt47Ix50dugV8l3M6uj3eOwQbvOVVBHbbEze_jc0KTsrrNoqdDMHtlOKPiIcv8t_sVLi8NEaGgbf7PBsT5u4gJFAlUjHgVxvkS',
+  //       'title': 'New Fuel Prices List',
+  //       'body': 'Fuel prices details: $fuelPriceDetails',
+  //     };
+
+  //     final response = await dio.post(
+  //       'http://10.0.2.2:8080/api/notifications/push',
+  //       data: notificationMessage,
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       print('Push notification sent successfully');
+  //     } else {
+  //       print('Failed to send push notification');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to send push notifications: $e');
+  //   }
+  // }
+
   Future<void> sendPushNotifications(List<FuelPrice> fuelPrices) async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
@@ -83,24 +128,37 @@ class FuelPricesService {
       final String? token = await authService.getToken();
       dio.options.headers['Authorization'] = 'Bearer $token';
 
+      final List<Map<String, dynamic>> fuelPriceDetails = fuelPrices
+          .map((fuelPrice) => {
+                'id': fuelPrice.fuelResponse!.type,
+                'price': fuelPrice.price,
+              })
+          .toList();
+
+      String fuelPricesDetails = '';
       for (var fuelPrice in fuelPrices) {
-        final notificationMessage = {
-          'receiptToken':
-              'faFA4_8mR7Sx9jkQBL29xk:APA91bFMAQPcAUht3ze2zhVHY8NV8RjMA4Ox6yKduMWt47Ix50dugV8l3M6uj3eOwQbvOVVBHbbEze_jc0KTsrrNoqdDMHtlOKPiIcv8t_sVLi8NEaGgbf7PBsT5u4gJFAlUjHgVxvkS',
-          'title': 'New Fuel Prices List',
-          'body': 'The price of ${fuelPrice.id} is ${fuelPrice.price}',
-        };
+        fuelPricesDetails +=
+            '${fuelPrice.fuelResponse!.type}: ${fuelPrice.price.toStringAsFixed(2)}, ';
+      }
+      fuelPricesDetails =
+          fuelPricesDetails.trim().replaceAll(RegExp(r',\s*$'), '');
 
-        final response = await dio.post(
-          'http://10.0.2.2:8080/api/notifications',
-          data: notificationMessage,
-        );
+      final notificationMessage = {
+        'receiptToken':
+            'd-AQXwA2QOaUrpVdgJwnDb:APA91bH6Ku7nZpjqVLs0X9BZIRF-KM5L4Cib6LCR5YvzrooyXQe-mb8KYH_IAZ6B71OexV1bHXc57PjBaiRKFhB1fytZPUQDRIoaJcuJOjseBIE_DKT-g5V7m6VTzjjkgGnlj5c8mZd-',
+        'title': 'New Fuel Prices List',
+        'body': 'Fuel prices details: $fuelPricesDetails',
+      };
 
-        if (response.statusCode == 200) {
-          print('Push notification sent successfully');
-        } else {
-          print('Failed to send push notification');
-        }
+      final response = await dio.post(
+        'http://10.0.2.2:8080/api/notifications/push',
+        data: notificationMessage,
+      );
+
+      if (response.statusCode == 200) {
+        print('Push notification sent successfully');
+      } else {
+        print('Failed to send push notification');
       }
     } catch (e) {
       throw Exception('Failed to send push notifications: $e');

@@ -1,9 +1,15 @@
 
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/Manage%20Cars/Cars.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
 // 
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../Widgets/Home/recentTransaction.dart';
 import '../../../../Widgets/profile/link.dart';
@@ -12,18 +18,43 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 import '../../../Services/Manage Accounts/vehicle_company_service.dart';
 import 'Edit Company.dart';
 
-
+import 'package:image_picker/image_picker.dart';
 
 class CompanyDetails extends StatefulWidget {
      Company company;
+     dynamic imageData;
 
-  CompanyDetails({required this.company});
+  CompanyDetails({required this.company,required this.imageData});
 
   @override
   State<CompanyDetails> createState() => _CompanyDetailsState();
 }
 
 class _CompanyDetailsState extends State<CompanyDetails> {
+  ImageService imageService = ImageService();
+  Uint8List? _imageData;
+
+  @override
+  void initState() {
+    super.initState();
+    // _fetchImage();
+      _imageData=widget.imageData;
+  }
+
+  Future<void> _fetchImage() async {
+    try {
+      // Fetch image data using the image ID
+      Uint8List imageData = await imageService.getImageFromId(widget.company.imageId);
+
+      // Update the state to trigger a rebuild with the fetched image data
+      setState(() {
+        _imageData = imageData;
+      });
+    } catch (e) {
+      // Handle errors
+      print('Failed to fetch image: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
   print(widget.company.email);
@@ -69,6 +100,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                   Column(
                     children: [
                      Image.asset("assets/images/wallpaper.png"),
+                     
                       Container(
                           color: Colors.white,
                           height: 600,
@@ -272,9 +304,85 @@ Padding(
                         child: CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 67,
-                          child: Image.asset("assets/images/buisness_profile.png"),
+                          child:  ClipOval(
+          child: 
+          
+          _imageData != null
+      ?
+          Image.memory(
+            _imageData!,
+            fit: BoxFit.cover, // Adjust the fit as needed
+            width: 134, // Set the width and height to ensure the image is circular
+            height: 134,
+          ):
+          Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.white,
+                      ),
+                    ) 
+        )
+      // : CircularProgressIndicator()
                         
-                      ))
+                      )),
+                      
+                  Positioned(
+                    // bottom: 3, 
+                    // left: 12, 
+                    child: Container(
+                          width: 30, // Adjust the width of the container as needed
+                          height: 30, // Adjust the height of the container as needed
+                          decoration: BoxDecoration(
+                  color: Colors.white, // You can set your desired background color
+                  shape: BoxShape.circle, // This makes it a circle
+                            boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3), // Shadow color
+                    spreadRadius: 2, // Spread radius
+                    blurRadius: 4, // Blur radius
+                    offset: const Offset(0, 2), // Offset
+                  ),
+                          ],
+                          ),
+                          child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: GestureDetector(
+                    onTap: (){
+                        
+                      final picker = ImagePicker();
+                        
+                        Future<void> _openImagePicker() async {
+                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                        
+                          if (pickedFile != null) {
+                  final file = File(pickedFile.path);
+                  final bytes = await file.readAsBytes();
+                  final base64Image = base64Encode(bytes);
+                  final image = "data:image/png;base64,$base64Image";
+                        
+                  // Now you have the base64-encoded image
+                  // print("Base64 Image: $base64Image");
+                        
+                  setState(() {
+                    _imageData = bytes; // Set the picked image file
+                     // Update the profileAvatar URL
+                  });
+                      
+                  // print(imgUrl);
+                          } else {
+                  // Handle no image picked error
+                          }
+                        }
+                    _openImagePicker();
+                    },
+                    child: Center(
+                      child: Icon(Icons.add)
+                    ),
+                  ),
+                          ),
+                    ),
+                  ),
                 ],
               ),
             

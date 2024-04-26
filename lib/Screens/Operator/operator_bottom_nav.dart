@@ -84,7 +84,7 @@ class _OperatorState extends State<Operator> {
       case 1:
         return const NewTransaction();
       case 2:
-        return const Profile(
+        return  Profile(
             // operator: operatorProvider.operator,
             );
       default:

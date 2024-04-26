@@ -18,6 +18,8 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   late Future<List<Transaction>> _transactionsFuture;
   final TransactionService transactionService = TransactionService();
+  final TextEditingController _searchController = TextEditingController();
+  List<Transaction> searchResults = [];
 
   void setupPushNotifications() async {
     final fcm = FirebaseMessaging.instance;
@@ -33,6 +35,23 @@ class _NewTransactionState extends State<NewTransaction> {
     super.initState();
     _transactionsFuture = _fetchTransactions();
     setupPushNotifications();
+  }
+
+  void _searchTransactions(String query) async {
+    List<Transaction> allTransactions = await _transactionsFuture;
+
+    setState(() {
+      searchResults = allTransactions.where((transaction) {
+        String vehicleCompanyName =
+            transaction.vehicle.company.name.toLowerCase();
+        String transactionDate = transaction.date.toLowerCase();
+        String pumpId = transaction.pump.id.toLowerCase();
+        // Customize the search criteria based on your requirements
+        return vehicleCompanyName.contains(query.toLowerCase()) ||
+            transactionDate.contains(query.toLowerCase()) ||
+            pumpId.contains(query.toLowerCase());
+      }).toList();
+    });
   }
 
   Future<List<Transaction>> _fetchTransactions() async {
@@ -71,9 +90,41 @@ class _NewTransactionState extends State<NewTransaction> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  child: TextFormField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      _searchTransactions(value);
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Transactions ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refreshTransactions,
+                color: const Color(0xff003D58),
                 child: FutureBuilder<List<Transaction>>(
                   future: _transactionsFuture,
                   builder: (context, snapshot) {
@@ -82,13 +133,19 @@ class _NewTransactionState extends State<NewTransaction> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<Transaction> transactions = snapshot.data ?? [];
+                      List<Transaction> transactions =
+                          snapshot.data ?? searchResults;
                       return ListView.builder(
-                        itemCount: transactions.length,
+                        reverse: true,
+                        itemCount: searchResults.isNotEmpty
+                            ? searchResults.length
+                            : transactions.length,
                         itemBuilder: (context, index) {
-                          final transaction = transactions[index];
+                          final transaction = searchResults.isNotEmpty
+                              ? searchResults[index]
+                              : transactions[index];
                           final total = transaction.quantity *
-                              transaction.pump.fuel.fuelPrice;
+                              transaction.pump.fuel.fuelPrice!;
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                             child: Row(
@@ -101,12 +158,17 @@ class _NewTransactionState extends State<NewTransaction> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      transaction.vehicle.company.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          transaction.vehicle.company.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        // Text(transaction.)
+                                      ],
                                     ),
                                     Text(
                                       transaction.date,

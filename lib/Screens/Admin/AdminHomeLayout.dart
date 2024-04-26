@@ -1,9 +1,12 @@
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/admin_profile.dart';
+import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/fuel_prices_notifications.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
 import 'package:company_pages/Services/deposit_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import '../../../Screens/Admin/Manage Companies/Company_Model.dart' as company;
 import '../../../Screens/Admin/ManageOperators/operator_model.dart' as op;
@@ -44,6 +47,16 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       // Call _getDepositList() only after _fetchUserData() completes
       _getDepositList();
     });
+    setupPushNotifications();
+  }
+
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    final token = await fcm.getToken();
+    print(token);
   }
 
   Future<void> _fetchOperators() async {
@@ -165,12 +178,17 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
         ),
         backgroundColor: const Color(0xff003D5B),
         actions: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(right: 8.0),
-            child: Icon(
-              Icons.notifications,
-              size: 37,
-              color: Colors.white,
+            child: IconButton(
+              onPressed: () {
+                push(FuelPricesScreen(), context);
+              },
+              icon: Icon(
+                Icons.notifications,
+                size: 37,
+                color: Colors.white,
+              ),
             ),
           )
         ],

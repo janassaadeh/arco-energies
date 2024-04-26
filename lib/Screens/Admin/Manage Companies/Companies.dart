@@ -1,14 +1,19 @@
 
+import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../../Services/Auth/AuthenticationService.dart';
 import '../../../Services/Manage Accounts/Company_Services.dart';
 import '../../../Widgets/CompanyCard.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'dart:typed_data';
 
 
 
@@ -25,6 +30,8 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
   late List<TickerProvider> tickerProviders;
   String searchQuery = '';
  late List<Company> filteredCompanies;
+List<dynamic?> imageDataList = [];
+
   @override
   void initState() {
     super.initState();
@@ -37,9 +44,45 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
       (index) => SlidableController(tickerProviders[index]),
     );
     filteredCompanies = filterCompanies(); // Filtered list of companies
+    fetchImageForFilteredCompanies();
 
   }
+  
+  Future<void> fetchImageForFilteredCompanies() async {
+    ImageService _apiService = ImageService();
 
+    // Initialize imageDataList with null values
+    imageDataList = List.generate(filteredCompanies.length, (_) => null);
+
+    for (int index = 0; index < filteredCompanies.length; index++) {
+      String imageId = filteredCompanies[index].imageId;
+      try {
+        if(imageId==null){
+            setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = 'no image';
+          });
+        }
+       else  if (imageId != null) {
+          // Fetch image data using the provided image ID
+          Uint8List imageData = await _apiService.getImageFromId(imageId);
+          setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = imageData;
+
+          });
+          
+          
+    print("${index} done ");
+
+        }
+    
+      } catch (e) {
+        // Handle errors
+        print('Failed to fetch image for company at index $index: $e');
+      }
+    }
+  }
   // Method to filter companies based on search query
   List<Company> filterCompanies() {
     return widget.companies.where((company) {
@@ -50,6 +93,23 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
       return name.contains(query) || email.contains(query) || contactName.contains(query);
     }).toList();
   }
+  
+
+Future<void> refreshCompanies() async {
+  CompanyService companyService = CompanyService();
+  List<Company> updatedCompanies = await companyService.getAllCompanies();
+  setState(() {
+    filteredCompanies = updatedCompanies;
+  });
+  
+}
+
+
+
+
+
+// Now imageDataList contains the image data for each filtered company
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,70 +159,82 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
                   Container(
                     color: Colors.white,
                     height: 652,
-                    child: ListView.builder(
-                      itemCount: filteredCompanies.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Slidable(
-                              key: ValueKey(index),
-                              controller: controllers[index],
-                              endActionPane: ActionPane(
-                                extentRatio: ratio,
-                                motion: const ScrollMotion(),
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      controllers[index]?.close();
-                                      _showCupertinoLikeDialog(context,index,filteredCompanies);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top:18,left:22,bottom:18),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color:Colors.red,
-                                            borderRadius: BorderRadius.circular(12)
-                                        ),
-                                        width: 88,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top:18,bottom:12),
-                                          child: Column(
-                                            children: [
-                                              Icon(Icons.delete, color: Colors.white,size: 20,),
-                                              SizedBox(height: 1,),
-                                              Text("Delete",style: TextStyle(color:Colors.white, fontSize: 14,fontWeight: FontWeight.bold),)
-                                            ],
+                    child: RefreshIndicator(
+  onRefresh: () async {
+    await refreshCompanies();
+  },
+
+                      child: ListView.builder(
+                        
+                        itemCount: filteredCompanies.length,
+                        itemBuilder: (context, index) {
+            
+                          return 
+                          
+                          Column(
+                            children: [
+                              Slidable(
+                                key: ValueKey(index),
+                                controller: controllers[index],
+                                endActionPane: ActionPane(
+                                  extentRatio: ratio,
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        controllers[index]?.close();
+                                        _showCupertinoLikeDialog(context,index,filteredCompanies);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top:18,left:22,bottom:18),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:Colors.red,
+                                              borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          width: 88,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top:18,bottom:12),
+                                            child: Column(
+                                              children: [
+                                                Icon(Icons.delete, color: Colors.white,size: 20,),
+                                                SizedBox(height: 1,),
+                                                Text("Delete",style: TextStyle(color:Colors.white, fontSize: 14,fontWeight: FontWeight.bold),)
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              child: GestureDetector(
-                                onTap:  () async {
-                                  final newCompany = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => CompanyDetails(company:filteredCompanies[index])),
-                                  );
-                                  if (newCompany!= filteredCompanies[index]) {
-                                    setState(() {
-                                      filteredCompanies[index]=newCompany;
-                                    });
-                                  }
-                                },
-                                child: CompanyCard(
-                                  title: filteredCompanies[index].name,
-                                  subtitle1: filteredCompanies[index].email,
-                                  subtitle2: filteredCompanies[index].contactName,
-                                  // subtitle3: '#${cars[index].carId}',
+                                  ],
                                 ),
+                                child: GestureDetector(
+                                  onTap:  () async {
+                                    final newCompany = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => CompanyDetails(company:filteredCompanies[index],imageData: imageDataList[index],)),
+                                    );
+                                    if (newCompany!= filteredCompanies[index]) {
+                                      setState(() {
+                                        filteredCompanies[index]=newCompany;
+                                      });
+                                    }
+                                  },
+                                  child: CompanyCard(
+                                    title: filteredCompanies[index].name,
+                                    subtitle1: filteredCompanies[index].email,
+                                    subtitle2: filteredCompanies[index].contactName,
+                                    // imageId: filteredCompanies[index].imageId,
+                                    imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index]
+                                    // subtitle3: '#${cars[index].carId}',
+                                  ),
+                                ),
+                                        
                               ),
-
-                            ),
-                          ],
-                        );
-                      }
+                            ],
+                          );
+                        }
+                      ),
                     ),
                   ),
                 ],
