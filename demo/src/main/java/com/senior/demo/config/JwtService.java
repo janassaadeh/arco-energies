@@ -27,18 +27,14 @@ public class JwtService {
     }
     public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails){
 
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.add(Calendar.MONTH, 1); // Add 1 month to the current date
-//
-//        Date expirationDate = calendar.getTime();
 
         return Jwts.builder().
                 setClaims(extraClaims).
 
                 setSubject(userDetails.getUsername()).
                 setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 ))
-//                .setExpiration(expirationDate)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+
 
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

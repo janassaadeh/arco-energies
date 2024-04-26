@@ -1,10 +1,12 @@
 package com.senior.demo.Service;
 
 
+import com.senior.demo.Collections.Company;
 import com.senior.demo.Collections.Fuel;
 import com.senior.demo.Collections.FuelPrice;
 import com.senior.demo.Collections.Pump;
 import com.senior.demo.Repository.FuelRepository;
+import com.senior.demo.Responses.CompanyResponse;
 import com.senior.demo.Responses.FuelResponse;
 import com.senior.demo.Responses.PumpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,27 @@ public class FuelService {
 
     public Fuel getFuelByType(String type) {
         return fuelRepository.findByType(type);
+    }
+
+    public FuelResponse getFuelResponseByType(String type) {
+        Fuel fuel=fuelRepository.findByType(type);
+
+        // Get the prices list from the Fuel object
+        List<FuelPrice> prices = fuel.getPrices();
+
+        // Check if prices list is empty
+        if (prices.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel prices list is empty for fuel with type: '" + type + "'");
+        }
+
+        // Get the last added FuelPrice object from the prices list
+        FuelPrice lastFuelPrice = prices.get(prices.size() - 1);
+
+        // Get the price field from the last added FuelPrice object
+        double fuelPrice = lastFuelPrice.getPrice();
+
+        FuelResponse fuelResponse=new FuelResponse(fuel.getId(), fuel.getType(), fuel.getDescription(), fuelPrice);
+        return fuelResponse;
     }
 
     public Fuel addFuelWithCustomId(String type, String description) {
@@ -66,6 +89,23 @@ public class FuelService {
 
         // Generate the next custom ID
         return FUEL_ID_PREFIX + nextId;
+    }
+
+    public List<Fuel> getAllFuels() {
+        return fuelRepository.findAll();
+    }
+
+    public void deleteFuelById(String fuelId) {
+        fuelRepository.deleteById(fuelId);
+    }
+
+    public Fuel getFuelById(String id) {
+        // Retrieve the Fuel object by its ID
+        Optional<Fuel> optionalFuel = fuelRepository.findById(id);
+        if (!optionalFuel.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fuel with id: '" + id + "' not found");
+        }
+        return optionalFuel.get();
     }
 
     public FuelResponse getFuelResponseById(String id) {

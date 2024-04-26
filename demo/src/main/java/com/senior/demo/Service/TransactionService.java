@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class TransactionService {
 
     private static final String TRANSACTION_ID_PREFIX = "TRANSACTION";
 
-    public Transaction addTransactionWithCustomId(String pumpId, String vehicleId, double quantity, double odometer, LocalDate date,Authentication authentication) {
+    public Transaction addTransactionWithCustomId(String pumpId, String vehicleId, double quantity, double odometer, LocalDateTime date, Authentication authentication) {
 
         // Retrieve the Fuel entity by its type
         Optional<Pump> optionalPump = pumpRepository.findById(pumpId);

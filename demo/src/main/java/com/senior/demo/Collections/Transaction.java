@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Document(collection = "transactions")
@@ -25,7 +26,7 @@ public class Transaction {
     private double odometer;
 
     @Field("date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Field("pump")
     private PumpResponse pump;
@@ -35,7 +36,7 @@ public class Transaction {
 
     private OperatorResponse operator;
 
-    public Transaction(String id, double quantity, double odometer, LocalDate date) {
+    public Transaction(String id, double quantity, double odometer, LocalDateTime date) {
         this.id = id;
         this.quantity = quantity;
         this.odometer = odometer;
@@ -70,7 +71,7 @@ public class Transaction {
         this.odometer = odometer;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
     public OperatorResponse getOperator() {
@@ -78,7 +79,7 @@ public class Transaction {
     }
 
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

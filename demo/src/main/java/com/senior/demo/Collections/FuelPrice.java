@@ -1,5 +1,6 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.FuelResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -23,8 +24,8 @@ public class FuelPrice {
     @Field("created_date")
     private LocalDate createdDate;
 
-    // ManyToOne
-//    private Fuel fuel;
+    //ManyToOne
+    private FuelResponse fuel;
 
     public FuelPrice(String id, double price, LocalDate createdDate) {
         this.id = id;
@@ -56,11 +57,11 @@ public class FuelPrice {
         this.createdDate = createdDate;
     }
 
-//    public Fuel getFuel() {
-//        return fuel;
-//    }
-//
-//    public void setFuel(Fuel fuel) {
-//        this.fuel = fuel;
-//    }
+    public FuelResponse getFuel() {
+        return fuel;
+    }
+
+    public void setFuel(FuelResponse fuel) {
+        this.fuel = fuel;
+    }
 }
