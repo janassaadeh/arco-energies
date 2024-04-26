@@ -2,6 +2,7 @@ package com.senior.demo.Controllers;
 
 import com.senior.demo.Responses.CompanyResponse;
 import com.senior.demo.Service.CompanyService;
+import com.senior.demo.Service.DiscountCalculationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,17 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+    private final DiscountCalculationService discountCalculationService;
     @Autowired
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, DiscountCalculationService discountCalculationService) {
         this.companyService = companyService;
+        this.discountCalculationService = discountCalculationService;
     }
-
+    @GetMapping("/{companyId}/transaction/discount")
+    public double calculateDiscountForNextTransaction(@PathVariable String companyId) {
+        // Call the DiscountCalculationService to get the discount for the company's next transaction
+        return discountCalculationService.calculateDiscount(companyId);
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<CompanyResponse>> getAllCompanies() {
@@ -27,6 +34,11 @@ public class CompanyController {
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
+    @GetMapping("activated/all")
+    public ResponseEntity<List<CompanyResponse>> getAllActivatedCompanies() {
+        List<CompanyResponse> companies = companyService.getAllActivatedCompanies();
+        return new ResponseEntity<>(companies, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponse> getCompanyById(@PathVariable("id") String id) {
         CompanyResponse company = companyService.getCompanyById(id);

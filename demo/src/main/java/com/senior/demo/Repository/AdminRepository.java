@@ -11,4 +11,5 @@ public interface AdminRepository extends MongoRepository<Admin, String> {
     User findByResetToken(String resetToken);
 
 
+
 }

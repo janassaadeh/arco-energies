@@ -13,9 +13,9 @@ public class Operator extends User {
     private String address;
     private List<Transaction> transactions=new ArrayList<>();
 
-
-    public Operator(String id,String email, String password, Role role, String phone, String name, String dob, String address) {
-        super(id,email, password, role, phone, name);
+//    private  String imageId;
+    public Operator(String id,String email, String password, Role role, String phone, String name, String dob, String address,String imageId) {
+        super(id,email, password, role, phone, name,imageId);
         this.dob = dob;
         this.address = address;
     }
@@ -48,6 +48,7 @@ public class Operator extends User {
         private String name;
         private String dob;
         private String address;
+        private String imageId;
 //private String id;
         public Operator.Builders email(String email) {
             this.email = email;
@@ -87,8 +88,13 @@ public class Operator extends User {
             return this;
         }
 
+        public Operator.Builders imageId(String imageId) {
+            this.imageId = imageId;
+            return this;
+        }
+
         public Operator build() {
-            return new Operator(id,email, password, role, phone, name, dob, address);
+            return new Operator(id,email, password, role, phone, name, dob, address,imageId);
         }
     }
 }

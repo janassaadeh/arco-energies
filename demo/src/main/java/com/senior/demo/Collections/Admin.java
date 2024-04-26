@@ -7,8 +7,8 @@ public class Admin extends User {
 
     private String dob;
 
-    Admin(String id,String email, String password, Role role, String phone, String name, String dob) {
-        super(id, email, password, role, phone, name);
+    Admin(String id,String email, String password, Role role, String phone, String name, String dob,String imageId) {
+        super(id, email, password, role, phone, name,imageId);
         this.dob = dob;
     }
 
@@ -24,7 +24,7 @@ public class Admin extends User {
         private String phone;
         private String name;
         private String dob;
-
+        private String imageId;
         public Builder email(String email) {
             this.email = email;
             return this;
@@ -57,9 +57,13 @@ public class Admin extends User {
             this.dob = dob;
             return this;
         }
+        public Builder imageId(String imageId) {
+            this.imageId = imageId;
+            return this;
+        }
 
         public Admin build() {
-            return new Admin(id,email, password, role, phone, name, dob);
+            return new Admin(id,email, password, role, phone, name, dob,imageId);
         }
     }
 }

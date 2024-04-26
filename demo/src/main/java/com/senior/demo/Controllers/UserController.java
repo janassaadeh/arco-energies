@@ -96,14 +96,15 @@ public class UserController {
 //            return convertToAdmin(user);
             if (user.getRole() == Role.ADMIN) {
                 Admin u = adminRepository.findByEmail(user.getEmail());
-                AdminResponse admin = new AdminResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getDob());
+                AdminResponse admin = new AdminResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getDob(), user.getImageId());
                 return admin;
 
             } else {
                 if (user.getRole() == Role.COMPANY) {
 //                    return companyRepository.findByEmail(user.getEmail())
+
                     Company u = companyRepository.findByEmail(user.getEmail());
-                    CompanyResponse company = new CompanyResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getBalance(),u.getContactName(),u.getLocation());
+                    CompanyResponse company = new CompanyResponse(user.getId(),u.getEmail(),u.getPhone(),u.getName(),u.getBalance(),u.getContactName(),u.getLocation(),u.getPts(),u.getImageId());
                     return company;
 
 

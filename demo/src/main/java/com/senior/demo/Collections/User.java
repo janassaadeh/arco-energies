@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,19 +34,20 @@ public class User implements UserDetails {
 
     private String name;
     private String resetToken;
-
-
+    @Field("userImageId")
+    private String imageId;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-    public User(String id,String email, String password, Role role, String phone, String name) {
+    public User(String id,String email, String password, Role role, String phone, String name,String imageId) {
         this.email = email;
         this.password = password;
         this.role = role;
         this.phone = phone;
         this.name = name;
         this.id=id;
+        this.imageId=imageId;
     }
     @Override
     public String getPassword() {

@@ -23,14 +23,14 @@ public class AdminService {
     public List<AdminResponse> getAllAdmins() {
         List<Admin> admins = adminRepository.findAll();
         return admins.stream()
-                .map(admin -> new AdminResponse(admin.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob()))
+                .map(admin -> new AdminResponse(admin.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob(),admin.getImageId()))
                 .collect(Collectors.toList());
     }
 
     // Method to get an admin by ID
     public AdminResponse getAdminById(String id) {
         Admin admin=adminRepository.findById(id).orElse(null);
-        AdminResponse adminResponse=new AdminResponse(admin.getId(), admin.getEmail(), admin.getPhone(),admin.getName(),admin.getDob());
+        AdminResponse adminResponse=new AdminResponse(admin.getId(), admin.getEmail(), admin.getPhone(),admin.getName(),admin.getDob(),admin.getImageId());
         return adminResponse;
     }
 

@@ -9,6 +9,7 @@ import com.senior.demo.Service.AuthenticationService;
 import com.senior.demo.Responses.RegistrationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +32,7 @@ public class AuthenticationController {
     @PostMapping("/company/register")
     public ResponseEntity<RegistrationResponse> registerCompany(
             @RequestBody Company user
-    ){
+            ){
         return ResponseEntity.ok(service.registerCompany(user));
     }
     @PostMapping("/authenticate")

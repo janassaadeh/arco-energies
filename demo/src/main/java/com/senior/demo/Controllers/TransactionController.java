@@ -29,7 +29,10 @@ public class TransactionController {
     public List<Transaction> getAllTransactions() {
         return transactionService.getAllTransactions();
     }
-
+    @GetMapping("/transactions/company/{id}")
+    public List<Transaction> getAllTransactionsForCompany(@PathVariable String id) {
+        return transactionService.getAllCompanyTransactions(id);
+    }
 //    @PutMapping("/transactions/{id}")
 //    public Transaction updateTransaction(@PathVariable String id, @RequestBody Transaction updatedTransaction) {
 //        return transactionService.updateTransaction(id, updatedTransaction);
