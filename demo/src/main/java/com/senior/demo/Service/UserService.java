@@ -67,16 +67,16 @@ public class UserService {
             User user = (User) authentication.getPrincipal();
             if (user.getAuthorities().contains(Role.ADMIN)) {
                 Admin admin = adminRepository.findByEmail(user.getUsername());
-                return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob());
+                return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob(),user.getImageId());
             } else if (user.getAuthorities().contains(Role.COMPANY)) {
                 Company company = companyRepository.findByEmail(user.getUsername());
                 System.out.println(company.getPts());
                 return new CompanyResponse(user.getId(), company.getEmail(), company.getPhone(), company.getName(), company.getBalance(), company.getContactName(), company.getLocation()
-                ,company.getPts()
+                ,company.getPts(),company.getImageId()
                 );
             } else if (user.getAuthorities().contains(Role.OPERATOR)) {
                 Operator operator = operatorRepository.findByEmail(user.getUsername());
-                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName());
+                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName(),operator.getImageId());
             }
         }
         return null;
@@ -86,7 +86,7 @@ public class UserService {
         User user = (User) authentication.getPrincipal();
 
         Admin admin = adminRepository.findByEmail(user.getUsername());
-        return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob());
+        return new AdminResponse(user.getId(), admin.getEmail(), admin.getPhone(), admin.getName(), admin.getDob(),admin.getImageId());
 
 
 
@@ -96,7 +96,7 @@ public class UserService {
         User user = (User) authentication.getPrincipal();
 
         Operator operator = operatorRepository.findByEmail(user.getUsername());
-        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getDob());
+        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getDob(),operator.getImageId());
 
 
 

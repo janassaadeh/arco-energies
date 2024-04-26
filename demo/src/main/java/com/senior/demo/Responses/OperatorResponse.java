@@ -11,7 +11,7 @@ public class OperatorResponse {
     String email;
     String phone; String name;
     String dob;String address;
-
+    String imageId;
 
 
 }

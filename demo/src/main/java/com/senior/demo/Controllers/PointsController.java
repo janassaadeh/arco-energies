@@ -24,7 +24,7 @@ public class PointsController {
             pointsService.addPoints(user.getId(), pointsToAdd);
             return ResponseEntity.ok("Points added successfully");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authenticatoion failed");
     }
 
 

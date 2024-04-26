@@ -15,4 +15,6 @@ public interface CompanyRepository extends MongoRepository<Company, String> {
 
 
     List<Company> findByActivated(boolean b);
+    User findByImageId(String imageId);
+
 }

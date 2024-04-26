@@ -24,14 +24,16 @@ public class Company extends User {
         return activated;
     }
 
-    private int pts;
+    private Integer pts;
     private Set<Reward> redeemedRewards = new HashSet<>();
 
     private List<Reward> rewards = new ArrayList<>();
 
 //    @DBRef
     private List<Vehicle> vehicles=new ArrayList<>();
+
     // Constructor, getters, setters...
+
 
 
     public boolean hasRedeemedReward(String rewardId) {
@@ -43,8 +45,8 @@ public class Company extends User {
 //        redeemedRewards.add(rewardId);
 //    }
     // Constructor with ID parameter
-    public Company(String id, String email, String password, Role role, String phone, String name, double balance, String contactName, String location,int pts, Set<Reward> redeemedRewards,List<Reward> rewards ) {
-        super(id,email, password, role, phone, name);
+    public Company(String id, String email, String password, Role role, String phone, String name, double balance, String contactName, String location,Integer pts, Set<Reward> redeemedRewards,List<Reward> rewards,String imageId ) {
+        super(id,email, password, role, phone, name,imageId);
         this.balance = balance;
         this.contactName = contactName;
         this.location = location;
@@ -96,9 +98,10 @@ public class Company extends User {
         private double balance;
         private String contactName;
         private String location;
-        private  int pts;
+        private  Integer pts;
         private Set<Reward> redeemedRewards;
         private List <Reward> rewards;
+        private String imageId;
 
         public Builder id(String id) {
             this.id = id;
@@ -152,14 +155,18 @@ public class Company extends User {
             this.location = location;
             return this;
         }
-        public Builder pts(int pts) {
+        public Builder pts(Integer pts) {
             this.pts = pts;
+            return this;
+        }
+        public Builder imageId(String imageId) {
+            this.imageId = imageId;
             return this;
         }
 
         // Build method to create Company object
         public Company build() {
-            return new Company(id, email, password, role, phone, name, balance, contactName, location,pts,redeemedRewards,rewards);
+            return new Company(id, email, password, role, phone, name, balance, contactName, location,pts,redeemedRewards,rewards,imageId);
         }
     }
 }

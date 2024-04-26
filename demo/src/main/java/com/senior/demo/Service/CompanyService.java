@@ -86,7 +86,7 @@ public class CompanyService {
         return companies.stream()
                 .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
                 company.getPts()
-
+,company.getImageId()
                 ))
                 .collect(Collectors.toList());
     }
@@ -101,7 +101,8 @@ public class CompanyService {
                         company.getBalance(),
                         company.getContactName(),
                         company.getLocation(),
-                        company.getPts()
+                        company.getPts(),
+                        company.getImageId()
                 ))
                 .collect(Collectors.toList());
     }
@@ -111,7 +112,7 @@ public class CompanyService {
     public CompanyResponse getCompanyById(String id) {
         Company company=companyRepository.findById(id).orElse(null);
         CompanyResponse companyResponse=new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
-                company.getPts()
+                company.getPts(),company.getImageId()
 
         );
         return companyResponse;
@@ -132,7 +133,7 @@ public class CompanyService {
 
             CompanyResponse exists=new CompanyResponse(existingCompany.getId(),existingCompany.getEmail(),existingCompany.getPhone(),existingCompany.getName(),
                     existingCompany.getBalance(),existingCompany.getContactName(),existingCompany.getLocation(),
-                    company.getPts()
+                    company.getPts(),company.getImageId()
 
             );
 
@@ -156,7 +157,8 @@ public class CompanyService {
                     existingCompany.getBalance(),
                     existingCompany.getContactName(),
                     existingCompany.getLocation(),
-                    existingCompany.getPts()
+                    existingCompany.getPts(),
+                    existingCompany.getImageId()
 
 
             );

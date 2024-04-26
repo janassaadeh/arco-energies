@@ -8,14 +8,16 @@ import com.senior.demo.Repository.TransactionRepository;
 import com.senior.demo.Repository.VehicleRepository;
 import com.senior.demo.Responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TransactionService {
@@ -39,6 +41,8 @@ public class TransactionService {
     private UserService userService;
     @Autowired
     private OperatorRepository operatorRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private static final String TRANSACTION_ID_PREFIX = "TRANSACTION";
 
@@ -105,6 +109,14 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    public List<Transaction> getAllCompanyTransactions(String id) {
+
+
+
+        return transactionRepository.findAll();
+    }
+
+
 //    public Transaction updateTransaction(String id, Transaction updatedTransaction) {
 //        Transaction existingTransaction = getTransactionById(id);
 //        // Update the fields of the existing transaction with the values from the updated transaction
@@ -114,7 +126,30 @@ public class TransactionService {
 //        // Save the updated transaction
 //        return transactionRepository.save(existingTransaction);
 //    }
+public List<Transaction> getTransactionsByCompany(String companyName) {
+    // Fetch all vehicles associated with the given company name
+    List<VehicleResponse> vehicles = mongoTemplate.find(
+            Query.query(Criteria.where("company.name").is(companyName)),
+            VehicleResponse.class
+    );
 
+    // Initialize a list to store transactions for the company
+    List<Transaction> transactions = new ArrayList<>();
+
+    // Iterate through each vehicle
+    for (VehicleResponse vehicle : vehicles) {
+        // Fetch transactions for the current vehicle
+        List<Transaction> vehicleTransactions = mongoTemplate.find(
+                Query.query(Criteria.where("vehicle.id").is(vehicle.getId())),
+                Transaction.class
+        );
+
+        // Add transactions for the current vehicle to the overall list
+        transactions.addAll(vehicleTransactions);
+    }
+
+    return transactions;
+}
     public void deleteTransactionById(String id) {
         // Check if the transaction exists
         if (!transactionRepository.existsById(id)) {

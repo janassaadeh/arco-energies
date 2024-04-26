@@ -33,14 +33,14 @@ public class OperatorService {
     public List<OperatorResponse> getAllOperators() {
         List<Operator> operators = operatorRepository.findAll();
         return operators.stream()
-                .map(operator ->new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress()))
+                .map(operator ->new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress(),operator.getImageId()))
                 .collect(Collectors.toList());
     }
 
     // Method to get an admin by ID
     public OperatorResponse getOperatorById(String id) {
         Operator operator=operatorRepository.findById(id).orElse(null);
-        OperatorResponse operatorResponse=new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress());
+        OperatorResponse operatorResponse=new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress(),operator.getImageId());
         return operatorResponse;
     }
 
@@ -56,7 +56,7 @@ public class OperatorService {
             existingOperator.setPhone(operator.getPhone());
 
             OperatorResponse exists=new OperatorResponse(existingOperator.getId(),existingOperator.getEmail(),existingOperator.getPhone(),existingOperator.getName(),
-                    existingOperator.getDob(),existingOperator.getAddress());
+                    existingOperator.getDob(),existingOperator.getAddress(),existingOperator.getImageId());
 
             // Save the updated company
             existingOperator = operatorRepository.save(existingOperator);
@@ -76,7 +76,8 @@ public class OperatorService {
                     existingOperator.getPhone(),
                     existingOperator.getName(),
                     existingOperator.getDob(),
-                    existingOperator.getAddress()
+                    existingOperator.getAddress(),
+                    existingOperator.getImageId()
             );
         } else {
             return null;

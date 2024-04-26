@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class AdminResponse {
     String id;
-    String email; String phone; String name; String dob;
+    String email; String phone; String name; String dob;String imageId;
 }
