@@ -12,7 +12,7 @@ import '../../../Services/Auth/AuthenticationService.dart';
 import '../../../Services/Manage Accounts/Company_Services.dart';
 import '../../../Widgets/CompanyCard.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+// import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:typed_data';
 
 

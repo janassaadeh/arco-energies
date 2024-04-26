@@ -192,7 +192,8 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                     Provider.of<TransactionProvider>(context,
                                             listen: false)
                                         .enteredOdometerValue);
-                                String date = "2024-03-17";
+                                final String currentDate =
+                                    DateTime.now().toIso8601String();
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .resetTransactionValues();
@@ -202,13 +203,11 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                   vehicleId,
                                   liters,
                                   odometer,
-                                  date,
+                                  currentDate,
                                 );
                                 Transaction transaction =
                                     await generatedTransaction;
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .storeGeneratedTransaction(transaction);
+
                                 final endTime = DateTime.now();
                                 final elapsedTime = endTime
                                     .difference(startTime)
@@ -224,7 +223,7 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                       Duration(milliseconds: elapsedTime));
                                 }
 
-                                _navigateToReceipt();
+                                _navigateToReceipt(transaction);
                               },
                             ),
                     ],
@@ -253,10 +252,16 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
     });
   }
 
-  void _navigateToReceipt() {
-    push(const ReceiptPage(), context);
-    setState(() {
-      _isLoading = false;
+  void _navigateToReceipt(Transaction transaction) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReceiptPage(transaction: transaction),
+      ),
+    ).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 

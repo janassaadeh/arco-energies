@@ -46,7 +46,7 @@ dependencies:
   firebase_messaging: ^14.7.10
   flutter_nfc_kit: ^3.4.2
   image_picker: ^1.0.7
-  skeletonizer: ^1.0.1
+  # skeletonizer: ^1.1.1
   shimmer: ^3.0.0
   carousel_slider: ^4.2.1
   timeline_tile: ^2.0.0

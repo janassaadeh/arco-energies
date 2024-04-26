@@ -1,10 +1,15 @@
 import 'package:company_pages/Models/fuel_price.dart';
+import 'package:company_pages/Models/fuel_response.dart';
+import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
+import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Widgets/Operator/useful_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 import 'package:company_pages/Models/fuel.dart';
+import 'package:company_pages/Models/notification.dart' as not;
+import 'package:provider/provider.dart';
 
 class EditPricesPopUp extends StatefulWidget {
   const EditPricesPopUp({Key? key}) : super(key: key);
@@ -23,21 +28,47 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
   late Future<List<Fuel>> fuelListFuture;
 
   final FuelService fuelService = FuelService();
+  final NotificationService notificationService = NotificationService();
   final FuelPricesService fuelPricesService = FuelPricesService();
+
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
+    _initializeInputFields();
+  }
+
+  void _initializeInputFields() async {
+    final fuels = await fuelListFuture;
+    // Retrieve the most recent prices for each fuel type
+    final double? fuel95Price = getMostRecentFuelPrice(fuels, '95');
+    final double? fuel98Price = getMostRecentFuelPrice(fuels, '98');
+    final double? dieselPrice = getMostRecentFuelPrice(fuels, 'Diesel');
+
+    // Set initial values for input field controllers
+    fuel95Controller.text = fuel95Price?.toString() ?? '';
+    fuel98Controller.text = fuel98Price?.toString() ?? '';
+    dieselController.text = dieselPrice?.toString() ?? '';
   }
 
   Future<List<Fuel>> _fetchFuels() async {
     try {
-      return await fuelService.getAllFuels();
+      List<Fuel> cachedNotifications =
+          Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels;
+
+      if (cachedNotifications.isNotEmpty) {
+        return cachedNotifications;
+      } else {
+        final List<Fuel> fuels = await fuelService.getAllFuels();
+        // Cache fetched pumps
+        Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels =
+            fuels;
+        return fuels;
+      }
     } catch (e) {
-      // Handle error
-      print('Error fetching fuels: $e');
-      return []; // Return empty list on error
+      throw Exception('Failed to fetch vehicles: $e');
     }
   }
 
@@ -60,25 +91,13 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
               child: Text('Failed to load fuel data'), // Show error message
             );
           } else {
-            final fuels = snapshot.data!;
-            _initializeInputFields(fuels); // Initialize input fields
+            // final fuels = snapshot.data!;
+            // _initializeInputFields(fuels); // Initialize input fields
             return _buildDialogContent(context); // Build dialog content
           }
         },
       ),
     );
-  }
-
-  void _initializeInputFields(List<Fuel> fuels) {
-    // Retrieve the most recent prices for each fuel type
-    final double? fuel95Price = getMostRecentFuelPrice(fuels, '95');
-    final double? fuel98Price = getMostRecentFuelPrice(fuels, '98');
-    final double? dieselPrice = getMostRecentFuelPrice(fuels, 'Diesel');
-
-    // Set initial values for input field controllers
-    fuel95Controller.text = fuel95Price?.toString() ?? '';
-    fuel98Controller.text = fuel98Price?.toString() ?? '';
-    dieselController.text = dieselPrice?.toString() ?? '';
   }
 
   Widget _buildDialogContent(BuildContext context) {
@@ -139,29 +158,52 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
               const SizedBox(width: 20),
               ElevatedButton(
                 onPressed: () async {
+                  setState(() {
+                    _isLoading = true; // Start loading
+                  });
+
                   try {
                     // Get entered fuel prices
                     final fuel98Price = double.parse(fuel98Controller.text);
                     final fuel95Price = double.parse(fuel95Controller.text);
                     final dieselPrice = double.parse(dieselController.text);
 
+                    final fuel98PriceResponse =
+                        FuelResponse(type: "98", description: "Fuel 98");
+                    final fuel95PriceResponse =
+                        FuelResponse(type: "95", description: "Fuel 95");
+                    final dieselPriceResponse =
+                        FuelResponse(type: "Diesel", description: "Diesel");
+
                     final String currentDate = DateTime.now().toIso8601String();
 
                     // Create list of entered fuel prices
                     final List<FuelPrice> enteredFuelPrices = [
                       FuelPrice(
-                          id: 'Fuel 98',
                           price: fuel98Price,
-                          createdDate: currentDate),
+                          createdDate: "2024-04-23",
+                          fuelResponse: fuel98PriceResponse),
                       FuelPrice(
-                          id: 'Fuel 95',
                           price: fuel95Price,
-                          createdDate: currentDate),
+                          createdDate: "2024-04-23",
+                          fuelResponse: fuel95PriceResponse),
                       FuelPrice(
-                          id: 'Diesel',
                           price: dieselPrice,
-                          createdDate: currentDate),
+                          createdDate: "2024-04-23",
+                          fuelResponse: dieselPriceResponse),
                     ];
+
+                    for (var fuelPrice in enteredFuelPrices) {
+                      final not.NotificationBody notification =
+                          not.NotificationBody(
+                        fuelPrice.fuelResponse!.type,
+                        fuelPrice.price,
+                        currentDate,
+                      );
+
+                      // Send the notification
+                      await notificationService.addNotification(notification);
+                    }
 
                     // Send push notifications with entered prices
                     await fuelPricesService
@@ -175,21 +217,32 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
                     // Optionally show an error message
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        duration: Duration(seconds: 60),
                         content: Text('Failed to send push notifications: $e'),
                         backgroundColor: Colors.red,
                       ),
                     );
                   }
+                  setState(() {
+                    _isLoading = false;
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 1, 14, 72),
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                 ),
-                child: const Text(
-                  'Send',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: _isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : const Text(
+                        'Send',
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             ],
           ),

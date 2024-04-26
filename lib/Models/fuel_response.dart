@@ -1,14 +1,14 @@
 class FuelResponse {
-  final String id;
+  String? id;
   final String type;
   final String description;
-  final double fuelPrice;
+  double? fuelPrice;
 
   FuelResponse({
-    required this.id,
+    this.id,
     required this.type,
     required this.description,
-    required this.fuelPrice,
+    this.fuelPrice,
   });
 
   factory FuelResponse.fromJson(Map<String, dynamic> json) {

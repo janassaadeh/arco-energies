@@ -1,13 +1,13 @@
 import 'fuel_response.dart';
 
 class FuelPrice {
-  final String id;
+  String? id;
   final double price;
   final String createdDate;
   FuelResponse? fuelResponse; // Allow fuelResponse to be nullable
 
   FuelPrice({
-    required this.id,
+    this.id,
     required this.price,
     required this.createdDate,
     this.fuelResponse,

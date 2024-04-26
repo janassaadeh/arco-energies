@@ -1,3 +1,4 @@
+import 'package:company_pages/Models/operator_response.dart';
 import 'package:company_pages/Models/pump_response.dart';
 import 'package:company_pages/Models/vehicle_response.dart';
 
@@ -8,6 +9,7 @@ class Transaction {
   final String date;
   final PumpResponse pump;
   final VehicleResponse vehicle;
+  // final OperatorResponse operator;
 
   Transaction({
     required this.id,
@@ -16,6 +18,7 @@ class Transaction {
     required this.date,
     required this.pump,
     required this.vehicle,
+    // required this.operator,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -26,6 +29,7 @@ class Transaction {
       date: json['date'],
       pump: PumpResponse.fromJson(json['pump']),
       vehicle: VehicleResponse.fromJson(json['vehicle']),
+      // operator: OperatorResponse.fromJson(json['operator']),
     );
   }
 }

@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import '../../Widgets/Common/CustomInputFieldLarge.dart';
 import '../Admin/Manage Cars/Cars.dart';
 
-
-
 // Define the LoginScreen class
 class LoginScreen extends StatefulWidget {
 
@@ -31,14 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticationService authenticationService=AuthenticationService();
-    return
-        WillPopScope(
-        onWillPop: () async {
-          // Prevent back button press
-          return false;
-        },
-            
+    AuthenticationService authenticationService = AuthenticationService();
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent back button press
+        return false;
+      },
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -101,19 +97,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.3),
                                               offset: Offset(0, 4),
                                               blurRadius: 4,
                                             ),
                                           ],
-                                          color: Color.fromRGBO(255, 255, 255, 1),
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 1),
                                         ),
                                         child: Container(
                                           width: 80,
                                           height: 80,
                                           decoration: const BoxDecoration(
                                             image: DecorationImage(
-                                              image: AssetImage('assets/images/logo.png'),
+                                              image: AssetImage(
+                                                  'assets/images/logo.png'),
                                               // fit: BoxFit.fitWidth
                                             ),
                                           ),
@@ -193,14 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
     ),
               const SizedBox(height: 30),
               GestureDetector(
-                onTap:() {
-                 
+                onTap: () {
                   push(const ForgotPassword(), context);
-    
-                  
                 },
                 child: const Padding(
-                  padding: EdgeInsets.only(right:40.0,bottom:30),
+                  padding: EdgeInsets.only(right: 40.0, bottom: 30),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -218,35 +214,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-            
               GestureDetector(
-      onTap: () async {
-      print("hi");
-      if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
-        await authenticationService.authenticate(_emailController.text, _passwordController.text);
-    
-        // Wait for getRole() to complete and then handle the role
-        String? role = await authenticationService.getRole();
-        print(role);
-    
-        // Handle the role accordingly
-        if (role == 'COMPANY') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const CompanyHomePageLayout()));
-        } else if (role == 'OPERATOR') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const Operator()));
-        }
-         else if (role == 'ADMIN') {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AdminHomePageLayout()));
-    
-        }
-    
-      }
-      },
-      
-    
-                child: const CustomButton(buttonText: "Sign In")),
+                  onTap: () async {
+                    print("hi");
+                    if (_emailController.text.isNotEmpty &&
+                        _passwordController.text.isNotEmpty) {
+                      await authenticationService.authenticate(
+                          _emailController.text, _passwordController.text);
+
+                      // Wait for getRole() to complete and then handle the role
+                      String? role = await authenticationService.getRole();
+                      print(role);
+
+                      // Handle the role accordingly
+                      if (role == 'COMPANY') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const CompanyHomePageLayout()));
+                      } else if (role == 'OPERATOR') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Operator()));
+                      } else if (role == 'ADMIN') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdminHomePageLayout()));
+                      }
+                    }
+                  },
+                  child: const CustomButton(buttonText: "Sign In")),
               Padding(
-                padding: const EdgeInsets.only(left:90.0,top:30),
+                padding: const EdgeInsets.only(left: 90.0, top: 30),
                 child: Align(
                   alignment: Alignment.center,
                   child: Row(
@@ -263,11 +265,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       GestureDetector(
-                       onTap: (){
-                  
-                        push(SignUp(), context);
-        
-                                    },
+                        onTap: () {
+                          push(SignUp(), context);
+                        },
                         child: const Text(
                           'Sign up',
                           textAlign: TextAlign.left,
@@ -284,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              ),                    
+              ),
             ],
           ),
         ),
@@ -292,12 +292,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
- void push(Widget s,BuildContext context){
-          Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => s,
-          ),
-        );
 
- }
+void push(Widget s, BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => s,
+    ),
+  );
+}
