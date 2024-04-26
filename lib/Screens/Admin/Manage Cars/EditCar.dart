@@ -23,7 +23,7 @@ import '../Manage Fields.dart';
 
 class EditCar extends StatelessWidget {
     final Vehicle car;
-    final Company company;
+    final dynamic company;
 
   EditCar({ required this.car,required this.company});
  late TextEditingController _modelController;

@@ -46,10 +46,8 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
               const SizedBox(height: 20),
               buildImageContainer("assets/images/select_company.png", true),
               const SizedBox(height: 30),
-              buildInput(
-                     '  Search...',
-                GestureDetector(
-              onTap:  () async {
+              GestureDetector(
+                  onTap:  () async {
               final id = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SelectCompanies(companies: companyList)),
@@ -61,14 +59,16 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
                 });
               }
             },
-                  child: Image.asset(
+                child: buildInputF(
+                       '  Search...',
+                  Image.asset(
                     "assets/images/Search.png",
                     width: 25,
                   ),
+                  
+                  true,
+                  idController,
                 ),
-                
-                true,
-                idController,
               ),
               const SizedBox(height: 20),
               buildSecondText(
@@ -88,4 +88,56 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
       ],
     );
   }
+}
+
+Widget buildInputF(String hintText, Widget widgetAtLeft, bool withBorder,
+    TextEditingController textEditingController,
+    {bool isPressable = false}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      border: withBorder
+          ? Border.all(
+              color: Colors.black,
+              width: 1,
+            )
+          :  Border(
+              bottom: BorderSide(
+                color: Colors.black,
+                width: 1,
+              ),
+            ),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: isPressable
+                ? const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18)
+                : const EdgeInsets.symmetric(horizontal: 18.0),
+            child: isPressable
+                ? Text(
+                    hintText,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  )
+                : TextFormField(
+                  enabled: false,
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                      hintText: hintText,
+                      border: InputBorder.none,
+                    ),
+                  ),
+          ),
+        ),
+        widgetAtLeft,
+        const SizedBox(
+          width: 15,
+        )
+      ],
+    ),
+  );
 }

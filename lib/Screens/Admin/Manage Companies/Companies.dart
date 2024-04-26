@@ -57,13 +57,7 @@ List<dynamic?> imageDataList = [];
     for (int index = 0; index < filteredCompanies.length; index++) {
       String imageId = filteredCompanies[index].imageId;
       try {
-        if(imageId==null){
-            setState(() {
-            // Update the imageDataList with fetched image data
-            imageDataList[index] = 'no image';
-          });
-        }
-       else  if (imageId != null) {
+         if (imageId != '') {
           // Fetch image data using the provided image ID
           Uint8List imageData = await _apiService.getImageFromId(imageId);
           setState(() {
@@ -101,7 +95,7 @@ Future<void> refreshCompanies() async {
   setState(() {
     filteredCompanies = updatedCompanies;
   });
-  
+  fetchImageForFilteredCompanies();
 }
 
 
@@ -219,6 +213,7 @@ Future<void> refreshCompanies() async {
                                         filteredCompanies[index]=newCompany;
                                       });
                                     }
+                                    
                                   },
                                   child: CompanyCard(
                                     title: filteredCompanies[index].name,
@@ -265,6 +260,7 @@ Future<void> refreshCompanies() async {
       searchQuery = value;
       filteredCompanies = filterCompanies(); // Update filteredOperators when searchQuery changes
     });
+    fetchImageForFilteredCompanies();
   },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(borderSide: BorderSide.none),

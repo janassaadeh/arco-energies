@@ -131,7 +131,7 @@ class RewardScreen extends StatelessWidget {
   context: context,
   builder: (BuildContext context) {
     return Container(
-      height: 620, // Adjust height as needed
+      // height: 620, // Adjust height as needed
       width: double.infinity,
       decoration: BoxDecoration(
       color: Colors.white,

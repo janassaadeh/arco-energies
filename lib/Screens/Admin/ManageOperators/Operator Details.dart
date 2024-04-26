@@ -1,11 +1,15 @@
 
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/Manage%20Cars/Cars.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/Edit%20Operator.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/operator_model.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
 // 
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../Widgets/Home/recentTransaction.dart';
 import '../../../../Widgets/profile/link.dart';
@@ -18,14 +22,39 @@ import '../../../Services/Manage Accounts/vehicle_company_service.dart';
 
 class OperatorDetails extends StatefulWidget {
      Operator operator;
+     dynamic imageData;
 
-  OperatorDetails({required this.operator});
+  OperatorDetails({required this.operator,required this.imageData});
 
   @override
   State<OperatorDetails> createState() => _OperatorDetailsState();
 }
 
 class _OperatorDetailsState extends State<OperatorDetails> {
+    ImageService imageService = ImageService();
+  Uint8List? _imageData;
+
+  @override
+  void initState() {
+    super.initState();
+    // _fetchImage();
+      _imageData=widget.imageData;
+  }
+
+  Future<void> _fetchImage() async {
+    try {
+      // Fetch image data using the image ID
+      Uint8List imageData = await imageService.getImageFromId(widget.operator.imageId);
+
+      // Update the state to trigger a rebuild with the fetched image data
+      setState(() {
+        _imageData = imageData;
+      });
+    } catch (e) {
+      // Handle errors
+      print('Failed to fetch image: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
   print(widget.operator.email);
@@ -50,7 +79,7 @@ class _OperatorDetailsState extends State<OperatorDetails> {
         onTap:  () async {
             final newOperator = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditOperator(operator:widget.operator)),
+              MaterialPageRoute(builder: (context) => EditOperator(operator:widget.operator,imageData:widget.imageData)),
             );
             if (newOperator != widget.operator) {
               setState(() {
@@ -267,15 +296,49 @@ Padding(
                               ),
                               
                       ),
-                      Positioned(
+                    Positioned(
                         top:100,
                         right:140,
-                        child: CircleAvatar(
+                        child: 
+                        
+                        _imageData=='' || _imageData==null?
+                        CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 67,
-                          child: Image.asset("assets/images/buisness_profile.png"),
                         
-                      ))
+                          child: Image.asset("assets/images/buisness_profile.png"),
+
+                        )
+                        
+                        
+                        :
+                        CircleAvatar(
+                        backgroundColor: Color(0xffC1BEBE),
+                        radius: 67,
+                          child:  ClipOval(
+          child: 
+          
+          _imageData != null
+      ?
+          Image.memory(
+            _imageData!,
+            fit: BoxFit.cover, // Adjust the fit as needed
+            width: 134, // Set the width and height to ensure the image is circular
+            height: 134,
+          ):
+          Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.white,
+                      ),
+                    ) 
+        )
+      // : CircularProgressIndicator()
+                        
+                      )),
+                      
+
                 ],
               ),
             

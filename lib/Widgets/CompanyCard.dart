@@ -34,23 +34,6 @@ class _CompanyCardState extends State<CompanyCard> {
 
   }
 
-  // Future<void> _fetchImage() async {
-  //   try {
-  //     if(widget.imageId!=null){
-  //     // Fetch image data using the provided image ID
-  //     Uint8List imageData = await _apiService.getImageFromId(widget.imageId!);
-
-  //     // Update the state to trigger a rebuild with the fetched image data
-  //     setState(() {
-  //       _imageData = imageData;
-  //     });
-  //     }
-
-  //   } catch (e) {
-  //     // Handle errors
-  //     print('Failed to fetch image: $e');
-  //   }
-  // }
   
   @override
   Widget build(BuildContext context) {

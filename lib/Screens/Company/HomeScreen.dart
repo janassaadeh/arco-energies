@@ -1,48 +1,57 @@
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Company/Cars.dart';
+import 'package:company_pages/Screens/Company/MyCars.dart';
+import 'package:company_pages/Screens/Company/deposit_receipt.dart';
+import 'package:company_pages/Screens/Company/my_transactions.dart';
 // import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
+import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Widgets/image_slider.dart';
-import 'package:company_pages/Widgets/images_carousel.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../Services/Auth/AuthenticationService.dart';
 import '../../Services/Manage Accounts/vehicle_company_service.dart';
-import '../../Widgets/Home/Cash.dart';
+
 import '../../Widgets/Home/features.dart';
 import '../../Widgets/Home/recentTransaction.dart';
 import '../Auth/Login.dart';
+
+
+String getType(String input) {
+  if (input.startsWith("TRANSACTION")) {
+    return "Transaction";
+  } else if (input.startsWith("CASH")) {
+    return "Cash";
+  } else {
+    return "Unknown";
+  }
+}
+
 
 class HomeScreen extends StatelessWidget {
   AuthenticationService authenticationService = AuthenticationService();
     dynamic company;
     List <DepositReceipt> ?depositList;
+    List <Transaction> ?transactionList;
+    List <dynamic>? mergedAndSorted;
 
-  HomeScreen({super.key, this.company,  this.depositList});
+
+  HomeScreen({super.key, this.company, this.depositList, this.transactionList, this.mergedAndSorted});
 
   @override
   Widget build(BuildContext context) {
+
+// List<dynamic> mergedAndSorted=mergeAndSortLists(depositList,transactionList);
+
     return
     company==null?Container():
      SingleChildScrollView(
       child: Column(
         children: [
-          //  Padding(
-          //   padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-          //   child: Cash(cashBalance:company.balance.toString()),
-          // ),
-          // const SizedBox(
-          //   height: 30,
-          // ),
-          
-          //       Padding(
-          //   padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-          //   child: ImageCarouselWidget(),
-          // ),
-          
-          // const SizedBox(
-          //   height: 30,
-          // ),
+       
                    Padding(
             padding: EdgeInsets.only(top:45),
             child: SlideShow(),
@@ -96,9 +105,11 @@ class HomeScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                             onTap: ()async{
-                              VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
-                              final cars=await vehicleCompanyService.getVehiclesForCompany(company.id);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Cars(cars:cars,company: company,)));
+                              VehicleCompanyService vehicleService=VehicleCompanyService();
+                              final dynamic cars=await vehicleService.getVehiclesForCompany(company.id);
+    
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyCars(cars:cars,company: company,)));
                               
                             },
                         child: const Features(
@@ -127,19 +138,35 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const Padding(
+           Padding(
             // padding: const EdgeInsets.all(18.0),
             padding: EdgeInsets.only(left: 18, right: 18.0),
 
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Recent Transactions",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(0xffA9A7A7),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                
+                Text(
+                  "Recent Transactions",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xffA9A7A7),
+                  ),
                 ),
-              ),
+                
+                
+                GestureDetector(
+                  onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AllTransactions(mergedAndSorted:mergedAndSorted,company: company,)));
+                    
+                  },
+                  child: Text("View all",   style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xffA9A7A7),
+                  ),)
+                  
+                  )
+              ],
             ),
           ),
           const SizedBox(
@@ -149,27 +176,42 @@ class HomeScreen extends StatelessWidget {
             
             padding: EdgeInsets.only(left: 18, right: 18.0),
             child: 
-             Container(
-  height:depositList!.length*80.0 ,
-  child: depositList != null && depositList!.isNotEmpty
-      ? ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
+Container(
+  height: mergedAndSorted!.length * 12200.0, // Adjust the height as needed
+  child: ListView.builder(
+    physics: NeverScrollableScrollPhysics(),
+    // itemCount: mergedAndSorted!.length,
+      itemCount: mergedAndSorted!.length > 3 ? 3 : mergedAndSorted!.length,
 
-          itemCount: depositList!.length,
-          itemBuilder: (context, index) {
-            final deposit = depositList![index];
-            return Transactions(
-              id: deposit.id,
-              price: deposit.cashAmount,
+    itemBuilder: (context, index) {
+      final item = mergedAndSorted![index];
+      if (getType(item.id) == 'Cash') {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Transactions(
+              id: item.id,
+              price: item.cashAmount,
               type: "+",
-              day: _calculateDaysAgo(deposit.timestamp),
-            );
-          },
-        )
-      : Center(
-          child: Container()
-        ),
-),
+              day: _calculateDaysAgo(item.timestamp),
+            ),
+          ],
+        );
+      } else if (getType(item.id) == 'Transaction') {
+        // Render transaction UI
+        final total = item.quantity * item.pump.fuel.fuelPrice;
+        return Transactions(
+          id: item.id,
+          price: double.parse(total.toStringAsFixed(2)),
+          type: "-",
+          day: _calculateDaysAgo2(item.date),
+        );
+      }
+      return Container(); // Default case
+    },
+  ),
+)
+
 
             ),
           
@@ -177,6 +219,7 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+  
 }
 int _calculateDaysAgo(String transactionDateString) {
   final transactionDate = DateTime.parse(transactionDateString);
@@ -184,3 +227,16 @@ int _calculateDaysAgo(String transactionDateString) {
   final difference = currentDate.difference(transactionDate);
   return difference.inDays;
 }
+int _calculateDaysAgo2(String transactionDateString) {
+  final List<String> dateParts = transactionDateString.split('-');
+  final int year = int.parse(dateParts[0]);
+  final int month = int.parse(dateParts[1]);
+  final int day = int.parse(dateParts[2]);
+
+  final DateTime transactionDate = DateTime(year, month, day);
+  final DateTime currentDate = DateTime.now();
+  final Duration difference = currentDate.difference(transactionDate);
+  
+  return difference.inDays;
+}
+

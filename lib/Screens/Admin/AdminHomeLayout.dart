@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/admin_profile.dart';
@@ -6,6 +8,7 @@ import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/fuel_pr
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
 import 'package:company_pages/Services/deposit_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import '../../../Screens/Admin/Manage Companies/Company_Model.dart'as company;
@@ -37,6 +40,7 @@ dynamic admin;
 List<DepositReceipt> depositList=[];
   List<company.Company> _companies = []; // State variable to store the fetched companies
   List<op.Operator> operators =[];
+  dynamic _imageData;
 @override
 void initState() {
   super.initState();
@@ -45,9 +49,42 @@ void initState() {
  _fetchUserData().then((_) {
     // Call _getDepositList() only after _fetchUserData() completes
     _getDepositList();
+    // if(admin.imageId=='')
+    _fetchImage();
+    // print('image yes');
+
   });
    setupPushNotifications();
 }
+
+ Future<void> _fetchImage() async {
+  try {
+    ImageService imageService = ImageService();
+    // Fetch image data using the image ID
+// print(admin.imageId);
+if(admin.imageId!=null){
+    Uint8List imageData = await imageService.getImageFromId(admin.imageId);
+ if (imageData != null) {
+      // Update the state to trigger a rebuild with the fetched image data
+      setState(() {
+        _imageData = imageData;
+      });
+}
+    // Check if imageData is not null before setting the state
+   
+      
+    } else {
+       setState(() {
+        _imageData = 'no image';
+      });
+      print('Image data is null.');
+    }
+  } catch (e) {
+    // Handle errors
+    print('Failed to fetch image: $e');
+  }
+}
+
   void setupPushNotifications() async {
     final fcm = FirebaseMessaging.instance;
 
@@ -145,11 +182,11 @@ Future<void> _getDepositList() async {
     Widget _getBody() {
     switch (_currentIndex) {
       case 0:
-        return  AdminHomeScreen(companies: _companies,admin:admin,operators:operators);
+        return  AdminHomeScreen(companies: _companies,admin:admin,operators:operators,imageData:_imageData);
       case 1:
         return  NewDeposit(deposits:depositList);
       case 2:
-        return AdminProfile();
+        return AdminProfile(admin: admin,imageData: _imageData,);
       default:
         return Container();
     }

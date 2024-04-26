@@ -70,14 +70,14 @@ class PaymentMethodEntry extends StatelessWidget {
                       // _buildPathLine(),
                     ],
                   ),
-                      Positioned(
-                        left:85,
-                        top:10,
-                        child: _buildPathLine(103,true)),
-                        Positioned(
-                        left:210,
-                        top:10,
-                        child: _buildPathLine(110,false)),
+                      // Positioned(
+                      //   left:85,
+                      //   top:10,
+                      //   child: _buildPathLine(103,true)),
+                      //   Positioned(
+                      //   left:210,
+                      //   top:10,
+                      //   child: _buildPathLine(110,false)),
     
                 ],
               ),

@@ -65,7 +65,7 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
                                         },
                                       );
                               },
-                              child:buildInput(
+                              child:buildInputF(
                   "Select Payment Method",
                  Image.asset('assets/images/down.png'),
               
@@ -96,3 +96,56 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
   }
 }
 List<String> paymentMethods=['Check','Cash','Credit Card'];
+
+
+Widget buildInputF(String hintText, Widget widgetAtLeft, bool withBorder,
+    TextEditingController textEditingController,
+    {bool isPressable = false}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      border: withBorder
+          ? Border.all(
+              color: Colors.black,
+              width: 1,
+            )
+          :  Border(
+              bottom: BorderSide(
+                color: Colors.black,
+                width: 1,
+              ),
+            ),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: isPressable
+                ? const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18)
+                : const EdgeInsets.symmetric(horizontal: 18.0),
+            child: isPressable
+                ? Text(
+                    hintText,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  )
+                : TextFormField(
+                  enabled: false,
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                      hintText: hintText,
+                      border: InputBorder.none,
+                    ),
+                  ),
+          ),
+        ),
+        widgetAtLeft,
+        const SizedBox(
+          width: 15,
+        )
+      ],
+    ),
+  );
+}

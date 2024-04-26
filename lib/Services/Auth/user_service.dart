@@ -76,8 +76,11 @@ class User {
 
 class Admin extends User {
   final String dob;
+  final String imageId;
 
-  Admin({required String id, required String email, required String phone, required String name, required this.dob})
+  Admin({required String id, required String email, required String phone, required String name, required this.dob,
+  required this.imageId
+  })
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Admin.fromJson(Map<String, dynamic> json) {
@@ -86,7 +89,9 @@ class Admin extends User {
       email: json['email'],
       phone: json['phone'],
       name: json['name'],
-      dob: json['dob'],
+      dob: json['dob']??'',
+      imageId: json['imageId']??'',
+
     );
   }
 }
@@ -110,6 +115,7 @@ class Company extends User {
   final String contactName;
   final String location;
   final int pts;
+  final String imageId;
 
   Company(
       {required String id,
@@ -119,7 +125,8 @@ class Company extends User {
       required this.balance,
       required this.contactName,
       required this.location,
-      required this.pts
+      required this.pts,
+      required this.imageId
 
       
       })
@@ -134,7 +141,8 @@ class Company extends User {
       balance: json['balance'],
       contactName: json['contactName'],
       location: json['location'],
-      pts:json['pts']
+      pts:json['pts'],
+      imageId: json['imageId']
     );
   }
 }

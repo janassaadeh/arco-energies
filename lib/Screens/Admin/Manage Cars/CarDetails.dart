@@ -17,7 +17,7 @@ import 'AddCar.dart';
 
 class CarDetails extends StatefulWidget {
    Vehicle car;
-  Company company;
+  dynamic company;
   CarDetails({required this.car,required this.company});
 
   @override

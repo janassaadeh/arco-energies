@@ -3,13 +3,15 @@ import 'package:company_pages/Screens/Company/Company%20Details.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../Widgets/profile/link.dart';
 
 class AdminProfile extends StatelessWidget {
   AuthenticationService authenticationService = AuthenticationService();
-
-  AdminProfile({super.key});
+  dynamic admin;
+  dynamic imageData;
+  AdminProfile({super.key,required this.admin,required this.imageData});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +47,8 @@ class AdminProfile extends StatelessWidget {
                   const SizedBox(
                     height: 80,
                   ),
-                  const Text(
-                    'Company Name',
+                   Text(
+                    admin.name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color.fromRGBO(0, 0, 0, 1),
@@ -58,8 +60,8 @@ class AdminProfile extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  const Text(
-                    'name@company.com',
+                   Text(
+                    admin.email,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color.fromRGBO(0, 0, 0, 1),
@@ -150,17 +152,38 @@ class AdminProfile extends StatelessWidget {
               ),
             ),
           ),
-          const Positioned(
+           Positioned(
               top: 60,
               right: 140,
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 67,
-                child: CircleAvatar(
-                  radius: 65,
-                  backgroundImage: AssetImage("assets/images/company.png"),
-                ),
-              ))
+              child:
+              
+  admin.imageId==''?
+      Image.asset("assets/images/User Shield.png"):
+  imageData != null
+      ? 
+      
+      
+      ClipOval(
+          child: 
+          Image.memory(
+            imageData!,
+            fit: BoxFit.cover,
+            width: 130,
+            height: 130,
+          ),
+        )
+      : ClipOval(
+        child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 90,
+              height: 90,
+              color: Colors.white, // You can change this color to match your background
+            ),
+          ),
+      ),
+              )
         ],
       ),
     );

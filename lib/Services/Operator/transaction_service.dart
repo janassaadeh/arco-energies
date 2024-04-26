@@ -82,4 +82,40 @@ class TransactionService {
       throw Exception('Failed to fetch transactions: $e');
     }
   }
+  
+  Future<List<Transaction>> getTransactionsForCompany(String id) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      if (token == null) {
+        throw Exception('Failed to retrieve authentication token');
+      }
+
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.get(
+        'http://10.0.2.2:8080/api/transactions/company/$id',
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data;
+
+        // Map the response data to Transaction objects
+        List<Transaction> transactions = [];
+        for (var transactionJson in responseData) {
+          transactions.add(Transaction.fromJson(transactionJson));
+        }
+        print(transactions);
+        return transactions;
+      } else {
+        throw Exception('Failed to load transactions');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch transactions: $e');
+    }
+  }
 }

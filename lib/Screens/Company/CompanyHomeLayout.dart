@@ -1,6 +1,8 @@
+import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Screens/Company/HomeScreen.dart';
 import 'package:company_pages/Screens/Company/RewardScreen.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
+import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
@@ -20,19 +22,52 @@ class _CompanyHomePageLayoutState extends State<CompanyHomePageLayout> {
 String name="John Doe";
 dynamic company;
 List <DepositReceipt> depositList=[];
+List <Transaction> transactionList=[];
+List <dynamic> mergedAndSorted=[];
 List <Reward> rewards=[];
 
 var _currentIndex=0;
-  @override
-  void initState() {
-
-    super.initState();
- _fetchUserData().then((_) {
+@override
+void initState() {
+  super.initState();
+  
+  _fetchUserData().then((_) {
     // Call _getDepositList() only after _fetchUserData() completes
     _getDepositList();
     _getReward();
+    _getTransaction(company.id).then((_) {
+      // Both _getDepositList() and _getTransaction() are completed here
+      List<dynamic> mergedAndSorted1 = [...depositList!, ...transactionList!];
+
+      // Sort the combined list by time
+      mergedAndSorted1.sort((a, b) {
+        if (a is DepositReceipt && b is DepositReceipt) {
+          return a.timestamp.compareTo(b.timestamp);
+        } else if (a is Transaction && b is Transaction) {
+          return a.date.compareTo(b.date);
+        } else if (a is DepositReceipt && b is Transaction) {
+          return a.timestamp.compareTo(b.date);
+        } else {
+          return a.date.compareTo(b.timestamp);
+        }
+      });
+
+      // Set the state with the sorted list
+      setState(() {
+        mergedAndSorted = mergedAndSorted1;
+      });
+
+      // Print the sorted list
+      mergedAndSorted1.forEach((item) {
+        print(item);
+      });
+    });
   });
-  }
+}
+
+
+
+
 
   Future<void> _fetchUserData() async {
   try {
@@ -46,6 +81,27 @@ var _currentIndex=0;
     print('Error fetching company: $e');
   }
 }
+Future<void> _getTransaction(String companyId) async {
+  try {
+    if (company == null) {
+      print('Company data is not yet fetched.');
+      return; // Exit the method if admin data is not available
+    }
+
+    TransactionService transactionService = TransactionService();
+    List<Transaction> allTransactions = await transactionService.getTransactions();
+    
+    // Filter transactions for the specific company
+    List<Transaction> companyTransactions = allTransactions.where((transaction) => transaction.vehicle.company.id == companyId).toList();
+
+    setState(() {
+      transactionList = companyTransactions;
+    });
+  } catch (e) {
+    print('Error fetching transactions: $e');
+  }
+}
+
 
 Future<void> _getDepositList() async {
   try {
@@ -105,7 +161,7 @@ Future<void> _getReward() async {
     Widget getBody() {
     switch (_currentIndex) {
       case 0:
-        return  HomeScreen(company:company,depositList: depositList,);
+        return  HomeScreen(company:company,depositList: depositList,transactionList:transactionList,mergedAndSorted: mergedAndSorted);
       case 1:
         return   RewardScreen(company:company,rewards:rewards);
       case 2:

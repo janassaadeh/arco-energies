@@ -14,11 +14,21 @@ import '../Admin/Manage Cars/Cars.dart';
 
 
 // Define the LoginScreen class
-class LoginScreen extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class LoginScreen extends StatefulWidget {
 
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool isLocked=true;
+
   @override
   Widget build(BuildContext context) {
     AuthenticationService authenticationService=AuthenticationService();
@@ -139,7 +149,48 @@ class LoginScreen extends StatelessWidget {
               ),
               CustomInputFieldLarge(controller: _emailController, imagePath: "assets/images/Envelope.png", hintText: "Email"),
               const SizedBox(height: 30,),
-              CustomInputFieldLarge(controller: _passwordController, imagePath: "assets/images/Eye.png", hintText: "Password"),
+              // CustomInputFieldLarge(controller: _passwordController, imagePath: "assets/images/Eye.png", hintText: "Password"),
+
+              Container(
+      width: 328,
+      height: 62,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromRGBO(196, 196, 196, 0.2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 8, bottom: 8, top: 11),
+        child: TextFormField(
+          controller: _passwordController,
+          obscureText: isLocked,
+          // obscuringCharacter: '⚫',
+            obscuringCharacter: '●',
+
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(borderSide: BorderSide.none),
+            hintText: 'Password',
+                contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+
+            hintStyle: const TextStyle(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              fontFamily: 'Mulish',
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
+            suffixIcon: GestureDetector(
+              
+              onTap: (){
+              setState(() {
+                isLocked=!isLocked;
+              });
+              },
+              child:isLocked? 
+              
+              Image.asset('assets/images/Blind.png',): Image.asset('assets/images/Eye.png',color: Color(0xff666666),)),
+          ),
+        ),
+      ),
+    ),
               const SizedBox(height: 30),
               GestureDetector(
                 onTap:() {

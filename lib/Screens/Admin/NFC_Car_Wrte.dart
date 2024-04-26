@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
@@ -215,32 +217,29 @@ class _WriteCarIdState extends State<WriteCarId> {
     );
   },
 );
-
 Future<void> writeCarIDToNFC(String carId) async {
-  // Check NFC availability
   var availability = await FlutterNfcKit.nfcAvailability;
   if (availability != NFCAvailability.available) {
     print("NFC not available on this device.");
     return;
   }
 
-  // Poll for NFC tag
   var tag = await FlutterNfcKit.poll(
     timeout: Duration(seconds: 10),
-    // iosMessage: "Scan your tag",
   );
   print(jsonEncode(tag));
 
-  // Check tag type and writability
   if (tag.ndefWritable != null && tag.ndefWritable!) {
-    // Prepare data to write
-    //     var carIdRecord =FlutterNfcKit.(carId);
+    var ndefRecord = ndef.TextRecord(
+      text: carId,
+      language: 'en'
+    );
 
+    // Write NDEF record
+    await FlutterNfcKit.writeNDEFRecords([ndefRecord, ndef.MimeRecord(decodedType: 'Content-type',
+  payload: Uint8List.fromList(
+    'vnd.com.example.company_pages'.codeUnits)),]);
 
-    // // Write NDEF record
-    // await FlutterNfcKit.writeNDEFRecords([carIdRecord]);
-
-await FlutterNfcKit.writeNDEFRecords([ndef.UriRecord.fromString(carId)]);
     Navigator.pop(context);
     print("Car ID written successfully: $carId");
   } else {
@@ -250,6 +249,7 @@ await FlutterNfcKit.writeNDEFRecords([ndef.UriRecord.fromString(carId)]);
   // Finish NFC operation
   await FlutterNfcKit.finish();
 }
+
                 await writeCarIDToNFC(vehicle.id);
                                   },
                                 );

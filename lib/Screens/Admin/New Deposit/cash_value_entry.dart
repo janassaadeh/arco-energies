@@ -79,14 +79,14 @@ class CashAmountValueEntry extends StatelessWidget {
                       ],
                       
                     ),
-                                        Positioned(
-                          left:85,
-                          top:10,
-                          child: _buildPathLine(103,true)),
-                          Positioned(
-                          left:210,
-                          top:10,
-                          child: _buildPathLine(110,true)),
+                          //               Positioned(
+                          // left:85,
+                          // top:10,
+                          // child: _buildPathLine(103,true)),
+                          // Positioned(
+                          // left:210,
+                          // top:10,
+                          // child: _buildPathLine(110,true)),
             
                   ],
                 ),

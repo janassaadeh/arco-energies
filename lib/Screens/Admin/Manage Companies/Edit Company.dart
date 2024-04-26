@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 // import 'package:your_app_path_here/company_model.dart';
 
 import '../../../Widgets/Common/CustomButton.dart';
@@ -9,28 +14,38 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 import '../Manage Fields.dart';
  // Import your Company model
 
-class EditCompany extends StatelessWidget {
+class EditCompany extends StatefulWidget {
   final Company company; // Pass the Company object to the screen
+   dynamic imageData;
+  EditCompany({required this.company,this.imageData});
 
-  EditCompany({required this.company});
+  @override
+  State<EditCompany> createState() => _EditCompanyState();
+}
 
+class _EditCompanyState extends State<EditCompany> {
   late TextEditingController _nameController;
+
   late TextEditingController _contactNameController;
+
   late TextEditingController _locationController;
+
   late TextEditingController _emailController;
+
   late TextEditingController _phoneController;
+
   late TextEditingController _balanceController;
+    dynamic base64Image1;
 
   @override
   Widget build(BuildContext context) {
     // Initialize controllers with company data
-    _nameController = TextEditingController(text: company.name);
-    _contactNameController = TextEditingController(text: company.contactName);
-    _locationController = TextEditingController(text: company.location);
-    _emailController = TextEditingController(text: company.email);
-    _phoneController = TextEditingController(text: company.phone);
-    _balanceController = TextEditingController(text: company.balance.toString());
-
+    _nameController = TextEditingController(text: widget.company.name);
+    _contactNameController = TextEditingController(text: widget.company.contactName);
+    _locationController = TextEditingController(text: widget.company.location);
+    _emailController = TextEditingController(text: widget.company.email);
+    _phoneController = TextEditingController(text: widget.company.phone);
+    _balanceController = TextEditingController(text: widget.company.balance.toString());
     return Scaffold(
   appBar: AppBar(
         leading: GestureDetector(
@@ -116,7 +131,10 @@ class EditCompany extends StatelessWidget {
 
                     const SizedBox(height: 30),
                     GestureDetector(
-                      onTap: () {
+                      onTap: ()async {
+                        ImageService imageService =ImageService();
+                        // print(base64Image1);
+                 await  imageService.uploadImage(base64Image1, widget.company.id);
                         _saveChanges(context);
                       },
                       child: CustomButton(buttonText: "Save"),
@@ -128,10 +146,82 @@ class EditCompany extends StatelessWidget {
             Positioned(
               top: 50,
               right: 140,
-              child: CircleAvatar(
-                backgroundColor: Color(0xffC1BEBE),
-                radius: 67,
-                child: Image.asset("assets/images/buisness_profile.png"),
+              child: Stack(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Color(0xffC1BEBE),
+                    radius: 67,
+                    child:(widget.imageData==null)? Image.asset("assets/images/buisness_profile.png"):
+                    ClipOval(
+                      child: Image.memory(
+                                widget.imageData!,
+                                fit: BoxFit.cover, // Adjust the fit as needed
+                                width: 134, // Set the width and height to ensure the image is circular
+                                height: 134,
+                              ),
+                    ),
+                  ),
+                      Positioned(
+                    top: 5, 
+                    right: 0, 
+                    child: Container(
+                          width: 30, // Adjust the width of the container as needed
+                          height: 30, // Adjust the height of the container as needed
+                          decoration: BoxDecoration(
+                  color: Colors.white, // You can set your desired background color
+                  shape: BoxShape.circle, // This makes it a circle
+                  //           boxShadow: [
+                  // BoxShadow(
+                  //   color: Colors.black.withOpacity(0.3), // Shadow color
+                  //   spreadRadius: 2, // Spread radius
+                  //   blurRadius: 4, // Blur radius
+                  //   offset: const Offset(0, 2), // Offset
+                  // ),
+                          // ],
+                          ),
+                          child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: GestureDetector(
+                    onTap: (){
+                        
+                      final picker = ImagePicker();
+                        
+                        Future<void> _openImagePicker() async {
+                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                        
+                          if (pickedFile != null) {
+                  final file = File(pickedFile.path);
+                  final bytes = await file.readAsBytes();
+                  final base64Image = base64Encode(bytes);
+                  final image = "data:image/png;base64,$base64Image";
+                                          
+                  // Now you have the base64-encoded image
+                  // print("Base64 Image: $base64Image");
+                        // print(base64Image);
+                        
+                  setState(() {
+                    widget.imageData = bytes; // Set the picked image file
+                     // Update the profileAvatar URL
+                     base64Image1=base64Image;
+                  });
+                  // print(base64Image1);
+
+                      
+                  // print(imgUrl);
+                          } else {
+                  // Handle no image picked error
+                          }
+                        }
+                    _openImagePicker();
+                    },
+                    child: Center(
+                      child: Icon(Icons.add)
+                    ),
+                  ),
+                          ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -141,15 +231,16 @@ class EditCompany extends StatelessWidget {
   }
 
   void _saveChanges(BuildContext context) async {
+    
     final editedCompany = Company(
-      id: company.id,
+      id: widget.company.id,
       name: _nameController.text,
       contactName: _contactNameController.text,
       location: _locationController.text,
       email: _emailController.text,
       phone: _phoneController.text,
       balance: double.tryParse(_balanceController.text) ?? 0.0,
-      imageId: company.imageId
+      imageId: widget.company.imageId
     );
     CompanyService _companyService=CompanyService();
     try {

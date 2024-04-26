@@ -1,101 +1,116 @@
 import 'package:company_pages/Models/vehicle.dart';
+import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Widgets/cars/CustomCarSearch.dart';
+// import 'package:company_pages/Widgets/cars/CarCard.dart';
 import 'package:flutter/material.dart';
 
-import 'package:company_pages/Widgets/cars/CarCard.dart';
+import '../Admin/CarCard.dart';
+import '../Admin/Manage Cars/CarDetails.dart';
 
-class MyCars extends StatelessWidget {
-  MyCars({super.key});
+class MyCars extends StatefulWidget {
+  final dynamic cars;
+  final dynamic company;
 
-  final VehicleService vehicleService = VehicleService();
+  MyCars({ this.cars,this.company}) ;
 
+  @override
+  _MyCarsState createState() => _MyCarsState();
+}
+
+class _MyCarsState extends State<MyCars> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: Container(),
-          title: const Center(
-            child: Text(
-              'All Cars',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+      appBar: AppBar(
+         leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.arrow_back_ios, color: Colors.white)),
+        title: const Center(
+          child: Text(
+            'All Cars',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color(0xff003D5B),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                Icons.notifications,
-                size: 37,
-                color: Colors.white,
-              ),
-            )
-          ],
         ),
-        backgroundColor: const Color(0xff003D58),
-        body: SingleChildScrollView(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                children: [
-                  Container(height: 120, color: const Color(0xff003D58)),
-                  Container(
-                    height: 500,
-                    color: Colors.white,
-                    // height: MediaQuery.of(context).size.height / 1.1,
-                    child: FutureBuilder<List<Vehicle>>(
-                      future: vehicleService.getVehicles(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          List<Vehicle>? vehicles = snapshot.data;
-                          if (vehicles != null && vehicles.isNotEmpty) {
-                            return ListView.builder(
-                              itemCount: vehicles.length,
-                              itemBuilder: (context, index) {
-                                Vehicle vehicle = vehicles[index];
-                                return CarCard(
-                                  vehicle: vehicle,
-                                );
-                              },
-                            );
-                          } else {
-                            return const Text('No vehicles found');
+        backgroundColor: const Color(0xff003D5B),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(
+              Icons.notifications,
+              size: 37,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
+      backgroundColor: const Color(0xff003D58),
+      body: SingleChildScrollView(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Column(
+              children: [
+                Container(height: 120, color: const Color(0xff003D58)),
+                Container(
+                  height: 700,
+                  color: Colors.white,
+                  child: ListView.builder(
+                    itemCount: widget.cars.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          // Navigating to CarDetails
+                          final newCar = await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CarDetails(car: widget.cars[index], company: widget.company)),
+                          );
+
+                          // Handling the returned car object from CarDetails
+                          if (newCar != null) {
+                            setState(() {
+                              widget.cars[index] = newCar; // Update the list with the edited car object
+                            });
                           }
-                        }
-                      },
-                    ),
+                        },
+                        child: CarCard(
+                          title: widget.cars[index].driverName,
+                          subtitle1: widget.cars[index].model,
+                          subtitle2: widget.cars[index].year.toString(),
+                          // subtitle3: '#${cars[index].carId}',
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 100.0),
-                child: Container(
-                  height: 30,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      )),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 100.0),
+              child: Container(
+                height: 30,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 15, left: 15.0, right: 15),
-                child: CustomCarSearch(),
-              ),
-            ],
-          ),
-        ));
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 15, left: 15.0, right: 15),
+              child: CustomCarSearch(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

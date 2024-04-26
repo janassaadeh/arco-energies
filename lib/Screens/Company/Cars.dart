@@ -163,7 +163,7 @@ body:
                       decoration: InputDecoration(
                         border: OutlineInputBorder(borderSide: BorderSide.none),
                         // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Companies ...",
+                        hintText: "Search Cars ...",
                         hintStyle: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.5),
                           fontFamily: 'Mulish',

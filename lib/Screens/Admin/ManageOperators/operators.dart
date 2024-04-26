@@ -1,9 +1,12 @@
 
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/AddOperator.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/Operator%20Details.dart';
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -30,6 +33,7 @@ class _MyOperatorsState extends State<Operators> with SingleTickerProviderStateM
   late List<TickerProvider> tickerProviders;
   String searchQuery = '';
  late List<Operator> filteredOperators;
+List<dynamic?> imageDataList = [];
  
   @override
   void initState() {
@@ -44,8 +48,40 @@ class _MyOperatorsState extends State<Operators> with SingleTickerProviderStateM
     );
     filteredOperators = filterOperators(); // Filtered list of companies
 
-  }
+   fetchImageForFilteredOperators();
 
+  }
+  
+  Future<void> fetchImageForFilteredOperators() async {
+    ImageService _apiService = ImageService();
+
+    // Initialize imageDataList with null values
+    imageDataList = List.generate(filteredOperators.length, (_) => null);
+
+    for (int index = 0; index < filteredOperators.length; index++) {
+      String imageId = filteredOperators[index].imageId;
+      try {
+         if (imageId != '') {
+          // Fetch image data using the provided image ID
+          Uint8List imageData = await _apiService.getImageFromId(imageId);
+          setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = imageData;
+
+          });
+          
+          
+    print("${index} done ");
+
+        }
+    
+      } catch (e) {
+        // Handle errors
+        print('Failed to fetch image for company at index $index: $e');
+      }
+    }
+  }
+ 
   // Method to filter companies based on search query
   List<Operator> filterOperators() {
     return widget.operators.where((op) {
@@ -57,7 +93,14 @@ class _MyOperatorsState extends State<Operators> with SingleTickerProviderStateM
       return name.contains(query) || email.contains(query) || address.contains(query) || phone.contains(query);
     }).toList();
   }
-
+Future<void> refreshOperators() async {
+  OperatorService operatorService = OperatorService();
+  List<Operator> updatedOperators = await operatorService.getAllOperators();
+  setState(() {
+    filteredOperators = updatedOperators;
+  });
+  fetchImageForFilteredOperators();
+}
   @override
   Widget build(BuildContext context) {
 
@@ -107,70 +150,78 @@ class _MyOperatorsState extends State<Operators> with SingleTickerProviderStateM
                   Container(
                     color: Colors.white,
                     height: 652,
-                    child: ListView.builder(
-                      itemCount: filteredOperators.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Slidable(
-                              key: ValueKey(index),
-                              controller: controllers[index],
-                              endActionPane: ActionPane(
-                                extentRatio: ratio,
-                                motion: const ScrollMotion(),
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      controllers[index]?.close();
-                                      _showCupertinoLikeDialog(context,index,filteredOperators);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top:18,left:22,bottom:18),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color:Colors.red,
-                                            borderRadius: BorderRadius.circular(12)
-                                        ),
-                                        width: 88,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top:18,bottom:12),
-                                          child: Column(
-                                            children: [
-                                              Icon(Icons.delete, color: Colors.white,size: 20,),
-                                              SizedBox(height: 1,),
-                                              Text("Delete",style: TextStyle(color:Colors.white, fontSize: 14,fontWeight: FontWeight.bold),)
-                                            ],
+                    child: RefreshIndicator(
+  onRefresh: () async {
+    await refreshOperators();
+  },
+
+                      child: ListView.builder(
+                        itemCount: filteredOperators.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Slidable(
+                                key: ValueKey(index),
+                                controller: controllers[index],
+                                endActionPane: ActionPane(
+                                  extentRatio: ratio,
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        controllers[index]?.close();
+                                        _showCupertinoLikeDialog(context,index,filteredOperators);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top:18,left:22,bottom:18),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:Colors.red,
+                                              borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          width: 88,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top:18,bottom:12),
+                                            child: Column(
+                                              children: [
+                                                Icon(Icons.delete, color: Colors.white,size: 20,),
+                                                SizedBox(height: 1,),
+                                                Text("Delete",style: TextStyle(color:Colors.white, fontSize: 14,fontWeight: FontWeight.bold),)
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              child: GestureDetector(
-                                onTap:  () async {
-                                  final newOperator = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => OperatorDetails(operator:filteredOperators[index])),
-                                  );
-                                  if (newOperator!= filteredOperators[index]) {
-                                    setState(() {
-                                      filteredOperators[index]=newOperator;
-                                    });
-                                  }
-                                },
-                                child: CompanyCard(
-                                  title: filteredOperators[index].name,
-                                  subtitle1: filteredOperators[index].email,
-                                  subtitle2: filteredOperators[index].phone,
-                                  // subtitle3: '#${cars[index].carId}',
+                                  ],
                                 ),
+                                child: GestureDetector(
+                                  onTap:  () async {
+                                    final newOperator = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => OperatorDetails(operator:filteredOperators[index],imageData: imageDataList[index],)),
+                                    );
+                                    if (newOperator!= filteredOperators[index]) {
+                                      setState(() {
+                                        filteredOperators[index]=newOperator;
+                                      });
+                                    }
+                                  },
+                                  child: CompanyCard(
+                                    title: filteredOperators[index].name,
+                                    subtitle1: filteredOperators[index].email,
+                                    subtitle2: filteredOperators[index].phone,
+                                    // subtitle3: '#${cars[index].carId}',
+                                      imageData:(filteredOperators[index].imageId=='')?'no image':imageDataList[index]
+                    
+                                  ),
+                                ),
+                    
                               ),
-
-                            ),
-                          ],
-                        );
-                      }
+                            ],
+                          );
+                        }
+                      ),
                     ),
                   ),
                 ],

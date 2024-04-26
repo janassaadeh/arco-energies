@@ -41,18 +41,21 @@ class Info extends StatelessWidget {
 
 
             (title=="Email")?
-            Text(
-  content,
-  overflow: TextOverflow.ellipsis,
-  maxLines: 1, 
-                
-style: TextStyle(
-                color: Color.fromRGBO(0, 0, 0, 1),
-                fontFamily: 'Inter',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                
-))
+            Container(
+              width: MediaQuery.sizeOf(context).width*0.4,
+              child: Text(
+              content,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1, 
+                  
+            style: TextStyle(
+                  color: Color.fromRGBO(0, 0, 0, 1),
+                  fontFamily: 'Inter',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  
+            )),
+            )
 :
             Text(
               content,

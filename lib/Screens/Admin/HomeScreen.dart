@@ -1,4 +1,6 @@
 
+import 'dart:typed_data';
+
 import 'package:company_pages/Models/fuel.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Screens/Admin/NFC_Car_Wrte.dart';
@@ -6,10 +8,12 @@ import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Screens/Admin/qr_code.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Widgets/Operator/horizontal_gradient_box.dart';
 import 'package:company_pages/Models/fuel_price.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../Services/Auth/AuthenticationService.dart';
 import '../../Services/Auth/user_service.dart'as User;
@@ -27,8 +31,8 @@ class AdminHomeScreen extends StatefulWidget {
     
     List <company.Company> companies;
     dynamic admin;
-
-    AdminHomeScreen({required this.companies,required this.admin,required this.operators});
+    dynamic imageData;
+    AdminHomeScreen({required this.companies,required this.admin,required this.operators,required this.imageData});
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
@@ -41,10 +45,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   final FuelService fuelService = FuelService();
 
+
   @override
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
+
   }
 
   Future<List<Fuel>> _fetchFuels() async {
@@ -55,15 +61,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       return []; // Return empty list on error
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
-   
-    //     final List<FuelPrice> fuelPrices = [
-    //   FuelPrice("Fuel 95", "Last modified: 2023-10-25", 2.50),
-    //   FuelPrice("Fuel 98", "Last modified: 2023-10-25", 2.70),
-    //   FuelPrice("Diesel", "Last modified: 2023-10-25", 2.20),
-    // ];
     
     return 
     widget.admin==null?Container():
@@ -74,7 +74,73 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               padding: const EdgeInsets.only(left:18,right:18.0,top: 18),
 
 
-              child: horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
+              child: 
+              
+                Container(
+    height: 130,
+    width: MediaQuery.of(context).size.width,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color.fromRGBO(2, 91, 135, 1),
+          Color.fromRGBO(0, 61, 91, .6),
+        ], // Gradient colors
+      ),
+    ),
+    child: Stack(
+      children: [
+        Positioned(
+          top: 20,
+          left: 20,
+          child: Text(
+            widget.admin==null?'':'Hello, ${widget.admin.name}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Positioned(
+  bottom: 20,
+  right: 20,
+  child: 
+  
+  widget.admin.imageId==''?
+      Image.asset("assets/images/User Shield.png"):
+  widget.imageData != null
+      ? 
+      
+      
+      ClipOval(
+          child: 
+          Image.memory(
+            widget.imageData!,
+            fit: BoxFit.cover,
+            width: 90,
+            height: 90,
+          ),
+        )
+      : ClipOval(
+        child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 90,
+              height: 90,
+              color: Colors.white, // You can change this color to match your background
+            ),
+          ),
+      ),
+),
+
+      ],
+    ),
+  )
+              // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
             ),
             const SizedBox(height: 30,),
             Padding(

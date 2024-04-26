@@ -2,7 +2,7 @@
 class Operator{
     String id;
     String email; String phone; String name; String dob;String address;
-
+    String imageId;
 
   Operator({
     required this.id,
@@ -12,6 +12,8 @@ class Operator{
     required this.name,
     required this.dob,
     required this.address,
+    required this.imageId,
+
 
   });
 
@@ -23,6 +25,7 @@ class Operator{
       address: json['address'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
+      imageId: json['imageId']??''
     );
   }
 

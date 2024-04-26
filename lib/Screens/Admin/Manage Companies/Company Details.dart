@@ -79,7 +79,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         onTap:  () async {
             final newCompany = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditCompany(company:widget.company)),
+              MaterialPageRoute(builder: (context) => EditCompany(company:widget.company,imageData:widget.imageData)),
             );
             if (newCompany != widget.company) {
               setState(() {
@@ -301,7 +301,20 @@ Padding(
                       Positioned(
                         top:100,
                         right:140,
-                        child: CircleAvatar(
+                        child: 
+                        
+                        _imageData=='' || _imageData==null?
+                        CircleAvatar(
+                        backgroundColor: Color(0xffC1BEBE),
+                        radius: 67,
+                        
+                          child: Image.asset("assets/images/buisness_profile.png"),
+
+                        )
+                        
+                        
+                        :
+                        CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 67,
                           child:  ClipOval(
@@ -327,62 +340,7 @@ Padding(
                         
                       )),
                       
-                  Positioned(
-                    // bottom: 3, 
-                    // left: 12, 
-                    child: Container(
-                          width: 30, // Adjust the width of the container as needed
-                          height: 30, // Adjust the height of the container as needed
-                          decoration: BoxDecoration(
-                  color: Colors.white, // You can set your desired background color
-                  shape: BoxShape.circle, // This makes it a circle
-                            boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3), // Shadow color
-                    spreadRadius: 2, // Spread radius
-                    blurRadius: 4, // Blur radius
-                    offset: const Offset(0, 2), // Offset
-                  ),
-                          ],
-                          ),
-                          child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: GestureDetector(
-                    onTap: (){
-                        
-                      final picker = ImagePicker();
-                        
-                        Future<void> _openImagePicker() async {
-                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                        
-                          if (pickedFile != null) {
-                  final file = File(pickedFile.path);
-                  final bytes = await file.readAsBytes();
-                  final base64Image = base64Encode(bytes);
-                  final image = "data:image/png;base64,$base64Image";
-                        
-                  // Now you have the base64-encoded image
-                  // print("Base64 Image: $base64Image");
-                        
-                  setState(() {
-                    _imageData = bytes; // Set the picked image file
-                     // Update the profileAvatar URL
-                  });
-                      
-                  // print(imgUrl);
-                          } else {
-                  // Handle no image picked error
-                          }
-                        }
-                    _openImagePicker();
-                    },
-                    child: Center(
-                      child: Icon(Icons.add)
-                    ),
-                  ),
-                          ),
-                    ),
-                  ),
+              
                 ],
               ),
             

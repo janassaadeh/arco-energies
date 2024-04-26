@@ -154,6 +154,7 @@ class AddOperator extends StatelessWidget {
       dob: _dobController.text,
       phone: _phoneController.text,
       address: _addressController.text,
+      
     );
 
     // Extract the ID from the response
@@ -167,6 +168,7 @@ class AddOperator extends StatelessWidget {
       address: _addressController.text,
       email: _emailController.text,
       phone: _phoneController.text,
+      imageId: ''
     );
 
     // If registration is successful, navigate back with the new company object
