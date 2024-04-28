@@ -1,5 +1,6 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Responses.OperatorResponse;
 import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,8 @@ public class Notification {
     private double price;
 
     private LocalDateTime createdDate;
+
+    private OperatorResponse operator;
 
     public Notification(String id, String type, double price, LocalDateTime createdDate) {
         this.id = id;
@@ -57,5 +60,13 @@ public class Notification {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public OperatorResponse getOperator() {
+        return operator;
+    }
+
+    public void setOperator(OperatorResponse operator) {
+        this.operator = operator;
     }
 }

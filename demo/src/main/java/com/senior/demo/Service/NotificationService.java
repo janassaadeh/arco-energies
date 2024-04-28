@@ -5,8 +5,10 @@ package com.senior.demo.Service;
 //import org.slf4j.LoggerFactory;
 import com.senior.demo.Collections.Notification;
 import com.senior.demo.Repository.NotificationRepository;
+import com.senior.demo.Responses.OperatorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,15 +20,26 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private UserService userService;
+
     private static final String NOTIFICATION_ID_PREFIX = "NOTIF";
 
     public List<Notification> getAllNotifications() {
         return notificationRepository.findAll();
     }
 
-    public Notification addNotification(Notification notification) {
+    public Notification addNotification(Notification notification, Authentication authentication) {
         String customId = generateCustomId();
         notification.setId(customId);
+
+        OperatorResponse operator = userService.getOperator(authentication);
+        System.out.println(operator.getEmail());
+        if (operator == null) {
+            throw new RuntimeException("Operator not found");
+        }
+        notification.setOperator(operator);
+
         return notificationRepository.save(notification);
     }
 

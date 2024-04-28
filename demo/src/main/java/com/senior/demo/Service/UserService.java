@@ -96,7 +96,7 @@ public class UserService {
         User user = (User) authentication.getPrincipal();
 
         Operator operator = operatorRepository.findByEmail(user.getUsername());
-        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getDob(),operator.getImageId());
+        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getAddress(),operator.getImageId());
 
 
 

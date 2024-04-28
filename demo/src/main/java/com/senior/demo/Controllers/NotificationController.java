@@ -5,6 +5,7 @@ import com.senior.demo.Collections.NotificationMessage;
 import com.senior.demo.Service.NotificationService;
 import com.senior.demo.Service.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class NotificationController {
     }
 
     @PostMapping("/notifications/add")
-    public Notification addNotification(@RequestBody Notification notification) {
-        return notificationService.addNotification(notification);
+    public Notification addNotification(@RequestBody Notification notification, Authentication authentication) {
+        return notificationService.addNotification(notification, authentication);
     }
 
     @DeleteMapping("/notifications/{id}")

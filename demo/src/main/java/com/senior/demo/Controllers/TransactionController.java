@@ -42,4 +42,10 @@ public class TransactionController {
     public void deleteTransactionById(@PathVariable String id) {
         transactionService.deleteTransactionById(id);
     }
+
+    @DeleteMapping("/transactions")
+    public void deleteAllTransactions() {
+        transactionService.deleteAllTransactions();
+    }
+
 }

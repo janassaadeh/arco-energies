@@ -161,6 +161,10 @@ public List<Transaction> getTransactionsByCompany(String companyName) {
         transactionRepository.deleteById(id);
     }
 
+    public void deleteAllTransactions() {
+        transactionRepository.deleteAll();
+    }
+
     private synchronized String generateCustomId() {
 
         List<Transaction> allTransactions = transactionRepository.findAll();
