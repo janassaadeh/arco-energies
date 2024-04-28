@@ -72,7 +72,7 @@ public class UserService {
                 Company company = companyRepository.findByEmail(user.getUsername());
                 System.out.println(company.getPts());
                 return new CompanyResponse(user.getId(), company.getEmail(), company.getPhone(), company.getName(), company.getBalance(), company.getContactName(), company.getLocation()
-                ,company.getPts(),company.getImageId()
+                ,company.getPts(),company.getImageId(),company.isActivated()
                 );
             } else if (user.getAuthorities().contains(Role.OPERATOR)) {
                 Operator operator = operatorRepository.findByEmail(user.getUsername());

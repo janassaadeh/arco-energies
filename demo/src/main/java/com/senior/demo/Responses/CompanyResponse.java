@@ -11,9 +11,9 @@ public class CompanyResponse {
     String contactName; String location;
 
     Integer pts;
-//    Boolean activated;
+    Boolean activated;
 
-    public CompanyResponse(String id, String email, String phone, String name, double balance, String contactName, String location, Integer pts, String imageId) {
+    public CompanyResponse(String id, String email, String phone, String name, double balance, String contactName, String location, Integer pts, String imageId,Boolean activated) {
         this.id = id;
         this.email = email;
         this.phone = phone;
@@ -23,6 +23,7 @@ public class CompanyResponse {
         this.location = location;
         this.pts = pts;
         this.imageId = imageId;
+        this.activated=activated;
     }
 
     String imageId;

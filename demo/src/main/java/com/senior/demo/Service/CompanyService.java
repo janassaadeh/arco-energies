@@ -86,7 +86,7 @@ public class CompanyService {
         return companies.stream()
                 .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
                 company.getPts()
-,company.getImageId()
+,company.getImageId(),company.isActivated()
                 ))
                 .collect(Collectors.toList());
     }
@@ -102,9 +102,17 @@ public class CompanyService {
                         company.getContactName(),
                         company.getLocation(),
                         company.getPts(),
-                        company.getImageId()
+                        company.getImageId(),
+                        company.isActivated()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public void Activate(String id) {
+        Company company=companyRepository.findById(id).orElse(null);
+//        assert company != null;
+        company.setActivated(true);
+        companyRepository.save(company);
     }
 
 
@@ -112,7 +120,7 @@ public class CompanyService {
     public CompanyResponse getCompanyById(String id) {
         Company company=companyRepository.findById(id).orElse(null);
         CompanyResponse companyResponse=new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
-                company.getPts(),company.getImageId()
+                company.getPts(),company.getImageId(),company.isActivated()
 
         );
         return companyResponse;
@@ -133,7 +141,7 @@ public class CompanyService {
 
             CompanyResponse exists=new CompanyResponse(existingCompany.getId(),existingCompany.getEmail(),existingCompany.getPhone(),existingCompany.getName(),
                     existingCompany.getBalance(),existingCompany.getContactName(),existingCompany.getLocation(),
-                    company.getPts(),company.getImageId()
+                    company.getPts(),company.getImageId(),company.getActivated()
 
             );
 
@@ -158,7 +166,8 @@ public class CompanyService {
                     existingCompany.getContactName(),
                     existingCompany.getLocation(),
                     existingCompany.getPts(),
-                    existingCompany.getImageId()
+                    existingCompany.getImageId(),
+                    existingCompany.isActivated()
 
 
             );

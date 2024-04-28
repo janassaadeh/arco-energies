@@ -102,6 +102,7 @@ public class AuthenticationService {
         List<Reward> allRewards = rewardRepository.findAll();
 
         u.setRewards(allRewards);
+        u.setPts(0);
         Company company = new Company.Builder()
                 .id(id)
                 .pts(0)

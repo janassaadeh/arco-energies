@@ -2,10 +2,7 @@ package com.senior.demo.Service;
 
 
 import com.senior.demo.Collections.*;
-import com.senior.demo.Repository.OperatorRepository;
-import com.senior.demo.Repository.PumpRepository;
-import com.senior.demo.Repository.TransactionRepository;
-import com.senior.demo.Repository.VehicleRepository;
+import com.senior.demo.Repository.*;
 import com.senior.demo.Responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -45,6 +42,8 @@ public class TransactionService {
     private OperatorRepository operatorRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private CompanyRepository companyRepository;
 
     private static final String TRANSACTION_ID_PREFIX = "TRANSACTION";
 
@@ -92,6 +91,11 @@ public class TransactionService {
         Operator operator1 = operatorRepository.findById(operator.getId())
                 .orElseThrow(() -> new RuntimeException("Operator not found with id: " + operator.getId()));
         operator1.addTransaction(savedTransaction);
+        String companyId=vehicle.getCompany().getId();
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+        company.setPts((int) quantity);
+        companyRepository.save(company);
         operatorRepository.save(operator1);
         pumpRepository.save(pump);
         vehicleRepository.save(vehicle);
