@@ -107,6 +107,9 @@ class _CarsListState extends State<CarsList> {
                 width: 15,
               )),
           onTap: () {
+            Provider.of<TransactionProvider>(context, listen: false)
+                .resetTransactionValues();
+
             Navigator.pop(context);
             Navigator.pop(context);
           },

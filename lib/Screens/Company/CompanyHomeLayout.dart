@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Screens/Company/HomeScreen.dart';
 import 'package:company_pages/Screens/Company/RewardScreen.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
+import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
@@ -25,14 +29,17 @@ List <DepositReceipt> depositList=[];
 List <Transaction> transactionList=[];
 List <dynamic> mergedAndSorted=[];
 List <Reward> rewards=[];
-
+dynamic _imageData;
+dynamic cars;
 var _currentIndex=0;
 @override
 void initState() {
   super.initState();
   
   _fetchUserData().then((_) {
+    _getCars();
     // Call _getDepositList() only after _fetchUserData() completes
+    _fetchImage();
     _getDepositList();
     _getReward();
     _getTransaction(company.id).then((_) {
@@ -156,6 +163,42 @@ Future<void> _getReward() async {
     print('Error fetching rewards list : $e');
   }
 }
+
+ Future<void> _fetchImage() async {
+  try {
+    ImageService imageService = ImageService();
+    // Fetch image data using the image ID
+// print(admin.imageId);
+if(company.imageId!=null){
+    Uint8List imageData = await imageService.getImageFromId(company.imageId);
+ if (imageData != null) {
+      // Update the state to trigger a rebuild with the fetched image data
+      setState(() {
+        _imageData = imageData;
+      });
+}
+    // Check if imageData is not null before setting the state
+   
+      
+    } else {
+       setState(() {
+        _imageData = 'no image';
+      });
+      print('Image data is null.');
+    }
+  } catch (e) {
+    // Handle errors
+    print('Failed to fetch image: $e');
+  }
+}
+Future<void>_getCars()async{
+    VehicleCompanyService vehicleService=VehicleCompanyService();
+                              final dynamic carslist=await vehicleService.getVehiclesForCompany(company.id);
+    setState(() {
+      cars=carslist;
+    });
+
+}
   @override
   Widget build(BuildContext context) {    
     Widget getBody() {
@@ -165,7 +208,7 @@ Future<void> _getReward() async {
       case 1:
         return   RewardScreen(company:company,rewards:rewards);
       case 2:
-        return Profile();
+        return Profile(company: company,imageData:_imageData,cars:cars,mergeAndSorted: mergedAndSorted,);
       default:
         return Container();
     }

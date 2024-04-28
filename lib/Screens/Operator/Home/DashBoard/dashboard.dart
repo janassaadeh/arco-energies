@@ -7,6 +7,7 @@ import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../Models/fuel_price.dart';
 import 'package:company_pages/Widgets/Operator/gradient_box.dart';
@@ -14,7 +15,10 @@ import '../../../../../../../../Widgets/Operator/horizontal_gradient_box.dart';
 import '../../../../../../Widgets/Operator/sub_title.dart';
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({Key? key}) : super(key: key);
+  dynamic operator;
+  dynamic imageData;
+  DashBoard({Key? key, required this.imageData, required this.operator})
+      : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -72,9 +76,71 @@ class _DashBoardState extends State<DashBoard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              horizontalGradientBox(context, "Welcome Back\nAshraf",
-                  "assets/images/gas-pump.png"),
-              const SizedBox(height: 20),
+              // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
+              //     "assets/images/gas-pump.png"),
+              Padding(
+                  padding: const EdgeInsets.only(left: 0, right: 0.0, top: 0),
+                  child: Container(
+                    height: 130,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.fromRGBO(2, 91, 135, 1),
+                          Color.fromRGBO(0, 61, 91, .6),
+                        ], // Gradient colors
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 20,
+                          left: 20,
+                          child: Text(
+                            widget.operator == null
+                                ? ''
+                                : 'Hello, ${widget.operator.name}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          right: 20,
+                          child: widget.operator.imageId == ''
+                              ? Image.asset("assets/images/User Shield.png")
+                              : widget.imageData != null
+                                  ? ClipOval(
+                                      child: Image.memory(
+                                        widget.imageData!,
+                                        fit: BoxFit.cover,
+                                        width: 90,
+                                        height: 90,
+                                      ),
+                                    )
+                                  : ClipOval(
+                                      child: Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          width: 90,
+                                          height: 90,
+                                          color: Colors
+                                              .white, // You can change this color to match your background
+                                        ),
+                                      ),
+                                    ),
+                        ),
+                      ],
+                    ),
+                  )),
+              const SizedBox(height: 15),
               subTitle('Features'),
               const SizedBox(height: 8),
               Row(

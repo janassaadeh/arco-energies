@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/Cars.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/image_service.dart';
+import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
 // 
 import 'package:flutter/material.dart';
@@ -99,8 +100,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             
                   Column(
                     children: [
-                     Image.asset("assets/images/wallpaper.png"),
-                     
+                    //  Image.asset("assets/images/wallpaper.png"),
+                              Container(
+                height: 200,
+                width: double.infinity,
+               color: Colors.white
+              ),
                       Container(
                           color: Colors.white,
                           height: 600,
@@ -122,7 +127,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                 width:double.infinity,
                                 decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                                // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                               ),
                                 child: Column(children: [
                                         SizedBox(height: 90,),
@@ -146,6 +151,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                 ),),
               ),
             ),
+
             const SizedBox(height: 25,),
 
                 Container(
@@ -243,57 +249,57 @@ Padding(
                   )
                 ),
                           const SizedBox(height: 40,),
-                          GestureDetector(
-                            onTap: ()async{
-                              VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
-                              final cars=await vehicleCompanyService.getVehiclesForCompany(widget.company.id);
+        //                   GestureDetector(
+        //                     onTap: ()async{
+        //                       VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
+        //                       final cars=await vehicleCompanyService.getVehiclesForCompany(widget.company.id);
                               
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Cars(cars:cars,company: widget.company,)));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => Cars(cars:cars,company: widget.company,)));
                               
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(22.0),
-                              child: Container(
-                                  width: double.infinity,
-                                  height: 62,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    gradient: LinearGradient(
-                                      begin: Alignment(1.5, 1),
-                                      end: Alignment(-1.5, 1),
-                                      colors: [
-                                        Color.fromRGBO(237, 174, 73, 0.5),
-                                        Color.fromRGBO(237, 174, 73, 1),
-                                        Color.fromRGBO(237, 174, 73, 0.5)
-                                      ],
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        SizedBox(width: 70,),
-                                        Text(
-                                          'View All Cars',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Color.fromRGBO(255, 255, 255, 1),
-                                            fontFamily: 'Inter',
-                                            fontSize: 21,
-                                            letterSpacing: -0.44,
-                                            fontWeight: FontWeight.normal,
-                                            height: 1.0952380952380953,
-                                          ),
-                                        ),
-                                        SizedBox(width: 10,),
+        //                     },
+        //                     child: Padding(
+        //                       padding: const EdgeInsets.all(22.0),
+        //                       child: Container(
+        //                           width: double.infinity,
+        //                           height: 62,
+        //                           decoration: BoxDecoration(
+        //                             borderRadius: BorderRadius.circular(12),
+        //                             gradient: LinearGradient(
+        //                               begin: Alignment(1.5, 1),
+        //                               end: Alignment(-1.5, 1),
+        //                               colors: [
+        //                                 Color.fromRGBO(237, 174, 73, 0.5),
+        //                                 Color.fromRGBO(237, 174, 73, 1),
+        //                                 Color.fromRGBO(237, 174, 73, 0.5)
+        //                               ],
+        //                             ),
+        //                           ),
+        //                           child: Center(
+        //                             child: Row(
+        //                               mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //                               children: [
+        //                                 SizedBox(width: 70,),
+        //                                 Text(
+        //                                   'View All Cars',
+        //                                   textAlign: TextAlign.center,
+        //                                   style: TextStyle(
+        //                                     color: Color.fromRGBO(255, 255, 255, 1),
+        //                                     fontFamily: 'Inter',
+        //                                     fontSize: 21,
+        //                                     letterSpacing: -0.44,
+        //                                     fontWeight: FontWeight.normal,
+        //                                     height: 1.0952380952380953,
+        //                                   ),
+        //                                 ),
+        //                                 SizedBox(width: 10,),
                           
-                                        Image.asset('assets/images/Next page.png')
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                            ),
-                          )
+        //                                 Image.asset('assets/images/Next page.png')
+        //                               ],
+        //                             ),
+        //                           ),
+        //                         ),
+        //                     ),
+        //                   )
                                 ],),
                               ),
                               

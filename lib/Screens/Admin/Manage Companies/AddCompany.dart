@@ -50,7 +50,8 @@ class AddCompany extends StatelessWidget {
           children: [
             Column(
               children: [
-                Image.asset("assets/images/wallpaper.png"),
+                // Image.asset("assets/images/wallpaper.png"),
+                Container(color: Color(0xff003D5B),width: double.infinity,height: 200,),
                 Container(
                   color: Colors.white,
                   height: 600,
@@ -63,16 +64,16 @@ class AddCompany extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 120.0),
+              padding: const EdgeInsets.only(top: 90.0),
               child: Container(
                 height: 790,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
+                  // borderRadius: BorderRadius.only(
+                  //   topLeft: Radius.circular(25),
+                  //   topRight: Radius.circular(25),
+                  // ),
                 ),
                 child: Column(
                   children: [
@@ -129,11 +130,11 @@ class AddCompany extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 50,
+              top: 20,
               right: 140,
               child: CircleAvatar(
                 backgroundColor: Color(0xffC1BEBE),
-                radius: 67,
+                radius: 62,
                 child: Image.asset("assets/images/buisness_profile.png"),
               ),
             ),
@@ -171,7 +172,8 @@ class AddCompany extends StatelessWidget {
       email: _emailController.text,
       phone: _phoneController.text,
       balance: 0.0,
-      imageId: '' 
+      imageId: '' ,
+      activated: true
     );
 
     // If registration is successful, navigate back with the new company object

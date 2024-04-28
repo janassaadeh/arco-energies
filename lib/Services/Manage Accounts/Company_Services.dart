@@ -88,4 +88,24 @@ class CompanyService {
       throw Exception('Failed to delete company: $e');
     }
   }
+
+  Future<void> activateCompany(String id) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        await _dio.post(
+          '$_baseUrl/api/company/activate/$id',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to activate company: $e');
+    }
+  }
 }
+

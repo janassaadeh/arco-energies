@@ -192,7 +192,7 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
                         id: item.id,
                         price: (getType(item.id) == 'Cash')?item.cashAmount:item.quantity * item.pump.fuel.fuelPrice,
                         type: (getType(item.id) == 'Cash')?"+":"-",
-                        day: (getType(item.id) == 'Cash')?_calculateDaysAgo(item.timestamp):_calculateDaysAgo2(item.date),
+                        day: (getType(item.id) == 'Cash')?_calculateDaysAgo(item.timestamp):_calculateDaysAgo(item.date),
                       ),
                     );
                   // } else if (getType(item.id) == 'Transaction') {

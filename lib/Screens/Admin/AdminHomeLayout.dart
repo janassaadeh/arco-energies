@@ -34,56 +34,54 @@ class AdminHomePageLayout extends StatefulWidget {
 }
 
 class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
-String name="John Doe";
-var _currentIndex=0;
-dynamic admin;
-List<DepositReceipt> depositList=[];
-  List<company.Company> _companies = []; // State variable to store the fetched companies
-  List<op.Operator> operators =[];
+  String name = "John Doe";
+  var _currentIndex = 0;
+  dynamic admin;
+  List<DepositReceipt> depositList = [];
+  List<company.Company> _companies =
+      []; // State variable to store the fetched companies
+  List<op.Operator> operators = [];
   dynamic _imageData;
-@override
-void initState() {
-  super.initState();
-  _fetchCompanies();
-  _fetchOperators();
- _fetchUserData().then((_) {
-    // Call _getDepositList() only after _fetchUserData() completes
-    _getDepositList();
-    // if(admin.imageId=='')
-    _fetchImage();
-    // print('image yes');
-
-  });
-   setupPushNotifications();
-}
-
- Future<void> _fetchImage() async {
-  try {
-    ImageService imageService = ImageService();
-    // Fetch image data using the image ID
-// print(admin.imageId);
-if(admin.imageId!=null){
-    Uint8List imageData = await imageService.getImageFromId(admin.imageId);
- if (imageData != null) {
-      // Update the state to trigger a rebuild with the fetched image data
-      setState(() {
-        _imageData = imageData;
-      });
-}
-    // Check if imageData is not null before setting the state
-   
-      
-    } else {
-       setState(() {
-        _imageData = 'no image';
-      });
-      print('Image data is null.');
-    }
-  } catch (e) {
-    // Handle errors
-    print('Failed to fetch image: $e');
+  @override
+  void initState() {
+    super.initState();
+    _fetchCompanies();
+    _fetchOperators();
+    _fetchUserData().then((_) {
+      // Call _getDepositList() only after _fetchUserData() completes
+      _getDepositList();
+      // if(admin.imageId=='')
+      _fetchImage();
+      // print('image yes');
+    });
+    setupPushNotifications();
   }
-}
+
+  Future<void> _fetchImage() async {
+    try {
+      ImageService imageService = ImageService();
+      // Fetch image data using the image ID
+// print(admin.imageId);
+      if (admin.imageId != null) {
+        Uint8List imageData = await imageService.getImageFromId(admin.imageId);
+        if (imageData != null) {
+          // Update the state to trigger a rebuild with the fetched image data
+          setState(() {
+            _imageData = imageData;
+          });
+        }
+        // Check if imageData is not null before setting the state
+      } else {
+        setState(() {
+          _imageData = 'no image';
+        });
+        print('Image data is null.');
+      }
+    } catch (e) {
+      // Handle errors
+      print('Failed to fetch image: $e');
+    }
+  }
 
   void setupPushNotifications() async {
     final fcm = FirebaseMessaging.instance;
@@ -178,17 +176,25 @@ if(admin.imageId!=null){
   @override
   Widget build(BuildContext context) {
     Widget _getBody() {
-    switch (_currentIndex) {
-      case 0:
-        return  AdminHomeScreen(companies: _companies,admin:admin,operators:operators,imageData:_imageData);
-      case 1:
-        return  NewDeposit(deposits:depositList);
-      case 2:
-        return AdminProfile(admin: admin,imageData: _imageData,);
-      default:
-        return Container();
+      switch (_currentIndex) {
+        case 0:
+          return AdminHomeScreen(
+              companies: _companies,
+              admin: admin,
+              operators: operators,
+              imageData: _imageData);
+        case 1:
+          return NewDeposit(deposits: depositList);
+        case 2:
+          return AdminProfile(
+            admin: admin,
+            imageData: _imageData,
+          );
+        default:
+          return Container();
+      }
     }
-  }
+
     return Scaffold(
       appBar: AppBar(
         leading: Container(),

@@ -86,6 +86,7 @@ class _MyCompaniesState extends State<SelectCompanies>  {
                                   title: filteredCompanies[index].name,
                                   subtitle1: filteredCompanies[index].email,
                                   subtitle2: filteredCompanies[index].contactName,
+                                  activated: true,
                                   // subtitle3: '#${cars[index].carId}',
                                 ),
                               ),

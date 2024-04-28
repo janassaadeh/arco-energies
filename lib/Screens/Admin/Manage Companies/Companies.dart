@@ -2,6 +2,7 @@
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Companies/Edit%20Company.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -206,7 +207,7 @@ Future<void> refreshCompanies() async {
                                   onTap:  () async {
                                     final newCompany = await Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => CompanyDetails(company:filteredCompanies[index],imageData: imageDataList[index],)),
+                                      MaterialPageRoute(builder: (context) => EditCompany(company:filteredCompanies[index],imageData: imageDataList[index],)),
                                     );
                                     if (newCompany!= filteredCompanies[index]) {
                                       setState(() {
@@ -220,7 +221,8 @@ Future<void> refreshCompanies() async {
                                     subtitle1: filteredCompanies[index].email,
                                     subtitle2: filteredCompanies[index].contactName,
                                     // imageId: filteredCompanies[index].imageId,
-                                    imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index]
+                                    imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
+                                    activated: filteredCompanies[index].activated,
                                     // subtitle3: '#${cars[index].carId}',
                                   ),
                                 ),
@@ -240,54 +242,93 @@ Future<void> refreshCompanies() async {
                   height: 30,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                      // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                   ),),
               ),
-              Padding(
+               Padding(
                 padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                child: Container(
-                  // width: 328,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                    child: TextFormField(
-                       onChanged: (value) {
-    setState(() {
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
       searchQuery = value;
       filteredCompanies = filterCompanies(); // Update filteredOperators when searchQuery changes
     });
     fetchImageForFilteredCompanies();
-  },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Companies ...",
-                        hintStyle: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Image.asset('assets/images/red-slider.png'),
-                        ),
-                        prefixIcon: Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.only(bottom:8.0),
-
-                          child: Image.asset('assets/images/green-search.png'),
-                        ),
-
+  
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Companies ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+  //               child: Container(
+  //                 // width: 328,
+  //                 height: 50,
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(12),
+  //                   color: Color.fromRGBO(255, 255, 255, 1),
+  //                 ),
+  //                 child: Padding(
+  //                   padding: EdgeInsets.only(left: 10, right: 8, top: 12),
+  //                   child: TextFormField(
+  //                      onChanged: (value) {
+  //   setState(() {
+  //     searchQuery = value;
+  //     filteredCompanies = filterCompanies(); // Update filteredOperators when searchQuery changes
+  //   });
+  //   fetchImageForFilteredCompanies();
+  // },
+  //                     decoration: InputDecoration(
+  //                       border: OutlineInputBorder(borderSide: BorderSide.none),
+  //                       // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+  //                       hintText: "Search Companies ...",
+  //                       hintStyle: TextStyle(
+  //                         color: Color.fromRGBO(0, 0, 0, 0.5),
+  //                         fontFamily: 'Mulish',
+  //                         fontSize: 16,
+  //                         fontWeight: FontWeight.normal,
+  //                       ),
+  //                       suffixIcon: Padding(
+  //                         padding: const EdgeInsets.only(bottom:8.0),
+  //                         child: Image.asset('assets/images/red-slider.png'),
+  //                       ),
+  //                       prefixIcon: Padding(
+  //                         // padding: const EdgeInsets.all(8.0),
+  //                         padding: const EdgeInsets.only(bottom:8.0),
+
+  //                         child: Image.asset('assets/images/green-search.png'),
+  //                       ),
+
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
             ],
           ),
         )

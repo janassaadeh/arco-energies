@@ -106,11 +106,18 @@ class Admin extends User {
 }
 
 class Operator extends User {
+  final String imageId;
+  final String dob;
+  final String address;
+
   Operator(
       {required String id,
       required String email,
       required String phone,
-      required String name})
+      required String name,
+      required this.imageId,
+      required this.dob,
+      required this.address})
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Operator.fromJson(Map<String, dynamic> json) {
@@ -119,6 +126,9 @@ class Operator extends User {
       email: json['email'],
       phone: json['phone'],
       name: json['name'],
+      imageId: json['imageId'] ?? '',
+      dob: json['dob'],
+      address: json['address'],
     );
   }
 }
@@ -129,7 +139,7 @@ class Company extends User {
   final String location;
   final int pts;
   final String imageId;
-
+  final bool activate;
   Company(
       {required String id,
       required String email,
@@ -139,7 +149,8 @@ class Company extends User {
       required this.contactName,
       required this.location,
       required this.pts,
-      required this.imageId})
+      required this.imageId,
+      required this.activate})
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Company.fromJson(Map<String, dynamic> json) {
@@ -152,6 +163,7 @@ class Company extends User {
         contactName: json['contactName'],
         location: json['location'],
         pts: json['pts'],
-        imageId: json['imageId']);
+        imageId: json['imageId'] ?? '',
+        activate: json['activate'] ?? false);
   }
 }
