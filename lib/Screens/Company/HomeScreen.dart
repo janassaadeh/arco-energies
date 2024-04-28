@@ -9,8 +9,11 @@ import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Widgets/image_slider.dart';
+import 'package:company_pages/Widgets/images_carousel.dart';
+import 'package:company_pages/Widgets/shimmer.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../Services/Auth/AuthenticationService.dart';
 import '../../Services/Manage Accounts/vehicle_company_service.dart';
@@ -47,26 +50,62 @@ class HomeScreen extends StatelessWidget {
 // List<dynamic> mergedAndSorted=mergeAndSortLists(depositList,transactionList);
 
     return
-    company==null?Container():
+    // company==null?Container():
      SingleChildScrollView(
       child: Column(
         children: [
        
                    Padding(
-            padding: EdgeInsets.only(top:45),
-            child: SlideShow(),
+  padding: EdgeInsets.only(left: 18, right: 18.0,top:20),           
+   child: 
+   
+   (company==null ||depositList==null||transactionList==null)?
+Shimmer.fromColors(
+  baseColor: Colors.grey[300]!,
+  highlightColor: Colors.grey[100]!,
+  child: Container(
+    width: 403.64825439453125,
+    height: 180,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.0), // Adjust the radius as needed
+    ),
+    // You can change this color to match your background
+  ),
+)
+:
+   ImageCarouselWidget(),
           ),
           
           const SizedBox(
             height: 30,
           ),
-          const Padding(
+           Padding(
             // padding: const EdgeInsets.all(18.0),
             padding: EdgeInsets.only(left: 18, right: 18.0),
 
-            child: Align(
+            child:
+            
+            
+             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
+              child: 
+                 (company==null ||depositList==null||transactionList==null)?
+Shimmer.fromColors(
+  baseColor: Colors.grey[300]!,
+  highlightColor: Colors.grey[100]!,
+  child: Container(
+    width: 100.64825439453125,
+    height: 20,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.0), // Adjust the radius as needed
+    ),
+    // You can change this color to match your background
+  ),
+)
+:
+              Text(
                 "Features",
                 style: TextStyle(
                   fontSize: 18,
@@ -84,7 +123,7 @@ class HomeScreen extends StatelessWidget {
                 onTap: () async {
                   var role = await authenticationService.getRole();
                   print(role);
-                  push(Profile(), context);
+                  // push(Profile(company: company,), context);
                 },
                 child: SizedBox(
                   height: 135,
@@ -95,7 +134,14 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 18,
                       ),
-                      const Features(
+                 (company==null ||depositList==null||transactionList==null)?
+
+          RoundedContainerWithShimmer(
+width: 152,
+      height: 135,
+):
+            
+                       Features(
                         color: Color.fromRGBO(209, 73, 91, 1),
                         imageAsset: "assets/images/Star.png",
                         text: "Earn and Redeem Points",
@@ -112,7 +158,15 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => MyCars(cars:cars,company: company,)));
                               
                             },
-                        child: const Features(
+                        child:  
+                        
+                                         (company==null ||depositList==null||transactionList==null)?
+
+          RoundedContainerWithShimmer(
+width: 152,
+      height: 135,
+):
+                        Features(
                           color: Color.fromRGBO(237, 174, 73, 1),
                           imageAsset: "assets/images/Traffic Jam.png",
                           text: "Manage your cars.",
@@ -121,7 +175,14 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      const Features(
+                      
+                                       (company==null ||depositList==null||transactionList==null)?
+
+          RoundedContainerWithShimmer(
+width: 152,
+      height: 135,
+):
+                       Features(
                         color: Color.fromRGBO(0, 121, 140, 1),
                         imageAsset: "assets/images/Money Bag.png",
                         text: "Track your transactions.",
@@ -145,7 +206,12 @@ class HomeScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                
+                                 (company==null ||depositList==null||transactionList==null)?
+
+          RoundedContainerWithShimmer(
+width: 100,
+      height: 20,
+):
                 Text(
                   "Recent Transactions",
                   style: TextStyle(
@@ -160,9 +226,18 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => AllTransactions(mergedAndSorted:mergedAndSorted,company: company,)));
                     
                   },
-                  child: Text("View all",   style: TextStyle(
+                  child: 
+                  
+                                   (company==null ||depositList==null||transactionList==null)?
+
+          RoundedContainerWithShimmer(
+width: 50,
+      height: 10,
+):
+                  Text("View all",   style: TextStyle(
                     fontSize: 18,
-                    color: Color(0xffA9A7A7),
+                    color:Color (0xff003D58),
+                    fontWeight: FontWeight.bold
                   ),)
                   
                   )
@@ -176,6 +251,31 @@ class HomeScreen extends StatelessWidget {
             
             padding: EdgeInsets.only(left: 18, right: 18.0),
             child: 
+(company==null ||depositList==null||transactionList==null||mergedAndSorted==[])?
+
+          Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  RoundedContainerWithShimmer(
+width: 150,
+      height: 10,
+),
+                  RoundedContainerWithShimmer(
+width: 150,
+      height: 10,
+),
+                ],
+              ),
+                            RoundedContainerWithShimmer(
+width: 150,
+      height: 10,
+),
+            ],
+          ):
 Container(
   height: mergedAndSorted!.length * 12200.0, // Adjust the height as needed
   child: ListView.builder(
@@ -189,6 +289,7 @@ Container(
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Transactions(
               id: item.id,
               price: item.cashAmount,
@@ -200,11 +301,13 @@ Container(
       } else if (getType(item.id) == 'Transaction') {
         // Render transaction UI
         final total = item.quantity * item.pump.fuel.fuelPrice;
-        return Transactions(
+        return 
+        
+        Transactions(
           id: item.id,
           price: double.parse(total.toStringAsFixed(2)),
           type: "-",
-          day: _calculateDaysAgo2(item.date),
+          day: _calculateDaysAgo(item.date),
         );
       }
       return Container(); // Default case

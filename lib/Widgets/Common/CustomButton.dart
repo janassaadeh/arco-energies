@@ -15,11 +15,13 @@ class CustomButton extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment(1.5, 1),
           end: Alignment(-1.5, 1),
-          colors: [
-            Color.fromRGBO(237, 174, 73, 0.5),
-            Color.fromRGBO(237, 174, 73, 1),
-            Color.fromRGBO(237, 174, 73, 0.5)
-          ],
+          // colors: [
+          //   Color.fromRGBO(237, 174, 73, 0.5),
+          //   Color.fromRGBO(237, 174, 73, 1),
+          //   Color.fromRGBO(237, 174, 73, 0.5)
+          // ],
+                  colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+
         ),
       ),
       child: Center(

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/AddOperator.dart';
+import 'package:company_pages/Screens/Admin/ManageOperators/Edit%20Operator.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/Operator%20Details.dart';
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
 import 'package:company_pages/Services/image_service.dart';
@@ -199,7 +200,7 @@ Future<void> refreshOperators() async {
                                   onTap:  () async {
                                     final newOperator = await Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => OperatorDetails(operator:filteredOperators[index],imageData: imageDataList[index],)),
+                                      MaterialPageRoute(builder: (context) => EditOperator(operator:filteredOperators[index],imageData: imageDataList[index],)),
                                     );
                                     if (newOperator!= filteredOperators[index]) {
                                       setState(() {
@@ -212,7 +213,8 @@ Future<void> refreshOperators() async {
                                     subtitle1: filteredOperators[index].email,
                                     subtitle2: filteredOperators[index].phone,
                                     // subtitle3: '#${cars[index].carId}',
-                                      imageData:(filteredOperators[index].imageId=='')?'no image':imageDataList[index]
+                                      imageData:(filteredOperators[index].imageId=='')?'no image':imageDataList[index],
+                                      activated: true,
                     
                                   ),
                                 ),
@@ -232,53 +234,57 @@ Future<void> refreshOperators() async {
                   height: 30,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                      // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                   ),),
               ),
               Padding(
-                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+                padding: const EdgeInsets.only(top:100.0),
                 child: Container(
-                  // width: 328,
-                  height: 50,
+                  height: 30,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                    child: TextFormField(
-                     onChanged: (value) {
-    setState(() {
+                      color: Colors.white,
+                      // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                  ),),
+              ),
+               Padding(
+                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
       searchQuery = value;
-      filteredOperators = filterOperators(); // Update filteredOperators when searchQuery changes
+      filteredOperators = filteredOperators; // Update filteredOperators when searchQuery changes
     });
-  },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Operators ...",
-                        hintStyle: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Image.asset('assets/images/red-slider.png'),
-                        ),
-                        prefixIcon: Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.only(bottom:8.0),
-
-                          child: Image.asset('assets/images/green-search.png'),
-                        ),
-
+    fetchImageForFilteredOperators();
+  
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Operators ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
             ],
           ),
         )

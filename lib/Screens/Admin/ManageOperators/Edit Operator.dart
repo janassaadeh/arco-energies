@@ -68,170 +68,198 @@ class _EditOperatorState extends State<EditOperator> {
         )],
       ),
       body: SingleChildScrollView(
-        child: Stack(
-          clipBehavior: Clip.none,
+        child: Column(
+          // clipBehavior: Clip.none,
           children: [
-            Column(
-              children: [
-                Image.asset("assets/images/wallpaper.png"),
-                Container(
-                  color: Colors.white,
-                  height: 600,
-                  child: Column(
-                    children: [
-                      
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                        SizedBox(height: 40,),
+     Padding(
+       padding: const EdgeInsets.only(bottom:40),
+       child: Center(
+         child: Stack(
+           children: [
+             CircleAvatar(
+               backgroundColor: Color(0xffC1BEBE),
+               radius: 67,
+               child:(widget.imageData==null)? Image.asset("assets/images/buisness_profile.png"):
+               ClipOval(
+                 child: Image.memory(
+                           widget.imageData!,
+                           fit: BoxFit.cover, // Adjust the fit as needed
+                           width: 134, // Set the width and height to ensure the image is circular
+                           height: 134,
+                         ),
+               ),
+             ),
+                 Positioned(
+               top: 5, 
+               right: 0, 
+               child: Container(
+                     width: 30, // Adjust the width of the container as needed
+                     height: 30, // Adjust the height of the container as needed
+                     decoration: BoxDecoration(
+             color: Colors.grey, // You can set your desired background color
+             shape: BoxShape.circle, // This makes it a circle
+             //           boxShadow: [
+             // BoxShadow(
+             //   color: Colors.black.withOpacity(0.3), // Shadow color
+             //   spreadRadius: 2, // Spread radius
+             //   blurRadius: 4, // Blur radius
+             //   offset: const Offset(0, 2), // Offset
+             // ),
+                     // ],
+                     ),
+                     child: Padding(
+             padding: const EdgeInsets.all(4),
+             child: GestureDetector(
+               onTap: (){
+                   
+                 final picker = ImagePicker();
+                   
+                   Future<void> _openImagePicker() async {
+                     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                   
+                     if (pickedFile != null) {
+             final file = File(pickedFile.path);
+             final bytes = await file.readAsBytes();
+             final base64Image = base64Encode(bytes);
+             final image = "data:image/png;base64,$base64Image";
+                                     
+             // Now you have the base64-encoded image
+             // print("Base64 Image: $base64Image");
+                   // print(base64Image);
+                   
+             setState(() {
+               widget.imageData = bytes; // Set the picked image file
+                // Update the profileAvatar URL
+                base64Image1=base64Image;
+             });
+             // print(base64Image1);
+       
+                 
+             // print(imgUrl);
+                     } else {
+             // Handle no image picked error
+                     }
+                   }
+               _openImagePicker();
+               },
+               child: Center(
+                 child: Icon(Icons.add)
+               ),
+             ),
+                     ),
+               ),
+             ),
+           ],
+         ),
+       ),
+     ),
+     
             Padding(
-              padding: const EdgeInsets.only(top: 120.0),
-              child: Container(
-                height: 790,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 80),
-                    SizedBox(height: 25),
-                    // Replace CustomInputFieldLarge with your desired input fields
-                    ManageFields(
-                      controller: _nameController,
-                      imagePath: 'assets/images/buis_name.png',
-                      hintText: "Operator Name",
-                    ),
-           
-                    const SizedBox(height: 20),
-                    ManageFields(
-                      controller: _addressController,
-                      imagePath: 'assets/images/blue pin.png',
-                      hintText: "Address",
-                    ),
-                    const SizedBox(height: 20),
-                    ManageFields(
-                      controller: _emailController,
-                      imagePath: 'assets/images/Letter.png',
-                      hintText: "Email",
-                    ),
-                    const SizedBox(height: 20),
-
-                    ManageFields(
-                      controller: _phoneController,
-                      imagePath: 'assets/images/phone_blue.png',
-                      hintText: "Phone",
-                    ), 
-                    const SizedBox(height: 20),
-
-     ManageFields(
-                      controller: _nameController,
-                      imagePath: 'assets/images/buis_name.png',
-                      hintText: "Date Of Birth",
-                    ),
-           
-                    // const SizedBox(height: 20),
-                    const SizedBox(height: 30),
-                    GestureDetector(
-                      
-                      onTap: () async{
-                                 ImageService imageService =ImageService();
-                        // print(base64Image1);
-                 await  imageService.uploadImage(base64Image1, widget.operator.id);
-                        _saveChanges(context);
-                      },
-                      child: CustomButton(buttonText: "Save"),
-                    )
-                  ],
-                ),
-              ),
-            ),
-Positioned(
-              top: 50,
-              right: 140,
-              child: Stack(
+              padding: const EdgeInsets.only(top: 0.0),
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color(0xffC1BEBE),
-                    radius: 67,
-                    child:(widget.imageData==null)? Image.asset("assets/images/buisness_profile.png"):
-                    ClipOval(
-                      child: Image.memory(
-                                widget.imageData!,
-                                fit: BoxFit.cover, // Adjust the fit as needed
-                                width: 134, // Set the width and height to ensure the image is circular
-                                height: 134,
-                              ),
+                  // SizedBox(height: 80),
+                  SizedBox(height: 10),
+                  // Replace CustomInputFieldLarge with your desired input fields
+                   Padding(
+                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Name",style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffA9A7A7),
+                                    ),),
                     ),
                   ),
-                      Positioned(
-                    top: 5, 
-                    right: 0, 
-                    child: Container(
-                          width: 30, // Adjust the width of the container as needed
-                          height: 30, // Adjust the height of the container as needed
-                          decoration: BoxDecoration(
-                  color: Colors.white, // You can set your desired background color
-                  shape: BoxShape.circle, // This makes it a circle
-                  //           boxShadow: [
-                  // BoxShadow(
-                  //   color: Colors.black.withOpacity(0.3), // Shadow color
-                  //   spreadRadius: 2, // Spread radius
-                  //   blurRadius: 4, // Blur radius
-                  //   offset: const Offset(0, 2), // Offset
-                  // ),
-                          // ],
-                          ),
-                          child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: GestureDetector(
-                    onTap: (){
-                        
-                      final picker = ImagePicker();
-                        
-                        Future<void> _openImagePicker() async {
-                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                        
-                          if (pickedFile != null) {
-                  final file = File(pickedFile.path);
-                  final bytes = await file.readAsBytes();
-                  final base64Image = base64Encode(bytes);
-                  final image = "data:image/png;base64,$base64Image";
-                                          
-                  // Now you have the base64-encoded image
-                  // print("Base64 Image: $base64Image");
-                        // print(base64Image);
-                        
-                  setState(() {
-                    widget.imageData = bytes; // Set the picked image file
-                     // Update the profileAvatar URL
-                     base64Image1=base64Image;
-                  });
-                  // print(base64Image1);
-
-                      
-                  // print(imgUrl);
-                          } else {
-                  // Handle no image picked error
-                          }
-                        }
-                    _openImagePicker();
+                  ManageFields(
+                    controller: _nameController,
+                    imagePath: 'assets/images/buis_name.png',
+                    hintText: "Operator Name",
+                  ),
+           
+                  const SizedBox(height: 20),
+                   Padding(
+                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Address",style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffA9A7A7),
+                                    ),),
+                    ),
+                  ),
+                  ManageFields(
+                    controller: _addressController,
+                    imagePath: 'assets/images/blue pin.png',
+                    hintText: "Address",
+                  ),
+                  const SizedBox(height: 20),
+                   Padding(
+                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Email",style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffA9A7A7),
+                                    ),),
+                    ),
+                  ),
+                  ManageFields(
+                    controller: _emailController,
+                    imagePath: 'assets/images/Letter.png',
+                    hintText: "Email",
+                  ),
+                  const SizedBox(height: 20),
+ Padding(
+                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Phone Number",style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffA9A7A7),
+                                    ),),
+                    ),
+                  ),
+                  ManageFields(
+                    controller: _phoneController,
+                    imagePath: 'assets/images/phone_blue.png',
+                    hintText: "Phone",
+                  ), 
+                  const SizedBox(height: 20),
+ Padding(
+                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Date Of Birth",style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xffA9A7A7),
+                                    ),),
+                    ),
+                  ),
+     ManageFields(
+                    controller: _nameController,
+                    imagePath: 'assets/images/buis_name.png',
+                    hintText: "Date Of Birth",
+                  ),
+           
+                  // const SizedBox(height: 20),
+                  const SizedBox(height: 40),
+                  GestureDetector(
+                    
+                    onTap: () async{
+                               ImageService imageService =ImageService();
+                      // print(base64Image1);
+               await  imageService.uploadImage(base64Image1, widget.operator.id);
+                      _saveChanges(context);
                     },
-                    child: Center(
-                      child: Icon(Icons.add)
-                    ),
-                  ),
-                          ),
-                    ),
-                  ),
+                    child: CustomButton(buttonText: "Save"),
+                  )
                 ],
               ),
             ),
+          SizedBox(height: 50,)
+
           ],
         ),
       ),

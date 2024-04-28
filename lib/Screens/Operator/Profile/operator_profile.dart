@@ -1,147 +1,278 @@
-import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Screens/Company/Company%20Details.dart';
+import 'package:company_pages/Screens/Company/MyCars.dart';
+import 'package:company_pages/Screens/Company/my_transactions.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
-import 'package:flutter/material.dart';
+//
+import 'package:company_pages/Screens/Auth/Login.dart';
 
-import 'package:company_pages/Widgets/Operator/link.dart';
+import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+
 
 class Profile extends StatelessWidget {
-   Profile({super.key});
+  AuthenticationService authenticationService = AuthenticationService();
+  dynamic operator;
+  dynamic imageData;
+  // dynamic cars;
+  // List<dynamic>? mergeAndSorted;
 
-AuthenticationService authenticationService=AuthenticationService();
+  Profile({required this.operator,required this.imageData});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: Column(
+        
         children: [
-          Column(
-            children: [
-              Image.asset("assets/images/wallpaper.png"),
-              Container(
-                color: Colors.white,
-                height: 600,
-                child: const Column(
-                  children: [],
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 130.0),
-            child: Container(
-              height: 700,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25))),
-              child: Column(
-                children: [
-                  // Figma Flutter Generator CompanynameWidget - TEXT
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  const Text(
-                    'Operaor Ashraf',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 1),
-                        fontFamily: 'Inter',
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        height: 1),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text(
-                    'ashraf@gmail.com',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 1),
-                        fontFamily: 'Inter',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        height: 1),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 25.0, left: 25, top: 5, bottom: 5),
-                    child: Column(
-                      children: [
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
-                        const Link(
-                          imagePath: "assets/images/email.png",
-                          buttonText: 'ashraf@gmail.com',
-                        ),
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
-                        const Link(
-                          imagePath: "assets/images/name.png",
-                          buttonText: "Ashraf Samir",
-                        ),
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
-                        const Link(
-                          imagePath: "assets/images/phone.png",
-                          buttonText: "03 123 456",
-                        ),
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
-                        const Link(
-                          imagePath: "assets/images/location.png",
-                          buttonText: "Mina Street, Tripoli",
-                        ),
-                        Divider(
-                          color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        ),
-                        // const Link(
-                        //   imagePath: "assets/images/calendar.png",
-                        //   buttonText: "1980-4-23",
-                        // ),
-                        // Divider(
-                        //   color: const Color(0xff9E9C9C).withOpacity(0.7),
-                        // ),
+          SizedBox(height: 40,),
 
-                 GestureDetector(
-                            onTap: () async {
-                              await authenticationService.logout();
-                                       Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>LoginScreen()));
-                            },
-                            child: const Link(
-                              imagePath: "assets/images/logout.png",
-                              buttonText: "Logout",
-                            )),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+  operator.imageId==''?
+      Image.asset("assets/images/User Shield.png"):
+  imageData != null
+      ? 
+      
+      
+      ClipOval(
+          child: 
+          Image.memory(
+            imageData!,
+            fit: BoxFit.cover,
+            width: 120,
+            height: 120,
+          ),
+        )
+      : ClipOval(
+        child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 120,
+              height: 120,
+              color: Colors.white, // You can change this color to match your background
             ),
           ),
-          Positioned(
-              top: 60,
-              right: 140,
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 67,
-                child: CircleAvatar(
-                  radius: 65,
-                  child: Image.asset("assets/images/operator-profile.png"),
+      ),
+          SizedBox(height: 20,),
+
+          Column(
+            children: [
+              // Figma Flutter Generator CompanynameWidget - TEXT
+           
+               Text(
+                operator.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontFamily: 'Inter',
+                    fontSize: 25,
+                    fontWeight: FontWeight.w800,
+                    height: 1),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+
+               Text(
+                '+961 ${operator.phone}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Color(0xffA9A9AC),
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    height: 1),
+              ),
+             
+              const SizedBox(
+                height: 40,
+              ),
+              Container(
+                color: Color(0xffF2F2F7),
+                width: double.infinity,
+                height: 53,
+                child: Padding(
+                  padding: const EdgeInsets.only(top:18.0,left: 22),
+                  child: Text("Overview",style: TextStyle(
+                      color: Color.fromARGB(255, 117, 117, 122),
+                      fontFamily: 'Inter',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      height: 1),
+                                  ),
                 ),
-              ))
+              ),
+              SizedBox(height:20),
+               Padding(
+                 padding: const EdgeInsets.only(left: 22,right: 22),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("Email",style: TextStyle(
+                         color: Color(0xff8B8B91),
+                         fontSize: 18,
+                         fontWeight: FontWeight.w500,
+                         height: 1),
+                                     ),
+                       Text(operator.email,style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 18,
+                           fontWeight: FontWeight.w500,
+                           height: 1),
+                                       ),
+                   ],
+                 ),
+               ),
+              SizedBox(height:10),
+
+              Padding(
+                padding: const EdgeInsets.only(left:14.0,right: 14),
+                child: Divider(
+                        color: const Color(0xff8B8B91).withOpacity(0.1),
+                      ),
+              ),
+              SizedBox(height:15),
+
+                 Padding(
+                 padding: const EdgeInsets.only(left: 22,right: 22),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("Date Of Birth",style: TextStyle(
+                         color: Color(0xff8B8B91),
+                         fontSize: 18,
+                         fontWeight: FontWeight.w500,
+                         height: 1),
+                                     ),
+                       Text(operator.dob,style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 18,
+                           fontWeight: FontWeight.w500,
+                           height: 1),
+                                       ),
+                   ],
+                 ),
+               ),
+              SizedBox(height:10),
+
+              Padding(
+                padding: const EdgeInsets.only(left:14.0,right: 14),
+                child: Divider(
+                        color: const Color(0xff8B8B91).withOpacity(0.1),
+                      ),
+              ),
+              SizedBox(height:10),
+
+                 Padding(
+                 padding: const EdgeInsets.only(left: 22,right: 22),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("ID",style: TextStyle(
+                         color: Color(0xff8B8B91),
+                         fontSize: 18,
+                         fontWeight: FontWeight.w500,
+                         height: 1),
+                                     ),
+                       Text(operator.id,style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 18,
+                           fontWeight: FontWeight.w500,
+                           height: 1),
+                                       ),
+                                       
+                   ],
+                 ),
+               ),
+              SizedBox(height:15),
+
+                Padding(
+                padding: const EdgeInsets.only(left:14.0,right: 14),
+                child: Divider(
+                        color: const Color(0xff8B8B91).withOpacity(0.1),
+                      ),
+              ),
+              SizedBox(height:15),
+
+                 Padding(
+                 padding: const EdgeInsets.only(left: 22,right: 22),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text("Address",style: TextStyle(
+                         color: Color(0xff8B8B91),
+                         fontSize: 18,
+                         fontWeight: FontWeight.w500,
+                         height: 1),
+                                     ),
+                       Text(operator.address,style: TextStyle(
+                           color: Colors.black,
+                           fontSize: 18,
+                           fontWeight: FontWeight.w500,
+                           height: 1),
+                                       ),
+                   ],
+                 ),
+               ),
+              SizedBox(height:20),
+
+  
+
+           
+              SizedBox(height:5),
+                Container(
+                color: Color(0xffF2F2F7),
+                width: double.infinity,
+                height: 53,
+                child: Padding(
+                  padding: const EdgeInsets.only(top:18.0,left: 22),
+                  child: Text("Account",style: TextStyle(
+                      color: Color.fromARGB(255, 117, 117, 122),
+                      fontFamily: 'Inter',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      height: 1),
+                                  ),
+                ),
+              ),
+              SizedBox(height:15),
+
+                  Padding(
+                 padding: const EdgeInsets.only(left: 22,right: 22),
+                 child: GestureDetector(
+                  // onTap: (){
+                                               onTap: () async {
+                          await authenticationService.logout();
+                                   Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>LoginScreen()));
+                        
+       
+                  },
+                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                      Row(children: [
+                  
+                      Image.asset('assets/images/logout.png',color: Colors.black,width: 30,),
+                      SizedBox(width: 15,),
+                        Text('Logout',style: TextStyle(
+                             color: Colors.black,
+                             fontSize: 18,
+                             fontWeight: FontWeight.w500,
+                             height: 1),
+                                         ),
+                      ],),
+                      // Icon(Icons.arrow_forward_ios,size: 20,)
+                      
+                     ],
+                   ),
+                 ),
+               ),
+           
+              SizedBox(height:15),
+                       ],
+          ),
+      
         ],
       ),
     );

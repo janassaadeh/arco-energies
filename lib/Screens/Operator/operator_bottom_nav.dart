@@ -1,5 +1,10 @@
+// import 'dart:html';
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Operator/Home/DashBoard/dashboard.dart';
 import 'package:company_pages/Screens/Operator/Profile/operator_profile.dart';
+import 'package:company_pages/Services/Auth/user_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/material.dart';
 
 import 'Transactions/new_transaction.dart';
@@ -12,8 +17,65 @@ class Operator extends StatefulWidget {
 }
 
 class _OperatorState extends State<Operator> {
-  int _currentIndex = 0;
+  dynamic operator;
+  dynamic _imageData;
 
+  int _currentIndex = 0;
+@override
+void initState() {
+  super.initState();
+  
+  _fetchUserData().then((_) {
+  
+    // Call _getDepositList() only after _fetchUserData() completes
+    _fetchImage();
+   
+   
+  });
+}
+
+
+
+
+
+  Future<void> _fetchUserData() async {
+  try {
+    UserService userService = UserService();
+  dynamic userData = await userService.fetchUserData();
+  setState(() {
+    operator=userData;
+  });
+  } catch (e) {
+    // Handle error appropriately, e.g., show a snackbar
+    print('Error fetching operator: $e');
+  }
+}
+
+
+ Future<void> _fetchImage() async {
+  try {
+    ImageService imageService = ImageService();
+
+if(operator.imageId!=null){
+    Uint8List imageData = await imageService.getImageFromId(operator.imageId);
+ if (imageData != null) {
+      setState(() {
+        _imageData = imageData;
+      });
+}
+   
+      
+    } else {
+       setState(() {
+        _imageData = 'no image';
+      });
+      print('Image data is null.');
+    }
+  } catch (e) {
+    // Handle errors
+    print('Failed to fetch image: $e');
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,11 +142,13 @@ class _OperatorState extends State<Operator> {
   Widget _getBody() {
     switch (_currentIndex) {
       case 0:
-        return const DashBoard();
+        return  DashBoard(operator: operator,imageData: _imageData,);
       case 1:
         return const NewTransaction();
       case 2:
         return  Profile(
+          operator: operator,
+          imageData: _imageData,
             // operator: operatorProvider.operator,
             );
       default:

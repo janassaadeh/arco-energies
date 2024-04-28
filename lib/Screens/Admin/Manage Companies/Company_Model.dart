@@ -8,6 +8,7 @@ class Company {
   String phone;
   double balance;
   String imageId;
+  bool activated;
 
   Company({
     required this.id,
@@ -17,7 +18,9 @@ class Company {
     required this.email,
     required this.phone,
     required this.balance,
-    required this.imageId
+    required this.imageId,
+    required this.activated
+
   });
 
   factory Company.fromJson(Map<String, dynamic> json) {
@@ -30,6 +33,8 @@ class Company {
       phone: json['phone'] ?? '',
       balance: json['balance'] ?? 0,
       imageId: json['imageId'] ?? '',
+      activated: json['activated'] ?? false,
+
 
     );
   }

@@ -70,7 +70,7 @@ class _SlideShowState extends State<SlideShow> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         child: Image.asset(
           imagePath,
           width: double.infinity,
