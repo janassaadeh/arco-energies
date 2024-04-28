@@ -39,6 +39,12 @@ public class CompanyController {
         List<CompanyResponse> companies = companyService.getAllActivatedCompanies();
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
+
+    @PostMapping("activate/{id}")
+    public ResponseEntity<Boolean> activateCompany(@PathVariable("id") String id) {
+        companyService.Activate(id);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponse> getCompanyById(@PathVariable("id") String id) {
         CompanyResponse company = companyService.getCompanyById(id);
