@@ -64,18 +64,10 @@ class _OdometerValueEntryState extends State<OdometerValueEntry> {
             onTap: () {
               Provider.of<TransactionProvider>(context, listen: false)
                   .resetTransactionValues();
-              if (Provider.of<TransactionProvider>(context, listen: false)
-                      .isIdTriggeredByNFC >
-                  0) {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              }
+
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
           ),
         ),
@@ -102,12 +94,12 @@ class _OdometerValueEntryState extends State<OdometerValueEntry> {
                 child: Column(
                   children: [
                     buildTitleWidget("Enter Odometer Reading", "3"),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 2),
                     buildText(
                         "Input the car's odometer reading into the text field."),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     buildImageContainer("assets/images/odometer.png", false),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 10),
                     buildInput(
                       "Odometer Reading",
                       const Text(
@@ -120,10 +112,10 @@ class _OdometerValueEntryState extends State<OdometerValueEntry> {
                       true,
                       odometerController,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
                     buildSecondText(
                         "Double-check the odometer reading to avoid errors."),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     nextButton(
                       "Next",
                       fn: () {

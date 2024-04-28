@@ -1,10 +1,13 @@
+import 'package:company_pages/Models/operator_response.dart';
+
 class Notification {
   String id;
   String type;
   double price;
   String createdDate;
+  OperatorResponse operator;
 
-  Notification(this.id, this.type, this.price, this.createdDate);
+  Notification(this.id, this.type, this.price, this.createdDate, this.operator);
 
   factory Notification.fromJson(Map<String, dynamic> json) {
     return Notification(
@@ -12,6 +15,7 @@ class Notification {
       json['type'] as String,
       json['price'] as double,
       json['createdDate'] as String,
+      OperatorResponse.fromJson(json['operator']),
     );
   }
 
@@ -31,7 +35,11 @@ class NotificationBody {
   double price;
   String createdDate;
 
-  NotificationBody(this.type, this.price, this.createdDate);
+  NotificationBody(
+    this.type,
+    this.price,
+    this.createdDate,
+  );
 
   factory NotificationBody.fromJson(Map<String, dynamic> json) {
     return NotificationBody(
@@ -39,13 +47,5 @@ class NotificationBody {
       json['price'] as double,
       json['createdDate'] as String,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'price': price,
-      'createdDate': createdDate,
-    };
   }
 }

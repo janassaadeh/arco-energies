@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 
 import 'package:company_pages/Models/fuel.dart';
@@ -31,11 +30,15 @@ import 'ManageOperators/operators.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   List<op.Operator> operators;
-    
-    List <company.Company> companies;
-    dynamic admin;
-    dynamic imageData;
-    AdminHomeScreen({required this.companies,required this.admin,required this.operators,required this.imageData});
+
+  List<company.Company> companies;
+  dynamic admin;
+  dynamic imageData;
+  AdminHomeScreen(
+      {required this.companies,
+      required this.admin,
+      required this.operators,
+      required this.imageData});
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
@@ -48,12 +51,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   final FuelService fuelService = FuelService();
 
-
   @override
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
-
   }
 
   Future<List<Fuel>> _fetchFuels() async {
@@ -79,92 +80,91 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     setState(() {
       fuelListFuture = fuelService.getAllFuels();
     });
+
+    // Update cached fuels in FuelPricesProvider
+    List<Fuel> updatedFuels = await fuelService.getAllFuels();
+    Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels =
+        updatedFuels;
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    
-    return 
-    widget.admin==null?Container():
-    SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left:18,right:18.0,top: 18),
-
-
-              child: 
-              
-                Container(
-    height: 130,
-    width: MediaQuery.of(context).size.width,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color.fromRGBO(2, 91, 135, 1),
-          Color.fromRGBO(0, 61, 91, .6),
-        ], // Gradient colors
-      ),
-    ),
-    child: Stack(
-      children: [
-        Positioned(
-          top: 20,
-          left: 20,
-          child: Text(
-            widget.admin==null?'':'Hello, ${widget.admin.name}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Positioned(
-  bottom: 20,
-  right: 20,
-  child: 
-  
-  widget.admin.imageId==''?
-      Image.asset("assets/images/User Shield.png"):
-  widget.imageData != null
-      ? 
-      
-      
-      ClipOval(
-          child: 
-          Image.memory(
-            widget.imageData!,
-            fit: BoxFit.cover,
-            width: 90,
-            height: 90,
-          ),
-        )
-      : ClipOval(
-        child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              width: 90,
-              height: 90,
-              color: Colors.white, // You can change this color to match your background
-            ),
-          ),
-      ),
-),
-
-      ],
-    ),
-  )
-              // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
-            ),
-            const SizedBox(height: 30,),
-            Padding(
-              // padding: const EdgeInsets.all(18.0),
-              padding: const EdgeInsets.only(left:18,right:18.0),
+    return widget.admin == null
+        ? Container()
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                    padding:
+                        const EdgeInsets.only(left: 18, right: 18.0, top: 18),
+                    child: Container(
+                      height: 130,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color.fromRGBO(2, 91, 135, 1),
+                            Color.fromRGBO(0, 61, 91, .6),
+                          ], // Gradient colors
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 20,
+                            left: 20,
+                            child: Text(
+                              widget.admin == null
+                                  ? ''
+                                  : 'Hello, ${widget.admin.name}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            right: 20,
+                            child: widget.admin.imageId == ''
+                                ? Image.asset("assets/images/User Shield.png")
+                                : widget.imageData != null
+                                    ? ClipOval(
+                                        child: Image.memory(
+                                          widget.imageData!,
+                                          fit: BoxFit.cover,
+                                          width: 90,
+                                          height: 90,
+                                        ),
+                                      )
+                                    : ClipOval(
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            width: 90,
+                                            height: 90,
+                                            color: Colors
+                                                .white, // You can change this color to match your background
+                                          ),
+                                        ),
+                                      ),
+                          ),
+                        ],
+                      ),
+                    )
+                    // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
+                    ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  // padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.only(left: 18, right: 18.0),
 
                   child: const Align(
                     alignment: Alignment.centerLeft,

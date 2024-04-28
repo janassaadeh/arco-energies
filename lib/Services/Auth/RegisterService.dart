@@ -15,7 +15,7 @@ class RegistrationService {
   }) async {
     try {
       final response = await _dio.post(
-        'http://10.0.2.2:8080/api/v1/auth/company/register',
+        'http://192.168.6.112:8080/api/v1/auth/company/register',
         data: {
           'email': email,
           'password': password,
@@ -26,7 +26,7 @@ class RegistrationService {
           'location': location,
         },
       );
-      
+
       // Parse the response data and return a RegistrationResponse object
       return RegistrationResponse.fromJson(response.data);
     } catch (e) {
@@ -34,47 +34,49 @@ class RegistrationService {
       rethrow;
     }
   }
-   Future<RegistrationResponse> registerCompanyByAdmin({
-  required String name,
-  required String email,
-  required String password,
-  required String phone,
-  required double balance,
-  required String contactName,
-  required String location,
-}) async {
-  try {
-    final authenticationService = AuthenticationService();
-    final token = await authenticationService.getToken();
-    if (token != null) {
-      final response = await _dio.post(
-        'http://10.0.2.2:8080/admins/company/register',
-        data: {
-          'email': email,
-          'password': password,
-          'name': name,
-          'phone': phone,
-          'balance': 0, // Assuming you want to use the provided balance parameter here
-          'contactName': contactName,
-          'location': location,
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
-      );
 
-      // Parse the response data and return a RegistrationResponse object
-      return RegistrationResponse.fromJson(response.data);
+  Future<RegistrationResponse> registerCompanyByAdmin({
+    required String name,
+    required String email,
+    required String password,
+    required String phone,
+    required double balance,
+    required String contactName,
+    required String location,
+  }) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.post(
+          'http://192.168.6.112:8080/admins/company/register',
+          data: {
+            'email': email,
+            'password': password,
+            'name': name,
+            'phone': phone,
+            'balance':
+                0, // Assuming you want to use the provided balance parameter here
+            'contactName': contactName,
+            'location': location,
+          },
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+
+        // Parse the response data and return a RegistrationResponse object
+        return RegistrationResponse.fromJson(response.data);
+      }
+      // If token is null, handle accordingly
+      throw ('Token is null');
+    } catch (e) {
+      print('Error during registration: $e');
+      rethrow;
     }
-    // If token is null, handle accordingly
-    throw ('Token is null');
-  } catch (e) {
-    print('Error during registration: $e');
-    rethrow;
   }
-}
 
-    Future<RegistrationResponse> registerOperator({
+  Future<RegistrationResponse> registerOperator({
     required String name,
     required String email,
     required String password,
@@ -84,7 +86,7 @@ class RegistrationService {
   }) async {
     try {
       final response = await _dio.post(
-        'http://10.0.2.2:8080/api/v1/auth/operator/register',
+        'http://192.168.6.112:8080/api/v1/auth/operator/register',
         data: {
           'email': email,
           'password': password,
@@ -94,7 +96,7 @@ class RegistrationService {
           'address': address,
         },
       );
-      
+
       // Parse the response data and return a RegistrationResponse object
       return RegistrationResponse.fromJson(response.data);
     } catch (e) {
@@ -102,7 +104,6 @@ class RegistrationService {
       rethrow;
     }
   }
-  
 }
 
 class RegistrationResponse {

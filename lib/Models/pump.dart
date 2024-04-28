@@ -4,6 +4,7 @@ import 'fuel_response.dart';
 class Pump {
   final String id;
   final String name;
+  final String currency;
   final String status;
   final List<Transaction> transactions;
   final FuelResponse fuel;
@@ -11,6 +12,7 @@ class Pump {
   Pump({
     required this.id,
     required this.name,
+    required this.currency,
     required this.status,
     required this.transactions,
     required this.fuel,
@@ -30,6 +32,7 @@ class Pump {
     return Pump(
       id: json['id'] as String,
       name: json['name'] as String,
+      currency: json['currency'] as String,
       status: json['status'] as String,
       transactions: transactions,
       fuel: json['fuel'] != null

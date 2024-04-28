@@ -5,7 +5,7 @@ Widget horizontalGradientBox(context, String txt, String imgPath) {
     height: 130,
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(12),
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,

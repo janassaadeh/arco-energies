@@ -155,9 +155,9 @@ class _CarAccessState extends State<CarAccess> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 2),
                       buildText('Tap the NFC tag on the car with your device.'),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
                       _buildGifImage('assets/images/nfc gif.gif', context),
                       const SizedBox(height: 10),
                       GestureDetector(
@@ -174,11 +174,20 @@ class _CarAccessState extends State<CarAccess> {
                         },
                         child: buildInput(
                           Provider.of<TransactionProvider>(context,
+                                      listen: false)
+                                  .selectedVehicleId
+                                  .isNotEmpty
+                              ? Provider.of<TransactionProvider>(context,
+                                      listen: false)
+                                  .selectedVehicleId
+                              : Provider.of<TransactionProvider>(context,
                                           listen: false)
-                                      .selectedVehicleId ==
-                                  ""
-                              ? '  Search...'
-                              : _nfcResult,
+                                      .selectedVehicleId
+                                      .isEmpty
+                                  ? '  Search...'
+                                  : _nfcResult.isNotEmpty
+                                      ? _nfcResult
+                                      : '',
                           Image.asset(
                             "assets/images/Search.png",
                             width: 25,
@@ -188,7 +197,7 @@ class _CarAccessState extends State<CarAccess> {
                           isPressable: true,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 5),
                       buildSecondText(
                           "Automatically fill this field upon NFC tag scan. Manually search for issues if encountered."),
                       const SizedBox(height: 20),

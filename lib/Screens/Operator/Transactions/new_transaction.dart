@@ -5,8 +5,10 @@ import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/transaction.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../Widgets/Operator/next_button.dart';
+import 'package:company_pages/Widgets/Operator/input_field.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction({Key? key}) : super(key: key);
@@ -65,7 +67,7 @@ class _NewTransactionState extends State<NewTransaction> {
       } else {
         final List<Transaction> transactions =
             await transactionService.getTransactions();
-        // Cache fetched pumps
+
         Provider.of<TransactionProvider>(context, listen: false)
             .cachedTransactions = transactions;
         return transactions;
@@ -79,6 +81,11 @@ class _NewTransactionState extends State<NewTransaction> {
     setState(() {
       _transactionsFuture = transactionService.getTransactions();
     });
+
+    List<Transaction> updatedTransactions =
+        await transactionService.getTransactions();
+    Provider.of<TransactionProvider>(context, listen: false)
+        .cachedTransactions = updatedTransactions;
   }
 
   @override
@@ -90,35 +97,14 @@ class _NewTransactionState extends State<NewTransaction> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, right: 15),
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
-                  child: TextFormField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      _searchTransactions(value);
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Search Transactions ...",
-                      hintStyle: TextStyle(
-                        color: Colors.grey[500],
-                        fontFamily: 'Mulish',
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
-                    ),
-                  ),
-                ),
-              ),
+            buildInput(
+              "Search Transactions ...",
+              Icon(Icons.search, color: Colors.grey[500]),
+              true,
+              _searchController,
+              fn: (value) {
+                _searchTransactions(value);
+              },
             ),
             const SizedBox(height: 15),
             Expanded(
@@ -135,8 +121,10 @@ class _NewTransactionState extends State<NewTransaction> {
                     } else {
                       List<Transaction> transactions =
                           snapshot.data ?? searchResults;
+
+                      transactions.sort((a, b) => b.date.compareTo(a.date));
+
                       return ListView.builder(
-                        reverse: true,
                         itemCount: searchResults.isNotEmpty
                             ? searchResults.length
                             : transactions.length,
@@ -144,6 +132,11 @@ class _NewTransactionState extends State<NewTransaction> {
                           final transaction = searchResults.isNotEmpty
                               ? searchResults[index]
                               : transactions[index];
+                          String createdDate = transaction.date;
+                          DateTime dateTime = DateTime.parse(createdDate);
+
+                          final formattedDate =
+                              DateFormat.yMMMd().add_jms().format(dateTime);
                           final total = transaction.quantity *
                               transaction.pump.fuel.fuelPrice!;
                           return Padding(
@@ -171,7 +164,7 @@ class _NewTransactionState extends State<NewTransaction> {
                                       ],
                                     ),
                                     Text(
-                                      transaction.date,
+                                      formattedDate,
                                       style: const TextStyle(
                                         color: Colors.grey,
                                       ),

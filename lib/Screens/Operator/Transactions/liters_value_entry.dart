@@ -1,6 +1,5 @@
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
-import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import '../../../Widgets/Operator/next_button.dart';
@@ -64,20 +63,11 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
           onTap: () {
             Provider.of<TransactionProvider>(context, listen: false)
                 .resetTransactionValues();
-            if (Provider.of<TransactionProvider>(context, listen: false)
-                    .isIdTriggeredByNFC >
-                0) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }
+
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ),
@@ -107,12 +97,12 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                   child: Column(
                     children: [
                       buildTitleWidget("Enter Fuel Quantity", "4"),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 2),
                       buildText(
                           "Input the fuel's quantity in liters into the text field."),
                       const SizedBox(height: 20),
                       buildImageContainer("assets/images/drop.png", true),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 10),
                       buildInput(
                         "Fuel Quantity",
                         const Text(
@@ -125,10 +115,10 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                         true,
                         litersController,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 5),
                       buildSecondText(
                           "Double-check the fuel quantity to ensure it is in liters to avoid errors."),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       _isLoading
                           ? Container(
                               width: 342,

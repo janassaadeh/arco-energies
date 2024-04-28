@@ -4,65 +4,71 @@ import 'package:dio/dio.dart';
 class UserService {
   final Dio _dio = Dio();
 
-Future<dynamic> fetchUserData() async {
-  try {
-    AuthenticationService authenticationService = AuthenticationService();
-    
-    // Print the token for debugging
-    String? token = await authenticationService.getToken();
-    print('Token: $token');
+  Future<dynamic> fetchUserData() async {
+    try {
+      AuthenticationService authenticationService = AuthenticationService();
 
-    // Set up headers with the token
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+      // Print the token for debugging
+      String? token = await authenticationService.getToken();
+      print('Token: $token');
 
-    // Make GET request to the specified URL with the token
-    Response response = await _dio.get(
-      'http://10.0.2.2:8080/users/identity',
-      options: options,
-    );
+      // Set up headers with the token
+      Options options = Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    // Check if the response is successful
-    if (response.statusCode == 200) {
-      // Parse the response data
-      Map<String, dynamic> responseData = response.data;
-      print('Response Data: $responseData');
-  String? role=await authenticationService.getRole();
-  print(role);
+      // Make GET request to the specified URL with the token
+      Response response = await _dio.get(
+        'http://192.168.6.112:8080/users/identity',
+        options: options,
+      );
 
-      // Determine user type based on the received data
-      if (role == 'ADMIN') {
-        return Admin.fromJson(responseData); // Parse as Admin object
-      } else if (role == 'OPERATOR') {
-        return Operator.fromJson(responseData); // Parse as Operator object
-      } else if (role == 'COMPANY') {
-        return Company.fromJson(responseData); // Parse as Company object
+      // Check if the response is successful
+      if (response.statusCode == 200) {
+        // Parse the response data
+        Map<String, dynamic> responseData = response.data;
+        print('Response Data: $responseData');
+        String? role = await authenticationService.getRole();
+        print(role);
+
+        // Determine user type based on the received data
+        if (role == 'ADMIN') {
+          return Admin.fromJson(responseData); // Parse as Admin object
+        } else if (role == 'OPERATOR') {
+          return Operator.fromJson(responseData); // Parse as Operator object
+        } else if (role == 'COMPANY') {
+          return Company.fromJson(responseData); // Parse as Company object
+        } else {
+          // Handle unrecognized user role
+          print('Error: Unrecognized user role');
+          return null;
+        }
       } else {
-        // Handle unrecognized user role
-        print('Error: Unrecognized user role');
+        // Handle error response
+        print('Error: ${response.statusCode}');
         return null;
       }
-    } else {
-      // Handle error response
-      print('Error: ${response.statusCode}');
+    } catch (e) {
+      // Handle Dio errors
+      print('Error: $e');
       return null;
     }
-  } catch (e) {
-    // Handle Dio errors
-    print('Error: $e');
-    return null;
   }
-}}
+}
+
 class User {
   final String id;
   final String email;
   final String phone;
   final String name;
 
-  User({required this.id, required this.email, required this.phone, required this.name});
+  User(
+      {required this.id,
+      required this.email,
+      required this.phone,
+      required this.name});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -78,9 +84,13 @@ class Admin extends User {
   final String dob;
   final String imageId;
 
-  Admin({required String id, required String email, required String phone, required String name, required this.dob,
-  required this.imageId
-  })
+  Admin(
+      {required String id,
+      required String email,
+      required String phone,
+      required String name,
+      required this.dob,
+      required this.imageId})
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Admin.fromJson(Map<String, dynamic> json) {
@@ -89,15 +99,18 @@ class Admin extends User {
       email: json['email'],
       phone: json['phone'],
       name: json['name'],
-      dob: json['dob']??'',
-      imageId: json['imageId']??'',
-
+      dob: json['dob'] ?? '',
+      imageId: json['imageId'] ?? '',
     );
   }
 }
 
 class Operator extends User {
-  Operator({required String id, required String email, required String phone, required String name})
+  Operator(
+      {required String id,
+      required String email,
+      required String phone,
+      required String name})
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Operator.fromJson(Map<String, dynamic> json) {
@@ -126,25 +139,19 @@ class Company extends User {
       required this.contactName,
       required this.location,
       required this.pts,
-      required this.imageId
-
-      
-      })
+      required this.imageId})
       : super(id: id, email: email, phone: phone, name: name);
 
   factory Company.fromJson(Map<String, dynamic> json) {
     return Company(
-      id: json['id'],
-      email: json['email'],
-      phone: json['phone'],
-      name: json['name'],
-      balance: json['balance'],
-      contactName: json['contactName'],
-      location: json['location'],
-      pts:json['pts'],
-      imageId: json['imageId']
-    );
+        id: json['id'],
+        email: json['email'],
+        phone: json['phone'],
+        name: json['name'],
+        balance: json['balance'],
+        contactName: json['contactName'],
+        location: json['location'],
+        pts: json['pts'],
+        imageId: json['imageId']);
   }
 }
-
-

@@ -17,7 +17,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/fuel_prices',
+        'http://192.168.6.112:8080/api/fuel_prices',
       );
 
       if (response.statusCode == 200) {
@@ -53,7 +53,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/fuel_prices',
+        'http://192.168.6.112:8080/api/fuel_prices',
         queryParameters: {
           'fuelType': fuelType,
         },
@@ -104,7 +104,7 @@ class FuelPricesService {
   //     };
 
   //     final response = await dio.post(
-  //       'http://10.0.2.2:8080/api/notifications/push',
+  //       'http://192.168.6.112:8080/api/notifications/push',
   //       data: notificationMessage,
   //     );
 
@@ -128,12 +128,12 @@ class FuelPricesService {
       final String? token = await authService.getToken();
       dio.options.headers['Authorization'] = 'Bearer $token';
 
-      final List<Map<String, dynamic>> fuelPriceDetails = fuelPrices
-          .map((fuelPrice) => {
-                'id': fuelPrice.fuelResponse!.type,
-                'price': fuelPrice.price,
-              })
-          .toList();
+      // final List<Map<String, dynamic>> fuelPriceDetails = fuelPrices
+      //     .map((fuelPrice) => {
+      //           'id': fuelPrice.fuelResponse!.type,
+      //           'price': fuelPrice.price,
+      //         })
+      //     .toList();
 
       String fuelPricesDetails = '';
       for (var fuelPrice in fuelPrices) {
@@ -151,7 +151,7 @@ class FuelPricesService {
       };
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/notifications/push',
+        'http://192.168.6.112:8080/api/notifications/push',
         data: notificationMessage,
       );
 

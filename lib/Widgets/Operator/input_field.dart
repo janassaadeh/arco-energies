@@ -2,22 +2,11 @@ import 'package:flutter/material.dart';
 
 Widget buildInput(String hintText, Widget widgetAtLeft, bool withBorder,
     TextEditingController textEditingController,
-    {bool isPressable = false}) {
+    {bool isPressable = false, void Function(String)? fn}) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      border: withBorder
-          ? Border.all(
-              color: Colors.black,
-              width: 1,
-            )
-          :  Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 1,
-              ),
-            ),
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromRGBO(196, 196, 196, 0.2),
     ),
     child: Row(
       children: [
@@ -35,6 +24,7 @@ Widget buildInput(String hintText, Widget widgetAtLeft, bool withBorder,
                   )
                 : TextFormField(
                     controller: textEditingController,
+                    onChanged: fn,
                     decoration: InputDecoration(
                       hintText: hintText,
                       border: InputBorder.none,

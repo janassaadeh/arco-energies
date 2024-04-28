@@ -9,7 +9,7 @@ class Transaction {
   final String date;
   final PumpResponse pump;
   final VehicleResponse vehicle;
-  // final OperatorResponse operator;
+  final OperatorResponse operator;
 
   Transaction({
     required this.id,
@@ -18,7 +18,7 @@ class Transaction {
     required this.date,
     required this.pump,
     required this.vehicle,
-    // required this.operator,
+    required this.operator,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -29,7 +29,7 @@ class Transaction {
       date: json['date'],
       pump: PumpResponse.fromJson(json['pump']),
       vehicle: VehicleResponse.fromJson(json['vehicle']),
-      // operator: OperatorResponse.fromJson(json['operator']),
+      operator: OperatorResponse.fromJson(json['operator']),
     );
   }
 }

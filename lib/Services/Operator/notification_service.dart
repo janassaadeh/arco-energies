@@ -17,7 +17,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/notifications',
+        'http://192.168.6.112:8080/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -52,8 +52,13 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/notifications/add',
-        data: notification.toJson(),
+        'http://192.168.6.112:8080/api/notifications/add',
+        data: {
+          'type': notification.type,
+          'price': notification.price,
+          'createdDate': notification.createdDate,
+          'authentication': token,
+        },
       );
 
       if (response.statusCode == 200) {
@@ -82,7 +87,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://10.0.2.2:8080/api/notifications',
+        'http://192.168.6.112:8080/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -106,7 +111,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/notifications/$id',
+        'http://192.168.6.112:8080/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {
@@ -135,7 +140,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://10.0.2.2:8080/api/notifications/$id',
+        'http://192.168.6.112:8080/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {

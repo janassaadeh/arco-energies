@@ -91,16 +91,8 @@ class _PumpSelectionState extends State<PumpSelection> {
           onTap: () {
             Provider.of<TransactionProvider>(context, listen: false)
                 .resetTransactionValues();
-            if (Provider.of<TransactionProvider>(context, listen: false)
-                    .isIdTriggeredByNFC >
-                0) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ),
@@ -125,7 +117,7 @@ class _PumpSelectionState extends State<PumpSelection> {
             child: Column(
               children: [
                 buildTitleWidget("Select Pump", "2"),
-                const SizedBox(height: 10),
+                const SizedBox(height: 2),
                 buildText("Select the pump you need to use for filling."),
                 // const SizedBox(height: 20),
                 SizedBox(
@@ -149,8 +141,8 @@ class _PumpSelectionState extends State<PumpSelection> {
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 0,
                               childAspectRatio: 1,
                             ),
                             itemCount: pumps.length,
@@ -263,5 +255,9 @@ class _PumpSelectionState extends State<PumpSelection> {
     setState(() {
       _pumpsFuture = pumpService.getPumps();
     });
+
+    List<Pump> updatedPumps = await pumpService.getPumps();
+    Provider.of<TransactionProvider>(context, listen: false).cachedPumps =
+        updatedPumps;
   }
 }

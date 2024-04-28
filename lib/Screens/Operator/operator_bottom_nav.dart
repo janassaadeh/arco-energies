@@ -19,7 +19,6 @@ class _OperatorState extends State<Operator> {
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
-
         toolbarHeight: 80,
         title: Center(
           child: Row(
@@ -46,7 +45,7 @@ class _OperatorState extends State<Operator> {
       ),
       body: _getBody(),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: const Color.fromRGBO(209, 73, 91, 1),
+        selectedItemColor: const Color(0xff003D58),
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -63,7 +62,7 @@ class _OperatorState extends State<Operator> {
               "assets/images/Gaspump.png",
               width: 28,
               color: _currentIndex == 1
-                  ? const Color.fromRGBO(209, 73, 91, 1)
+                  ? const Color(0xff003D58)
                   : const Color.fromARGB(255, 114, 113, 113),
             ),
             label: 'Transactions',
@@ -84,7 +83,7 @@ class _OperatorState extends State<Operator> {
       case 1:
         return const NewTransaction();
       case 2:
-        return  Profile(
+        return Profile(
             // operator: operatorProvider.operator,
             );
       default:

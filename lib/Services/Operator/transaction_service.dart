@@ -22,12 +22,13 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/transactions',
+        'http://192.168.6.112:8080/api/transactions',
         queryParameters: {'pumpId': pumpId, 'vehicleId': vehicleId},
         data: {
           'quantity': quantity,
           'odometer': odometer,
           'date': date,
+          'authentication': token,
         },
       );
 
@@ -62,7 +63,7 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/transactions',
+        'http://192.168.6.112:8080/api/transactions',
       );
 
       if (response.statusCode == 200) {
@@ -82,7 +83,7 @@ class TransactionService {
       throw Exception('Failed to fetch transactions: $e');
     }
   }
-  
+
   Future<List<Transaction>> getTransactionsForCompany(String id) async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
@@ -98,7 +99,7 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/transactions/company/$id',
+        'http://192.168.6.112:8080/api/transactions/company/$id',
       );
 
       if (response.statusCode == 200) {

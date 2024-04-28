@@ -9,7 +9,7 @@ class AuthenticationService {
   Future<bool> authenticate(String email, String password) async {
     try {
       final response = await _dio.post(
-        'http://10.0.2.2:8080/api/v1/auth/authenticate',
+        'http://192.168.6.112:8080/api/v1/auth/authenticate',
         data: {'email': email, 'password': password},
       );
 
@@ -50,7 +50,6 @@ class AuthenticationService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
   }
-
 
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

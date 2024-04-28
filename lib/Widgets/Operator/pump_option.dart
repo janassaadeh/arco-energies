@@ -15,65 +15,70 @@ class PumpOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Size screenSize = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () {
         onSelect(pump);
       },
       child: Column(
         children: [
-          Container(
-            width: 140,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                begin:
-                    const Alignment(-1.1779649257659912, -1.3327655792236328),
-                end: const Alignment(1.3327656984329224, -1.139451026916504),
-                colors: isSelected
-                    ? [
-                        const Color.fromRGBO(94, 181, 149, 1),
-                        const Color.fromRGBO(94, 181, 149, 0.57)
-                      ]
-                    : [
-                        const Color.fromRGBO(114, 212, 171, 1),
-                        const Color.fromRGBO(114, 212, 171, 0.57)
-                      ],
-              ),
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 4,
-                        offset: const Offset(0, 4),
+          Material(
+            elevation: isSelected ? 6 : 0,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 140,
+              height: 130,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: isSelected
+                    ? Border.all(
+                        color: const Color.fromRGBO(0, 61, 91, 1),
+                        width: 3,
                       )
-                    ]
-                  : null,
-            ),
-            child: Center(
-              child: Image.asset(
-                "assets/images/pump.png",
-                width: 85,
-                height: 85,
-                fit: BoxFit.contain,
+                    : null,
+                gradient: LinearGradient(
+                  begin:
+                      const Alignment(-1.1779649257659912, -1.3327655792236328),
+                  end: const Alignment(1.3327656984329224, -1.139451026916504),
+                  colors: [
+                    const Color.fromRGBO(114, 212, 171, 1),
+                    const Color.fromRGBO(114, 212, 171, 0.57)
+                  ],
+                ),
               ),
-            ),
-          ),
-          // const SizedBox(height: 5),
-          Expanded(
-            child: Text(
-              pump.name,
-              style: TextStyle(
-                color: isSelected
-                    ? Colors.black
-                    : const Color.fromRGBO(0, 61, 91, 1),
-                fontFamily: 'Inter',
-                fontSize: 14,
-                letterSpacing: -0.4399999976158142,
-                fontWeight: FontWeight.w500,
-                height: 1.2777777777777777,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/pump.png",
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    '${pump.name}',
+                    style: TextStyle(
+                      color: isSelected
+                          ? const Color.fromRGBO(0, 61, 91, 1)
+                          : Color.fromARGB(255, 0, 0, 0),
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    '${pump.fuel.type} (${pump.currency})',
+                    style: TextStyle(
+                      color: isSelected
+                          ? const Color.fromRGBO(0, 61, 91, 1)
+                          : Color.fromARGB(255, 0, 0, 0),
+                      fontFamily: 'Inter',
+                      fontSize: 14, // Adjust font size as needed
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

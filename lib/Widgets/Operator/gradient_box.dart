@@ -43,16 +43,14 @@ Widget gradientBox(
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
+                  padding: const EdgeInsets.only(top: 15.0, left: 10),
                   child: Text(
                     txt,
-                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 1),
-                      fontFamily: 'Inter',
                       fontSize: 16,
                       letterSpacing: 0.3199999928474426,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       height: 1.5,
                     ),
                   ),

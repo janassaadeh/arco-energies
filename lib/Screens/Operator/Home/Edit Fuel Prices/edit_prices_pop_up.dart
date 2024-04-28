@@ -119,7 +119,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
               fuel98Controller,
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
           _buildSection(
             title: 'Fuel 95 Price',
             child: buildInput(
@@ -129,7 +129,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
               fuel95Controller,
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
           _buildSection(
             title: 'Fuel Diesel Price',
             child: buildInput(
@@ -263,7 +263,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
             color: Color.fromARGB(255, 1, 14, 72),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         child,
       ],
     );

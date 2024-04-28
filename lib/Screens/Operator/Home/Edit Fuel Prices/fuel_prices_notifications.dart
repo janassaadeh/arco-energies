@@ -87,12 +87,21 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
     setState(() {
       fuelPricesFuture = fuelPricesService.getFuelPrices();
     });
+
+    List<FuelPrice> updatedFuelPrices = await fuelPricesService.getFuelPrices();
+    Provider.of<FuelPricesProvider>(context, listen: false).cachedFuelPrices =
+        updatedFuelPrices;
   }
 
   Future<void> _refreshNotifications() async {
     setState(() {
       notificationListFuture = notificationService.getAllNotifications();
     });
+
+    List<not.Notification> updatedNotifications =
+        await notificationService.getAllNotifications();
+    Provider.of<FuelPricesProvider>(context, listen: false)
+        .cachedNotifications = updatedNotifications;
   }
 
   void deleteAllNotifications() {
@@ -161,6 +170,8 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
         } else {
           List<not.Notification> notifications = snapshot.data ?? [];
 
+          notifications.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+
           if (notifications.isEmpty) {
             return Center(
               child: Text('No notifications'),
@@ -173,7 +184,6 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
             },
             color: const Color(0xff003D58),
             child: ListView.builder(
-              reverse: true,
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 final notification = notifications[index];
@@ -198,61 +208,115 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
                   ),
                   child: Card(
                     color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(12), // Set rounded corners
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        "${formattedDate}",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0, top: 5),
-                            child: Text(
-                              displayType,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.water_drop,
+                                    size: 24,
+                                    color: notification.type
+                                            .toLowerCase()
+                                            .contains("diesel")
+                                        ? const Color.fromARGB(
+                                            255, 204, 113, 79)
+                                        : const Color.fromARGB(153, 3, 110, 42),
+                                  ),
+                                ),
                               ),
+                              const SizedBox(width: 18.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${notification.type}  ',
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Image.asset(
+                                        "assets/images/FullStop.png",
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        '  ${notification.operator.name}',
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    formattedDate,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              Column(
+                                children: [
+                                  Text(
+                                    '${notification.price.toString()} \$',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 1, 14, 72),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Divider(
+                              height: 1.5,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Text(
-                              '${notification.price.toString()} \$',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 1, 14, 72),
-                                fontSize: 16,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.check),
+                                onPressed: () {
+                                  _handleApprove(notification);
+                                },
+                                color: Colors.green,
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.check),
-                            onPressed: () {
-                              _handleApprove(notification);
-                            },
-                            color: Colors.green,
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              _handleDecline(notification);
-                            },
-                            color: Colors.red,
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  _handleDecline(notification);
+                                },
+                                color: Colors.red,
+                              ),
+                            ],
                           ),
                         ],
                       ),

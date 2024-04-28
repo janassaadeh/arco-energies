@@ -1,3 +1,5 @@
+import 'package:company_pages/Models/company_response.dart';
+
 class Vehicle {
   final String id;
   final int year;
@@ -6,7 +8,7 @@ class Vehicle {
   final String driverName;
   final String type;
   final String color;
-  final List<dynamic> transactions;
+  CompanyResponse? company;
 
   Vehicle({
     required this.id,
@@ -16,7 +18,7 @@ class Vehicle {
     required this.driverName,
     required this.type,
     required this.color,
-    required this.transactions,
+    this.company,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -28,7 +30,7 @@ class Vehicle {
       driverName: json['driverName'],
       type: json['type'],
       color: json['color'],
-      transactions: json['transactions'],
+      company: CompanyResponse.fromJson(json['company']),
     );
   }
 }

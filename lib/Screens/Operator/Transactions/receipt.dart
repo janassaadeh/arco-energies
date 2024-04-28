@@ -1,9 +1,9 @@
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_fonts/flutter_fonts.dart';
 
 class ReceiptPage extends StatelessWidget {
   final Transaction transaction;
@@ -38,6 +38,11 @@ class ReceiptPage extends StatelessWidget {
         ),
       );
     }
+
+    String createdDate = transaction.date;
+    DateTime dateTime = DateTime.parse(createdDate);
+
+    final formattedDate = DateFormat.yMMMd().add_jms().format(dateTime);
 
     return Scaffold(
       appBar: AppBar(
@@ -76,22 +81,12 @@ class ReceiptPage extends StatelessWidget {
           onTap: () {
             Provider.of<TransactionProvider>(context, listen: false)
                 .resetTransactionValues();
-            if (Provider.of<TransactionProvider>(context, listen: false)
-                    .isIdTriggeredByNFC >
-                0) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }
+
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ),
@@ -145,13 +140,15 @@ class ReceiptPage extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Text(
-                    'Wed, May 27, 2020 • 9:27:53 AM',
+                    formattedDate,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      letterSpacing: -0.44999998807907104,
-                      fontWeight: FontWeight.normal,
-                      height: 1,
+                    style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: -0.44999998807907104,
+                        fontWeight: FontWeight.normal,
+                        height: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -178,7 +175,8 @@ class ReceiptPage extends StatelessWidget {
                 receiptDetailPositioned(.57, "Total",
                     "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
                 receiptDivider(.595),
-                receiptDetailPositioned(.62, "Operator", "Achraf Samir"),
+                receiptDetailPositioned(
+                    .62, "Operator", transaction.operator.name),
                 Positioned(
                   top: receiptMaxHeight * .645,
                   left: 0,
@@ -244,12 +242,14 @@ class ReceiptPage extends StatelessWidget {
           child: Text(
             leftTxt,
             textAlign: TextAlign.left,
-            style: const TextStyle(
-              color: Color.fromRGBO(109, 114, 120, 1),
-              fontSize: 11,
-              letterSpacing: 0.45,
-              fontWeight: FontWeight.normal,
-              height: 1,
+            style: GoogleFonts.roboto(
+              textStyle: TextStyle(
+                color: Color.fromRGBO(109, 114, 120, 1),
+                fontSize: 11,
+                letterSpacing: 0.45,
+                fontWeight: FontWeight.normal,
+                height: 1,
+              ),
             ),
           ),
         ),
@@ -259,12 +259,14 @@ class ReceiptPage extends StatelessWidget {
           child: Text(
             rightTxt,
             textAlign: TextAlign.right,
-            style: const TextStyle(
-              color: Color.fromRGBO(0, 0, 0, 1),
-              fontSize: 11,
-              letterSpacing: 0.45,
-              fontWeight: FontWeight.normal,
-              height: 1,
+            style: GoogleFonts.roboto(
+              textStyle: TextStyle(
+                color: Color.fromRGBO(0, 0, 0, 1),
+                fontSize: 11,
+                letterSpacing: 0.45,
+                fontWeight: FontWeight.normal,
+                height: 1,
+              ),
             ),
           ),
         ),

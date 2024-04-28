@@ -54,6 +54,10 @@ class _DashBoardState extends State<DashBoard> {
     setState(() {
       fuelListFuture = fuelService.getAllFuels();
     });
+
+    List<Fuel> updatedFuels = await fuelService.getAllFuels();
+    Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels =
+        updatedFuels;
   }
 
   @override
@@ -68,11 +72,11 @@ class _DashBoardState extends State<DashBoard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              horizontalGradientBox(context, "Welcome Back\n      Ashraf",
+              horizontalGradientBox(context, "Welcome Back\nAshraf",
                   "assets/images/gas-pump.png"),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               subTitle('Features'),
-              const SizedBox(height: 15),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   GestureDetector(
@@ -107,9 +111,8 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               subTitle('Fuel Prices'),
-              const SizedBox(height: 10),
               Container(
                 height: 350,
                 child: FutureBuilder<List<Fuel>>(

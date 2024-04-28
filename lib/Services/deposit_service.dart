@@ -2,15 +2,16 @@ import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:dio/dio.dart';
 
 class DepositService {
-  final Dio _dio=Dio();
-  final AuthenticationService authenticationService=AuthenticationService();
+  final Dio _dio = Dio();
+  final AuthenticationService authenticationService = AuthenticationService();
 
-  Future<String> addCashRequest(double cashAmount, String companyId, String paymentMethod) async {
-   final token = await authenticationService.getToken();
-   
+  Future<String> addCashRequest(
+      double cashAmount, String companyId, String paymentMethod) async {
+    final token = await authenticationService.getToken();
+
     try {
       final response = await _dio.post(
-        'http://10.0.2.2:8080/deposit/addCash',
+        'http://192.168.6.112:8080/deposit/addCash',
         data: {
           "cashAmount": cashAmount,
           "companyId": companyId,
@@ -25,7 +26,7 @@ class DepositService {
       );
 
       // Handle response
-     if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final responseData = response.data as Map<String, dynamic>;
         final id = responseData['id'] as String;
         final newBalance = responseData['newBalance'] as double;
@@ -44,14 +45,13 @@ class DepositService {
       print('Error occurred: $e');
     }
     return '';
-
   }
 
   Future<Map<String, dynamic>> getDepositReceipt(String receiptId) async {
-   final token = await authenticationService.getToken();
+    final token = await authenticationService.getToken();
     try {
       final response = await _dio.get(
-        'http://10.0.2.2:8080/deposit/receipt/$receiptId',
+        'http://192.168.6.112:8080/deposit/receipt/$receiptId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -62,22 +62,24 @@ class DepositService {
 
       if (response.statusCode == 200) {
         print(response.data);
-          // DepositReceipt receipt = DepositReceipt.fromJson(response.data);
+        // DepositReceipt receipt = DepositReceipt.fromJson(response.data);
         return response.data;
-        
       } else {
-        throw Exception('Failed to load deposit receipt. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load deposit receipt. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error occurred: $e');
     }
   }
-  Future<List<DepositReceipt>> getCashAdditionEventsByAdminId(String adminId) async {
+
+  Future<List<DepositReceipt>> getCashAdditionEventsByAdminId(
+      String adminId) async {
     final token = await authenticationService.getToken();
 
     try {
       final response = await _dio.get(
-        'http://10.0.2.2:8080/deposit/admin/$adminId',
+        'http://192.168.6.112:8080/deposit/admin/$adminId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -88,21 +90,26 @@ class DepositService {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data;
-        final receipts = responseData.map((receiptData) => DepositReceipt.fromJson(receiptData)).toList();
+        final receipts = responseData
+            .map((receiptData) => DepositReceipt.fromJson(receiptData))
+            .toList();
         return receipts;
       } else {
-        throw Exception('Failed to get deposit receipts. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to get deposit receipts. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error occurred: $e');
     }
   }
- Future<List<DepositReceipt>> getCashAdditionEventsByCompanyId(String companyId) async {
+
+  Future<List<DepositReceipt>> getCashAdditionEventsByCompanyId(
+      String companyId) async {
     final token = await authenticationService.getToken();
 
     try {
       final response = await _dio.get(
-        'http://10.0.2.2:8080/deposit/company/$companyId',
+        'http://192.168.6.112:8080/deposit/company/$companyId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -113,17 +120,18 @@ class DepositService {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data;
-        final receipts = responseData.map((receiptData) => DepositReceipt.fromJson(receiptData)).toList();
+        final receipts = responseData
+            .map((receiptData) => DepositReceipt.fromJson(receiptData))
+            .toList();
         return receipts;
       } else {
-        throw Exception('Failed to get deposit receipts. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to get deposit receipts. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error occurred: $e');
     }
   }
-
-
 }
 
 void printDepositReceipt(Map<String, dynamic> receipt) {

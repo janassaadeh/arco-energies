@@ -22,7 +22,7 @@ class PumpService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/pumps',
+        'http://192.168.6.112:8080/api/pumps',
       );
 
       if (response.statusCode == 200) {
@@ -33,6 +33,7 @@ class PumpService {
         for (var pumpJson in responseData) {
           String id = pumpJson['id'];
           String name = pumpJson['name'];
+          String currency = pumpJson['currency'];
           String status = pumpJson['status'];
           FuelResponse fuel = FuelResponse.fromJson(pumpJson['fuel']);
           List<Transaction> transactions = [];
@@ -46,19 +47,20 @@ class PumpService {
               String date = transactionJson['date'];
 
               transactions.add(Transaction(
-                id: transactionId,
-                quantity: quantity,
-                odometer: odometer,
-                date: date,
-                pump: PumpResponse.fromJson(transactionJson['pump']),
-                vehicle: VehicleResponse.fromJson(transactionJson['vehicle']),
-                // operator: OperatorResponse.fromJson(transactionJson['operator'])
-              ));
+                  id: transactionId,
+                  quantity: quantity,
+                  odometer: odometer,
+                  date: date,
+                  pump: PumpResponse.fromJson(transactionJson['pump']),
+                  vehicle: VehicleResponse.fromJson(transactionJson['vehicle']),
+                  operator:
+                      OperatorResponse.fromJson(transactionJson['operator'])));
             });
           }
           pumps.add(Pump(
             id: id,
             name: name,
+            currency: currency,
             status: status,
             transactions: transactions,
             fuel: fuel,
