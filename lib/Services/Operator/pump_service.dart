@@ -22,7 +22,7 @@ class PumpService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.112:8080/api/pumps',
+        'http://10.0.2.2:8080/api/pumps',
       );
 
       if (response.statusCode == 200) {

@@ -9,6 +9,7 @@ class Vehicle {
   final String type;
   final String color;
   CompanyResponse? company;
+  String ? imageId;
 
   Vehicle({
     required this.id,
@@ -19,6 +20,7 @@ class Vehicle {
     required this.type,
     required this.color,
     this.company,
+    this.imageId
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,8 @@ class Vehicle {
       type: json['type'],
       color: json['color'],
       company: CompanyResponse.fromJson(json['company']),
+      imageId: json['imageId']??'',
+
     );
   }
 }

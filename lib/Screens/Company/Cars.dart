@@ -124,6 +124,7 @@ body:
                             title: filteredCars[index].driverName,
                             subtitle1: filteredCars[index].model,
                             subtitle2:filteredCars[index].year.toString(),
+                            imageData: '',
                             // subtitle3: '#${cars[index].carId}',
                           ),
                         ),
