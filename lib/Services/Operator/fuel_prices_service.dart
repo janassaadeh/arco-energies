@@ -17,7 +17,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.112:8080/api/fuel_prices',
+        'http://172.20.10.3:8080/api/fuel_prices',
       );
 
       if (response.statusCode == 200) {
@@ -53,7 +53,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://192.168.6.112:8080/api/fuel_prices',
+        'http://172.20.10.3:8080/api/fuel_prices',
         queryParameters: {
           'fuelType': fuelType,
         },
@@ -104,7 +104,7 @@ class FuelPricesService {
   //     };
 
   //     final response = await dio.post(
-  //       'http://192.168.6.112:8080/api/notifications/push',
+  //       'http://172.20.10.3:8080/api/notifications/push',
   //       data: notificationMessage,
   //     );
 
@@ -151,7 +151,7 @@ class FuelPricesService {
       };
 
       final response = await dio.post(
-        'http://192.168.6.112:8080/api/notifications/push',
+        'http://172.20.10.3:8080/api/notifications/push',
         data: notificationMessage,
       );
 

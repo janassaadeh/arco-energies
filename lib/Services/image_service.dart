@@ -18,7 +18,7 @@ class ImageService {
       if (token != null) {
         // Make a POST request to upload the image
         await _dio.post(
-          'http://192.168.6.112:8080/images/upload?userId=$userId',
+          'http://172.20.10.3:8080/images/upload?userId=$userId',
           data: {'base64Image': encodedImage},
           options: Options(
             headers: {'Authorization': 'Bearer $token'},
@@ -45,7 +45,7 @@ class ImageService {
 
         // Make a GET request to fetch the image
         final Response<Uint8List> response = await _dio.get(
-          'http://192.168.6.112:8080/images/$id',
+          'http://172.20.10.3:8080/images/$id',
           options: Options(responseType: ResponseType.bytes),
         );
 

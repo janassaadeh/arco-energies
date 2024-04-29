@@ -6,7 +6,7 @@ class PasswordResetService {
   Future<void> initiatePasswordReset(String email) async {
     try {
       Response response = await _dio.post(
-        'http://192.168.6.112:8080/api/v1/auth/reset-password/initiate',
+        'http://172.20.10.3:8080/api/v1/auth/reset-password/initiate',
         queryParameters: {'email': email},
       );
       print('Initiate Password Reset Response: ${response.data}');
@@ -19,7 +19,7 @@ class PasswordResetService {
   Future<void> resetPassword(String token, String newPassword) async {
     try {
       Response response = await _dio.post(
-        'http://192.168.6.112:8080/api/v1/auth/reset-password/confirm',
+        'http://172.20.10.3:8080/api/v1/auth/reset-password/confirm',
         queryParameters: {'token': token, 'newPassword': newPassword},
       );
       print('Reset Password Response: ${response.data}');
