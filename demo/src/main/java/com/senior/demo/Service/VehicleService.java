@@ -33,7 +33,7 @@ public class VehicleService {
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));
 
         // Create the vehicle
-        Vehicle vehicle = new Vehicle(customId,year, model, plateNumber, driverName, type, color);
+        Vehicle vehicle = new Vehicle(customId,year, model, plateNumber, driverName, type, color,"");
         vehicle.setCompany(company);
         company1.addVehicle(vehicle);
 
@@ -48,7 +48,7 @@ public class VehicleService {
         CompanyResponse company = companyService.getCompanyById(companyId);
 
         // Get all vehicles associated with the company
-        return vehicleRepository.findByCompany(company);
+        return vehicleRepository.findByCompanyId(companyId);
     }
 
     // Method to update a vehicle related to a specific company
@@ -60,7 +60,7 @@ public class VehicleService {
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));
 
         // Check if the vehicle belongs to the company
-        Vehicle vehicle = getVehicleForCompany(company, vehicleId);
+        Vehicle vehicle = getVehicleForCompany(companyId, vehicleId);
 
         // Update the vehicle details
         vehicle.setType(type);
@@ -94,7 +94,7 @@ public class VehicleService {
         CompanyResponse company = companyService.getCompanyById(companyId);
 
         // Check if the vehicle belongs to the company
-        Vehicle vehicle = getVehicleForCompany(company, vehicleId);
+        Vehicle vehicle = getVehicleForCompany(companyId, vehicleId);
         Company company1 = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));
         // Delete the vehicle
@@ -123,13 +123,12 @@ public class VehicleService {
     }
 
     // Helper method to get a vehicle related to a specific company
-    private Vehicle getVehicleForCompany(CompanyResponse company, String vehicleId) {
-        // Get the vehicle by ID
+    private Vehicle getVehicleForCompany(String companyId, String vehicleId) {
         Optional<Vehicle> optionalVehicle = vehicleRepository.findById(vehicleId);
         if (optionalVehicle.isPresent()) {
             Vehicle vehicle = optionalVehicle.get();
             // Check if the vehicle belongs to the company
-            if (vehicle.getCompany().equals(company)) {
+            if (vehicle.getCompany().getId().equals(companyId)) {
                 return vehicle;
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found for the specified company");
@@ -158,7 +157,7 @@ public class VehicleService {
 
     public Vehicle addVehicleWithCustomId(String type, int year, String model, String plateNumber, String driverName, String color) {
         String customId = generateCustomId();
-        Vehicle vehicle = new Vehicle(customId, year, model, plateNumber, driverName, type, color);
+        Vehicle vehicle = new Vehicle(customId, year, model, plateNumber, driverName, type, color,"");
         return vehicleRepository.save(vehicle);
     }
 

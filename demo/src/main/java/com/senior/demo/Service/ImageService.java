@@ -18,7 +18,8 @@ public class ImageService {
     private OperatorRepository operatorRepository;
     @Autowired
     private CompanyRepository companyRepository;
-
+    @Autowired
+    private VehicleRepository vehicleRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -70,4 +71,16 @@ public class ImageService {
         return mongoTemplate.exists(query, Image.class);
     }
 
+    public void uploadImageToCar(byte[] imageData, String vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Image image = new Image();
+        image.setData(imageData);
+        image.setId(generateUniqueImageId());
+        imageRepository.save(image); // Save the image to get its ID
+
+        vehicle.setImageId(image.getId()); // Set the ID of the uploaded image for the user
+        vehicleRepository.save(vehicle);
+    }
 }

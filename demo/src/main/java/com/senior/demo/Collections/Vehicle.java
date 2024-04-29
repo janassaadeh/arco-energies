@@ -39,8 +39,9 @@ public class Vehicle {
 
     // OneToMany
     private List<Transaction> transactions;
+    private String imageId;
 
-    public Vehicle(String id, int year, String model, String plateNumber, String driverName, String type, String color) {
+    public Vehicle(String id, int year, String model, String plateNumber, String driverName, String type, String color,String imageId) {
         this.id = id;
         this.year = year;
         this.model = model;
@@ -49,6 +50,15 @@ public class Vehicle {
         this.type = type;
         this.color = color;
         this.transactions = new ArrayList<>();
+        this.imageId=imageId;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getId() {

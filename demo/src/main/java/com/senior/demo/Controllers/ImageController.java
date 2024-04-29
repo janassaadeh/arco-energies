@@ -30,6 +30,15 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
         }
     }
+    @PostMapping("/vehicle/upload")
+    public ResponseEntity<String> uploadImageToCar(@RequestBody Base64ImageRequest request, @RequestParam String vehicleId) {
+        try {
+            imageService.uploadImageToCar(Base64.getDecoder().decode(request.getBase64Image()),vehicleId);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Image uploaded successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable String id) {
