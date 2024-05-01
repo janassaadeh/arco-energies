@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,10 +34,10 @@ public class TransactionController {
     public List<Transaction> getAllTransactionsForCompany(@PathVariable String id) {
         return transactionService.getAllCompanyTransactions(id);
     }
-//    @PutMapping("/transactions/{id}")
-//    public Transaction updateTransaction(@PathVariable String id, @RequestBody Transaction updatedTransaction) {
-//        return transactionService.updateTransaction(id, updatedTransaction);
-//    }
+    @PutMapping("/transactions/{id}")
+    public Transaction updateTransaction(@PathVariable String id,@RequestParam String pumpId, @RequestParam String vehicleId, @RequestParam double quantity, @RequestParam double odometer) {
+        return transactionService.updateTransaction( id,pumpId, vehicleId, quantity, odometer);
+    }
 
     @DeleteMapping("/transactions/{id}")
     public void deleteTransactionById(@PathVariable String id) {
