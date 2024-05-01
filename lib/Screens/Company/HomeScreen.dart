@@ -278,8 +278,10 @@ width: 150,
             ],
           ):
 Container(
-  height: mergedAndSorted!.length * 12200.0, // Adjust the height as needed
+  height: mergedAndSorted!.length * 100.0, // Adjust the height as needed
   child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
     physics: NeverScrollableScrollPhysics(),
     // itemCount: mergedAndSorted!.length,
       itemCount: mergedAndSorted!.length > 3 ? 3 : mergedAndSorted!.length,

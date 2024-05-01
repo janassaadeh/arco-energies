@@ -49,7 +49,7 @@ class _SelectionListState extends State<SelectionList> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search Payment Methods',
+                      hintText: 'Search ...',
                       border: InputBorder.none,
                       suffixIcon: Icon(Icons.search),
                     ),

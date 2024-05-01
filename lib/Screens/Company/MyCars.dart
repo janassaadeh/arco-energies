@@ -62,6 +62,8 @@ class _MyCarsState extends State<MyCars> {
                   height: 700,
                   color: Colors.white,
                   child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                     itemCount: widget.cars.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -83,7 +85,7 @@ class _MyCarsState extends State<MyCars> {
                           title: widget.cars[index].driverName,
                           subtitle1: widget.cars[index].model,
                           subtitle2: widget.cars[index].year.toString(),
-                          imageData: '',
+                          imageData: 'no image',
                           // subtitle3: '#${cars[index].carId}',
                         ),
                       );

@@ -157,6 +157,8 @@ Future<void> refreshOperators() async {
   },
 
                       child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                         itemCount: filteredOperators.length,
                         itemBuilder: (context, index) {
                           return Column(
@@ -209,7 +211,7 @@ Future<void> refreshOperators() async {
                                     }
                                   },
                                   child: Padding(
-                                      padding: (index==filteredOperators.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                      padding: EdgeInsets.only(bottom:0.0),
                                     child: CompanyCard(
                                       title: filteredOperators[index].name,
                                       subtitle1: filteredOperators[index].email,
@@ -265,9 +267,12 @@ Future<void> refreshOperators() async {
                     onChanged: (value) {
                          setState(() {
       searchQuery = value;
-      filteredOperators = filteredOperators; // Update filteredOperators when searchQuery changes
+      filteredOperators = filterOperators(); // Update filteredOperators when searchQuery changes
     });
+      // filterOperators();
+
     fetchImageForFilteredOperators();
+    
   
                     },
                     decoration: InputDecoration(
@@ -293,8 +298,7 @@ Future<void> refreshOperators() async {
         )
     );
   }
-  
-Future<void> _showCupertinoLikeDialog(BuildContext context, int index,List<Operator>filteredOperators) async {
+Future<void> _showCupertinoLikeDialog(BuildContext context, int index, List<Operator> filteredOperators) async {
   await showCupertinoDialog(
     context: context,
     builder: (BuildContext context) {
@@ -319,19 +323,19 @@ Future<void> _showCupertinoLikeDialog(BuildContext context, int index,List<Opera
             onPressed: () async {
               try {
                 OperatorService operatorService = OperatorService();
-                // Call deleteCompany function to delete the company
+                // Call deleteOperator function to delete the operator
                 await operatorService.deleteOperator(filteredOperators[index].id);
-                                final operatorId = filteredOperators[index].id;
-final operatorIndex = widget.operators.indexWhere((operator) => operator.id == operatorId);
-
-if (operatorIndex != -1) {
-    setState(() {
-        widget.operators.removeAt(operatorIndex);
-    });
-}
-
-                // Filter companies again after deletion
                 
+                // Remove the operator from the list
+                final operatorId = filteredOperators[index].id;
+                final operatorIndex = widget.operators.indexWhere((operator) => operator.id == operatorId);
+                if (operatorIndex != -1) {
+                  setState(() {
+                    widget.operators.removeAt(operatorIndex);
+                    filteredOperators.removeAt(index); // Remove from filtered list as well
+                  });
+                }
+
                 Navigator.pop(context);
 
                 // Show a success Snackbar
@@ -357,6 +361,8 @@ if (operatorIndex != -1) {
     },
   );
 }
+
+
 
 
 }

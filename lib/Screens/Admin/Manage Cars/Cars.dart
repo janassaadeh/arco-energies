@@ -146,7 +146,10 @@ body:
                         color: Colors.white,
                         height: 652,
                       
+
                       child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                         itemCount:filteredCars.length,
                         itemBuilder: (context, index) {
                           
@@ -211,7 +214,7 @@ body:
 
           
                                     child: Padding(
-                                      padding: (index==filteredCars.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                      padding: EdgeInsets.only(bottom:0.0),
                                       child: CarCard(
                                         title: filteredCars[index].driverName,
                                         subtitle1: filteredCars[index].model,
@@ -284,12 +287,12 @@ body:
         )
     );
   }
- Future<void> _showCupertinoLikeDialog(BuildContext context, int index,List<Vehicle>filteredCars) async {
+ Future<void> _showCupertinoLikeDialog(BuildContext context, int index, List<Vehicle> filteredCars) async {
   await showCupertinoDialog(
     context: context,
     builder: (BuildContext context) {
       return CupertinoAlertDialog(
-        title: Text('Are you sure you want to delete this company?'),
+        title: Text('Are you sure you want to delete this car?'),
         actions: <Widget>[
           CupertinoDialogAction(
             isDefaultAction: true,
@@ -309,19 +312,23 @@ body:
             onPressed: () async {
               try {
                 VehicleCompanyService vehicleCompanyService = VehicleCompanyService();
-                // Call deleteCompany function to delete the company
-                await vehicleCompanyService.deleteVehicleForCompany(widget.company.id,filteredCars[index].id);
-                                final carId = filteredCars[index].id;
-final carIndex = widget.cars.indexWhere((car) => car.id == carId);
-
-if (carIndex != -1) {
-    setState(() {
-        widget.cars.removeAt(carIndex);
-    });
-}
-
-                // Filter companies again after deletion
+                // Call deleteVehicleForCompany function to delete the car
+                await vehicleCompanyService.deleteVehicleForCompany(widget.company.id, filteredCars[index].id);
                 
+                // Remove the car from the original list
+                final carId = filteredCars[index].id;
+                final carIndex = widget.cars.indexWhere((car) => car.id == carId);
+                if (carIndex != -1) {
+                  setState(() {
+                    widget.cars.removeAt(carIndex);
+                  });
+                }
+
+                // Remove the car from the filtered list
+                setState(() {
+                  filteredCars.removeAt(index);
+                });
+
                 Navigator.pop(context);
 
                 // Show a success Snackbar
@@ -335,7 +342,7 @@ if (carIndex != -1) {
                 // Show an error Snackbar
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Failed to delete company: $error'),
+                    content: Text('Failed to delete car: $error'),
                     duration: Duration(seconds: 2),
                   ),
                 );
@@ -346,7 +353,8 @@ if (carIndex != -1) {
       );
     },
   );
-}}
+}
+}
 
 class _TickerProvider extends TickerProvider {
   @override

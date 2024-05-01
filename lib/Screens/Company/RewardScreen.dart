@@ -120,6 +120,8 @@ class RewardScreen extends StatelessWidget {
               SizedBox(
                 height:rewards.length*110.0,
                 child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                   physics: NeverScrollableScrollPhysics(),
       itemCount: rewards.length,
       itemBuilder: (BuildContext context, int index) {
@@ -129,59 +131,65 @@ class RewardScreen extends StatelessWidget {
             var imageData=await rewardService.getQrCode(company.id, rewards[index].id);
             showModalBottomSheet(
   context: context,
+  
   builder: (BuildContext context) {
-    return Container(
-      // height: 620, // Adjust height as needed
-      width: double.infinity,
-      decoration: BoxDecoration(
-      color: Colors.white,
 
-        borderRadius: BorderRadius.circular(25)
-      ),
-      child: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 5,),
-            Container(
-              width: 76,
-              child: Divider(thickness: 4,color:Color(0xffDEDEDE))),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text('Redeem Reward',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
-              ),
-                  Divider(thickness: 1,color:Color(0xffDEDEDE)),
-                    Container(
-                      width: 100,
-                      height: 100,
-                      child: Image.asset("assets/images/s1.png",fit:BoxFit.fill)),
-      
-                Text(rewards[index].title,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700),),
-      SizedBox(height: 5,),
+    return Wrap(
+      children: [
+        Container(
+          width: double.infinity,
+
+          decoration: BoxDecoration(
+          color: Colors.white,
+
+            borderRadius: BorderRadius.circular(25)
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(height: 5,),
                 Container(
-                  width: 320,
-                  child: Center(
-                    child: Text(textAlign: TextAlign.center,'Visit our gas station and have one of our staff members scan your QR code to claim your reward.'
-                    ,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w500),),
+                  width: 76,
+                  child: Divider(thickness: 4,color:Color(0xffDEDEDE))),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text('Redeem Reward',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
                   ),
-                ),
-            Container(
-         
-              
-              child: 
-              
-              Column(children: [
-              Image.memory(imageData),
-              // Text(textAlign: TextAlign.center,'${rewards[index].id}'
-              //       ,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+                      Divider(thickness: 1,color:Color(0xffDEDEDE)),
+                        Container(
+                          width: 100,
+                          height: 100,
+                          child: Image.asset("assets/images/s1.png",fit:BoxFit.fill)),
+          
+                    Text(rewards[index].title,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700),),
+          SizedBox(height: 5,),
+                    Container(
+                      width: 320,
+                      child: Center(
+                        child: Text(textAlign: TextAlign.center,'Visit our gas station and have one of our staff members scan your QR code to claim your reward.'
+                        ,style: TextStyle(fontSize: 13,fontWeight: FontWeight.w500),),
+                      ),
+                    ),
+                Container(
+             
+                  
+                  child: 
+                  
+                  Column(children: [
+                  Image.memory(imageData),
+                  // Text(textAlign: TextAlign.center,'${rewards[index].id}'
+                  //       ,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+                    
+                  ],)
+                  ),
                 
-              ],)
-              ),
-            
 
-      
-          ],
+          
+              ],
+            ),
+          )
         ),
-      )
+      ],
     );
   },
 );

@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:company_pages/Models/fuel.dart';
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Screens/Admin/NFC_Car_Wrte.dart';
@@ -34,11 +36,16 @@ class AdminHomeScreen extends StatefulWidget {
   List<company.Company> companies;
   dynamic admin;
   dynamic imageData;
+    final List<Pump> pumps;
+  final List <Vehicle> cars;
   AdminHomeScreen(
       {required this.companies,
       required this.admin,
       required this.operators,
-      required this.imageData});
+      required this.imageData,
+      required this.pumps,
+      required this.cars
+      });
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
@@ -207,7 +214,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                push(Companies(companies: widget.companies),
+                                push(Companies(companies: widget.companies,allcars: widget.cars,pumps:widget.pumps,),
                                     context);
                               },
                               child: Features(

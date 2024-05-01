@@ -35,6 +35,7 @@ class _AllTransactionsState extends State<AllTransactions> {
   void initState() {
     super.initState();
     filteredTransactions = widget.mergedAndSorted;
+    print(widget.mergedAndSorted!.length);
   }
 List<dynamic> searchItems(String query, List<dynamic> list) {
   List<dynamic> searchResults = [];
@@ -105,7 +106,7 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-                  child: Cash(cashBalance: widget.company.balance.toString()),
+child: Cash(cashBalance: widget.company.balance.toStringAsFixed(2)),
                 ),
                 const SizedBox(
                   height: 30,
@@ -172,6 +173,8 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
             child: Padding(
               padding: const EdgeInsets.only(left:30,right: 30),
               child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                 // physics: NeverScrollableScrollPhysics(),
                 physics: AlwaysScrollableScrollPhysics(),
                 itemCount: filteredTransactions!.length,

@@ -1,4 +1,6 @@
 
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
@@ -20,7 +22,9 @@ import 'dart:typed_data';
 
 class Companies extends StatefulWidget {
   final List <Company> companies;
-  const Companies({Key? key,required this.companies}) : super(key: key);
+  final List<Pump> pumps;
+  final List <Vehicle> allcars;
+   Companies({Key? key,required this.companies,required this.allcars,required this.pumps}) : super(key: key);
 
   @override
   State<Companies> createState() => _MyCompaniesState();
@@ -155,15 +159,16 @@ Future<void> refreshCompanies() async {
                     color: Colors.white,
                     height: 652,
                     child: RefreshIndicator(
-  onRefresh: () async {
-    await refreshCompanies();
-  },
-
+              onRefresh: () async {
+                await refreshCompanies();
+              },
+              
                       child: ListView.builder(
-                        
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                         itemCount: filteredCompanies.length,
                         itemBuilder: (context, index) {
-            
+                        
                           return 
                           
                           Column(
@@ -207,7 +212,7 @@ Future<void> refreshCompanies() async {
                                   onTap:  () async {
                                     final newCompany = await Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => EditCompany(company:filteredCompanies[index],imageData: imageDataList[index],)),
+                                      MaterialPageRoute(builder: (context) => EditCompany(company:filteredCompanies[index],imageData: imageDataList[index],allcars:widget.allcars,pumps: widget.pumps,)),
                                     );
                                     if (newCompany!= filteredCompanies[index]) {
                                       setState(() {
@@ -217,7 +222,7 @@ Future<void> refreshCompanies() async {
                                     
                                   },
                                   child: Padding(
-                                      padding: (index==filteredCompanies.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                      padding: EdgeInsets.only(bottom:0.0),
                                     child: CompanyCard(
                                       title: filteredCompanies[index].name,
                                       subtitle1: filteredCompanies[index].email,
@@ -237,6 +242,7 @@ Future<void> refreshCompanies() async {
                       ),
                     ),
                   ),
+              
                 ],
               ),
               Padding(
@@ -337,8 +343,7 @@ Future<void> refreshCompanies() async {
         )
     );
   }
-  
-Future<void> _showCupertinoLikeDialog(BuildContext context, int index,List<Company>filteredCompanies) async {
+ Future<void> _showCupertinoLikeDialog(BuildContext context, int index, List<Company> filteredCompanies) async {
   await showCupertinoDialog(
     context: context,
     builder: (BuildContext context) {
@@ -365,17 +370,21 @@ Future<void> _showCupertinoLikeDialog(BuildContext context, int index,List<Compa
                 CompanyService companyService = CompanyService();
                 // Call deleteCompany function to delete the company
                 await companyService.deleteCompany(filteredCompanies[index].id);
-                                final companyId = filteredCompanies[index].id;
-final companyIndex = widget.companies.indexWhere((company) => company.id == companyId);
-
-if (companyIndex != -1) {
-    setState(() {
-        widget.companies.removeAt(companyIndex);
-    });
-}
-
-                // Filter companies again after deletion
                 
+                // Remove the company from the original list
+                final companyId = filteredCompanies[index].id;
+                final companyIndex = widget.companies.indexWhere((company) => company.id == companyId);
+                if (companyIndex != -1) {
+                  setState(() {
+                    widget.companies.removeAt(companyIndex);
+                  });
+                }
+
+                // Remove the company from the filtered list
+                setState(() {
+                  filteredCompanies.removeAt(index);
+                });
+
                 Navigator.pop(context);
 
                 // Show a success Snackbar
@@ -401,7 +410,6 @@ if (companyIndex != -1) {
     },
   );
 }
-
 
 }
 

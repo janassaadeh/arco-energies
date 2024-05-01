@@ -74,6 +74,8 @@ class _MyCompaniesState extends State<SelectCompanies>  {
                       color: Colors.white,
                       height: 652,
                       child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                         itemCount: filteredCompanies.length,
                         itemBuilder: (context, index) {
                           return Column(

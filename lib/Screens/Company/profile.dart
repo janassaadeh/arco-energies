@@ -21,14 +21,17 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return (company==null)?Container():SingleChildScrollView(
       child: Column(
         
         children: [
           SizedBox(height: 40,),
 
   company.imageId==''?
-      Image.asset("assets/images/User Shield.png"):
+        CircleAvatar(
+                 backgroundColor: Color(0xffC1BEBE),
+                 radius: 62,
+                 child: Image.asset("assets/images/buisness_profile.png")):
   imageData != null
       ? 
       

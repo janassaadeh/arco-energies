@@ -69,7 +69,7 @@ class _DashBoardState extends State<DashBoard> {
     // AuthenticationService authenticationService = AuthenticationService();
 
     return Scaffold(
-      body: SingleChildScrollView(
+      body: (widget.operator==null)?Container():SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
