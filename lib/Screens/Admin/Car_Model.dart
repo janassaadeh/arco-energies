@@ -6,6 +6,7 @@ class Car {
   String driverName;
   String modelName;
   int carId;
+  String imageId;
 
   Car({
     required this.model,
@@ -15,5 +16,7 @@ class Car {
     required this.driverName,
     required this.modelName,
     required this.carId,
+    required this.imageId,
+
   });
 }

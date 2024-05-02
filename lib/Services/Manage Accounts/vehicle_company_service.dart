@@ -7,7 +7,7 @@ import '../Auth/AuthenticationService.dart';
 
 class VehicleCompanyService {
   Dio _dio = Dio(); // Create Dio instance
-  final String _baseUrl = 'http://172.20.10.3:8080/api';
+  final String _baseUrl = 'http://172.20.10.2:8080/api';
 
   Future<Vehicle> addVehicleForCompany(String companyId, String type, int year,
       String model, String plateNumber, String driverName, String color) async {
@@ -87,12 +87,12 @@ class VehicleCompanyService {
         var response = await _dio.put(
           '$_baseUrl/vehicles/company/$companyId/vehicle/$vehicleId',
           queryParameters: {
-            'type': type,
-            'year': year,
-            'model': model,
-            'plateNumber': plateNumber,
-            'driverName': driverName,
-            'color': color,
+            'type': type ?? '',
+            'year': year ?? '',
+            'model': model ?? '',
+            'plateNumber': plateNumber ?? '',
+            'driverName': driverName ?? '',
+            'color': color ?? '',
           },
           options: Options(
             headers: {'Authorization': 'Bearer $token'},

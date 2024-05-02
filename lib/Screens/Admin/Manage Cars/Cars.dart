@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/CarCard.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/AddCar.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/CarDetails.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Cars/EditCar.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
 import 'package:company_pages/Screens/Admin/dis.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -29,6 +33,7 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
  String searchQuery = '';
    late List<TickerProvider> tickerProviders;
      late List <Vehicle> filteredCars ;
+     List<dynamic> imageDataList=[];
 
   @override
   void initState() {
@@ -42,8 +47,39 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
       (index) => SlidableController(tickerProviders[index]),
     );
     filteredCars=filterCars();
+    fetchImageForFilteredCars();
+
   }
   
+  Future<void> fetchImageForFilteredCars() async {
+    ImageService _apiService = ImageService();
+
+    // Initialize imageDataList with null values
+    imageDataList = List.generate(filteredCars.length, (_) => null);
+
+    for (int index = 0; index < filteredCars.length; index++) {
+      String? imageId = filteredCars[index].imageId;
+      try {
+         if (imageId != '') {
+          // Fetch image data using the provided image ID
+          Uint8List imageData = await _apiService.getImageFromId(imageId!);
+          setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = imageData;
+
+          });
+          
+          
+    print("${index} done ");
+
+        }
+    
+      } catch (e) {
+        // Handle errors
+        print('Failed to fetch image for company at index $index: $e');
+      }
+    }
+  }
   // Method to filter companies based on search query
   List<Vehicle> filterCars() {
     return widget.cars.where((car) {
@@ -161,7 +197,7 @@ body:
                                                         // Navigating to CarDetails
                 final newCar = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CarDetails(car: filteredCars[index], company: widget.company)),
+                  MaterialPageRoute(builder: (context) => EditCar(car: filteredCars[index], company: widget.company,imageData: imageDataList[index],)),
                 );
 
                 // Handling the returned car object from CarDetails
@@ -174,11 +210,16 @@ body:
                                         },
 
           
-                                    child: CarCard(
-                                      title: filteredCars[index].driverName,
-                                      subtitle1: filteredCars[index].model,
-                                      subtitle2:filteredCars[index].year.toString(),
-                                      // subtitle3: '#${cars[index].carId}',
+                                    child: Padding(
+                                      padding: (index==filteredCars.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                      child: CarCard(
+                                        title: filteredCars[index].driverName,
+                                        subtitle1: filteredCars[index].model,
+                                        subtitle2:filteredCars[index].year.toString(),
+                                        imageData:(filteredCars[index].imageId=='')?'no image':imageDataList[index],
+                                    
+                                        // subtitle3: '#${cars[index].carId}',
+                                      ),
                                     ),
                                   ),
                                   
@@ -187,6 +228,7 @@ body:
                         );}
                       ),
                     ),
+
                   ],
                 ),
                     Padding(
@@ -195,53 +237,48 @@ body:
                               height: 30,
                               decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                              // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                             ),),
                     ),
-              Padding(
+                            Padding(
                 padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                child: Container(
-                  // width: 328,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                    child: TextFormField(
-                       onChanged: (value) {
-    setState(() {
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
       searchQuery = value;
       filteredCars = filterCars(); // Update filteredOperators when searchQuery changes
     });
-  },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Companies ...",
-                        hintStyle: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Image.asset('assets/images/red-slider.png'),
-                        ),
-                        prefixIcon: Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.only(bottom:8.0),
-
-                          child: Image.asset('assets/images/green-search.png'),
-                        ),
-
+    fetchImageForFilteredCars();
+  
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Cars ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
             ],
           ),
         )

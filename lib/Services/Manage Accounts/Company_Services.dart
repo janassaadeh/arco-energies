@@ -6,7 +6,7 @@ import '../Auth/AuthenticationService.dart';
 
 class CompanyService {
   final Dio _dio = Dio();
-  final String _baseUrl = 'http://172.20.10.3:8080';
+  final String _baseUrl = 'http://172.20.10.2:8080';
 
   Future<List<Company>> getAllCompanies() async {
     try {

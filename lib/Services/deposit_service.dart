@@ -11,7 +11,7 @@ class DepositService {
 
     try {
       final response = await _dio.post(
-        'http://172.20.10.3:8080/deposit/addCash',
+        'http://172.20.10.2:8080/deposit/addCash',
         data: {
           "cashAmount": cashAmount,
           "companyId": companyId,
@@ -51,7 +51,7 @@ class DepositService {
     final token = await authenticationService.getToken();
     try {
       final response = await _dio.get(
-        'http://172.20.10.3:8080/deposit/receipt/$receiptId',
+        'http://172.20.10.2:8080/deposit/receipt/$receiptId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -79,7 +79,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'http://172.20.10.3:8080/deposit/admin/$adminId',
+        'http://172.20.10.2:8080/deposit/admin/$adminId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -109,7 +109,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'http://172.20.10.3:8080/deposit/company/$companyId',
+        'http://172.20.10.2:8080/deposit/company/$companyId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

@@ -208,14 +208,17 @@ Future<void> refreshOperators() async {
                                       });
                                     }
                                   },
-                                  child: CompanyCard(
-                                    title: filteredOperators[index].name,
-                                    subtitle1: filteredOperators[index].email,
-                                    subtitle2: filteredOperators[index].phone,
-                                    // subtitle3: '#${cars[index].carId}',
-                                      imageData:(filteredOperators[index].imageId=='')?'no image':imageDataList[index],
-                                      activated: true,
-                    
+                                  child: Padding(
+                                      padding: (index==filteredOperators.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                    child: CompanyCard(
+                                      title: filteredOperators[index].name,
+                                      subtitle1: filteredOperators[index].email,
+                                      subtitle2: filteredOperators[index].phone,
+                                      // subtitle3: '#${cars[index].carId}',
+                                        imageData:(filteredOperators[index].imageId=='')?'no image':imageDataList[index],
+                                        activated: true,
+                                                      
+                                    ),
                                   ),
                                 ),
                     

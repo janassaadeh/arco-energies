@@ -237,7 +237,8 @@ width: 50,
                   Text("View all",   style: TextStyle(
                     fontSize: 18,
                     color:Color (0xff003D58),
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+
                   ),)
                   
                   )

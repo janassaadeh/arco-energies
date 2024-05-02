@@ -216,14 +216,17 @@ Future<void> refreshCompanies() async {
                                     }
                                     
                                   },
-                                  child: CompanyCard(
-                                    title: filteredCompanies[index].name,
-                                    subtitle1: filteredCompanies[index].email,
-                                    subtitle2: filteredCompanies[index].contactName,
-                                    // imageId: filteredCompanies[index].imageId,
-                                    imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
-                                    activated: filteredCompanies[index].activated,
-                                    // subtitle3: '#${cars[index].carId}',
+                                  child: Padding(
+                                      padding: (index==filteredCompanies.length-1)? EdgeInsets.only(bottom:100.0):EdgeInsets.only(bottom:0.0),
+                                    child: CompanyCard(
+                                      title: filteredCompanies[index].name,
+                                      subtitle1: filteredCompanies[index].email,
+                                      subtitle2: filteredCompanies[index].contactName,
+                                      // imageId: filteredCompanies[index].imageId,
+                                      imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
+                                      activated: filteredCompanies[index].activated,
+                                      // subtitle3: '#${cars[index].carId}',
+                                    ),
                                   ),
                                 ),
                                         

@@ -37,23 +37,23 @@ class _CarDetailsState extends State<CarDetails> {
                 ),),
         ),
         backgroundColor: const Color(0xff003D5B),
-        actions: [GestureDetector(
-                   onTap:  () async {
-            final newCar = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EditCar(car:widget.car,company: widget.company,)),
-            );
-            if (newCar != widget.car) {
-              setState(() {
-              widget.car=newCar;
-              });
-            }
-          },
-          child: const Padding(
-            padding: EdgeInsets.only(right:8.0),
-            child: Icon(Icons.edit,size:37,color: Colors.white,),
-          ),
-        )],
+        // actions: [GestureDetector(
+        //            onTap:  () async {
+        //     final newCar = await Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => EditCar(car:widget.car,company: widget.company,)),
+        //     );
+        //     if (newCar != widget.car) {
+        //       setState(() {
+        //       widget.car=newCar;
+        //       });
+        //     }
+        //   },
+        //   child: const Padding(
+        //     padding: EdgeInsets.only(right:8.0),
+        //     child: Icon(Icons.edit,size:37,color: Colors.white,),
+        //   ),
+        // )],
       ),
             body: SingleChildScrollView(
               child: Stack(clipBehavior: Clip.none,
