@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/admin_profile.dart';
@@ -7,6 +9,8 @@ import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/fuel_prices_notifications.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
+import 'package:company_pages/Services/Operator/pump_service.dart';
+import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -42,6 +46,8 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       []; // State variable to store the fetched companies
   List<op.Operator> operators = [];
   dynamic _imageData;
+  List<Pump> pumps=[];
+  List<Vehicle> cars=[];
   @override
   void initState() {
     super.initState();
@@ -52,6 +58,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       _getDepositList();
       // if(admin.imageId=='')
       _fetchImage();
+      _fetchPumpsndVehicles();
       // print('image yes');
     });
     setupPushNotifications();
@@ -91,7 +98,23 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
     final token = await fcm.getToken();
     print(token);
   }
+  Future <void> _fetchPumpsndVehicles() async {
+    try {
 
+      PumpService pumpService=PumpService();
+      
+      List <Pump>fetchedpumps=await pumpService.getPumps();
+      VehicleService vehicleService=VehicleService();
+        final List<Vehicle> vehicles = await vehicleService.getVehicles();
+
+      setState(() {
+        pumps=fetchedpumps;
+        cars=vehicles;
+      });
+    } catch (e) {
+      throw Exception('Failed to fetch pumps: $e');
+    }
+  }
   Future<void> _fetchOperators() async {
     try {
       AuthenticationService authenticationService = AuthenticationService();
@@ -182,7 +205,10 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
               companies: _companies,
               admin: admin,
               operators: operators,
-              imageData: _imageData);
+              imageData: _imageData,
+              pumps:pumps,
+              cars:cars
+              );
         case 1:
           return NewDeposit(deposits: depositList);
         case 2:

@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/Cars.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Transactions/transactions.dart';
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
+import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +24,9 @@ import '../Manage Fields.dart';
 class EditCompany extends StatefulWidget {
   final Company company; // Pass the Company object to the screen
    dynamic imageData;
-  EditCompany({required this.company,this.imageData});
+   List <Vehicle> allcars;
+   List <Pump> pumps;
+  EditCompany({required this.company,this.imageData,required this.allcars,required this.pumps});
 
   @override
   State<EditCompany> createState() => _EditCompanyState();
@@ -238,42 +245,91 @@ class _EditCompanyState extends State<EditCompany> {
                 ),
               ),
               SizedBox(height: 15,),
-                 Padding(
-            padding: const EdgeInsets.only(right:40.0),
-            child: Container(
-                width: 190,
-                height: 50,
-       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        // gradient: const LinearGradient(
-        //   begin: Alignment(1.5, 1),
-        //   end: Alignment(-1.5, 1),
-        //           colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+                              GestureDetector(
+                            onTap: ()async{
+                              TransactionService transactionService = TransactionService();
+    List<Transaction> allTransactions = await transactionService.getTransactions();
+    
+    // Filter transactions for the specific company
+    List<Transaction> companyTransactions = allTransactions.where((transaction) => transaction.vehicle.company.id == widget.company.id).toList();
+// Sort the companyTransactions list from newest to oldest
+companyTransactions.sort((a, b) => b.date.compareTo(a.date));
 
-        // ),
-        color: Colors.red.shade400
-      ),
-      //                 decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(10),
-      //   color: const Color.fromRGBO(196, 196, 196, 0.2),
-      // ),
+// Now companyTransactions is sorted from newest to oldest
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyTranscations(transactions:companyTransactions,company: widget.company,cars:widget.allcars,pumps:widget.pumps)));
+                              
+                            },
                 child: Padding(
-                  padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(child: Text('Delete',style: TextStyle(color: Colors.white,fontSize: 18,),)),
-                      // Image.asset('assets/images/WhiteCar.png',color: Colors.white,)
-                  Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: Icon(Icons.delete,color: Colors.white,),
-                  )
+                  padding: const EdgeInsets.only(right:40.0),
+                  child: Container(
+                      width: 190,
+                      height: 50,
+                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      gradient: const LinearGradient(
+                begin: Alignment(1.5, 1),
+                end: Alignment(-1.5, 1),
+                        colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+              
+                      ),
+                    ),
+                    //                 decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(10),
+                    //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+                    // ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:20.0,right: 18,top: 10,bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('View Transactions',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      //       Padding(
+                      // padding: const EdgeInsets.only(left:8.0),
+                      //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),
+                      //       )
+                          ],
+                        ),
+                      ),
+                      ),
+                ),
+              ),
+      //            Padding(
+      //       padding: const EdgeInsets.only(right:40.0),
+      //       child: Container(
+      //           width: 190,
+      //           height: 50,
+      //  decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(30),
+      //   // gradient: const LinearGradient(
+      //   //   begin: Alignment(1.5, 1),
+      //   //   end: Alignment(-1.5, 1),
+      //   //           colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+
+      //   // ),
+      //   color: Colors.red.shade400
+      // ),
+      // //                 decoration: BoxDecoration(
+      // //   borderRadius: BorderRadius.circular(10),
+      // //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+      // // ),
+      //           child: Padding(
+      //             padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: [
+      //                 Center(child: Text('Delete',style: TextStyle(color: Colors.white,fontSize: 18,),)),
+      //                 // Image.asset('assets/images/WhiteCar.png',color: Colors.white,)
+      //             Padding(
+      //               padding: const EdgeInsets.only(left:8.0),
+      //               child: Icon(Icons.delete,color: Colors.white,),
+      //             )
                    
-                    ],
-                  ),
-                ),
-                ),
-          )
+      //               ],
+      //             ),
+      //           ),
+      //           ),
+      //     )
      
             ],
           )

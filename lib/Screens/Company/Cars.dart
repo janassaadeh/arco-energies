@@ -100,6 +100,8 @@ body:
                         height: 652,
                       
                       child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+
                         itemCount:filteredCars.length,
                         itemBuilder: (context, index) {
                           

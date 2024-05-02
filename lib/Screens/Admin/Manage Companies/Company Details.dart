@@ -78,15 +78,15 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         backgroundColor: const Color(0xff003D5B),
         actions: [GestureDetector(
         onTap:  () async {
-            final newCompany = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => EditCompany(company:widget.company,imageData:widget.imageData)),
-            );
-            if (newCompany != widget.company) {
-              setState(() {
-              widget.company=newCompany;
-              });
-            }
+            // final newCompany = await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => EditCompany(company:widget.company,imageData:widget.imageData,allcars: ,)),
+            // );
+            // if (newCompany != widget.company) {
+            //   setState(() {
+            //   widget.company=newCompany;
+            //   });
+            // }
           },
           child: const Padding(
             padding: EdgeInsets.only(right:8.0),

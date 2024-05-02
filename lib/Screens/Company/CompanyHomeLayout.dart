@@ -46,28 +46,33 @@ void initState() {
       // Both _getDepositList() and _getTransaction() are completed here
       List<dynamic> mergedAndSorted1 = [...depositList!, ...transactionList!];
 
-      // Sort the combined list by time
-      mergedAndSorted1.sort((a, b) {
-        if (a is DepositReceipt && b is DepositReceipt) {
-          return a.timestamp.compareTo(b.timestamp);
-        } else if (a is Transaction && b is Transaction) {
-          return a.date.compareTo(b.date);
-        } else if (a is DepositReceipt && b is Transaction) {
-          return a.timestamp.compareTo(b.date);
-        } else {
-          return a.date.compareTo(b.timestamp);
-        }
-      });
+// Sort the combined list by time (from newest to oldest)
+mergedAndSorted1.sort((a, b) {
+  if (a is DepositReceipt && b is DepositReceipt) {
+    // For DepositReceipt objects, compare timestamps in reverse order
+    return b.timestamp.compareTo(a.timestamp);
+  } else if (a is Transaction && b is Transaction) {
+    // For Transaction objects, compare dates in reverse order
+    return b.date.compareTo(a.date);
+  } else if (a is DepositReceipt && b is Transaction) {
+    // For mixed types, compare timestamp of DepositReceipt and date of Transaction
+    return b.date.compareTo(a.timestamp);
+  } else {
+    // For mixed types, compare date of Transaction and timestamp of DepositReceipt
+    return b.timestamp.compareTo(a.date);
+  }
+});
 
-      // Set the state with the sorted list
-      setState(() {
-        mergedAndSorted = mergedAndSorted1;
-      });
+// Set the state with the sorted list
+setState(() {
+  mergedAndSorted = mergedAndSorted1;
+});
 
-      // Print the sorted list
-      mergedAndSorted1.forEach((item) {
-        print(item);
-      });
+// Print the sorted list
+mergedAndSorted1.forEach((item) {
+  print(item);
+});
+
     });
   });
 }

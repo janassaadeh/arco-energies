@@ -8,7 +8,7 @@ class Transaction {
   final double odometer;
   final String date;
   final PumpResponse pump;
-  final VehicleResponse vehicle;
+   final VehicleResponse vehicle;
   final OperatorResponse operator;
 
   Transaction({
