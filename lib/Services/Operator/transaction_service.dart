@@ -22,7 +22,7 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://192.168.6.114:8080/api/transactions',
+        'http://192.168.20.59:8080/api/transactions',
         queryParameters: {'pumpId': pumpId, 'vehicleId': vehicleId},
         data: {
           'quantity': quantity,
@@ -63,7 +63,7 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.114:8080/api/transactions',
+        'http://192.168.20.59:8080/api/transactions',
       );
 
       if (response.statusCode == 200) {
@@ -99,7 +99,7 @@ class TransactionService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.114:8080/api/transactions/company/$id',
+        'http://192.168.20.59:8080/api/transactions/company/$id',
       );
 
       if (response.statusCode == 200) {

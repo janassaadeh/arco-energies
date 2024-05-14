@@ -17,7 +17,7 @@ class VehicleService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.114:8080/api/vehicles',
+        'http://192.168.20.59:8080/api/vehicles',
       );
 
       if (response.statusCode == 200) {

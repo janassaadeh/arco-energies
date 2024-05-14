@@ -10,7 +10,7 @@ class AuthenticationService {
   Future<bool> authenticate(String email, String password) async {
     try {
       final response = await _dio.post(
-        'http://192.168.6.114:8080/api/v1/auth/authenticate',
+        'http://192.168.20.59:8080/api/v1/auth/authenticate',
         data: {'email': email, 'password': password},
       );
 

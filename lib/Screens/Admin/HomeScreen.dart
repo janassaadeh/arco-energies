@@ -240,8 +240,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                   push(WriteCarId(), context);
                                 },
                                 child: Features(
-                                  color: const Color.fromRGBO(237, 174, 73, 1),
-                                  imageAsset: "assets/images/Budget.png",
+                                  color: const Color.fromRGBO(0, 121, 140, 1),
+                                  imageAsset: "assets/images/cars.png",
                                   text: "Write Car ID To NFC",
                                 ),
                               ),
@@ -264,7 +264,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     child: const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Daily Fuel Prices",
+                        "Fuel Prices",
                         style: TextStyle(
                           fontSize: 18,
                           color: Color(0xffA9A7A7),

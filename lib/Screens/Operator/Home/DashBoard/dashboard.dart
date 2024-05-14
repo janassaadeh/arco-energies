@@ -74,77 +74,83 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
       body: (widget.operator == null)
           ? Container()
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+          : RefreshIndicator(
+              onRefresh: _refreshfuelPrices,
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 18),
                     // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
                     //     "assets/images/gas-pump.png"),
-                    Container(
-                      height: 130,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.fromRGBO(2, 91, 135, 1),
-                            Color.fromRGBO(0, 61, 91, .6),
-                          ], // Gradient colors
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 18, right: 18.0, top: 18),
+                      child: Container(
+                        height: 130,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color.fromRGBO(2, 91, 135, 1),
+                              Color.fromRGBO(0, 61, 91, .6),
+                            ], // Gradient colors
+                          ),
                         ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 20,
-                            left: 20,
-                            child: Text(
-                              widget.operator == null
-                                  ? ''
-                                  : 'Hello, ${widget.operator.name}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 20,
+                              left: 20,
+                              child: Text(
+                                widget.operator == null
+                                    ? ''
+                                    : 'Hello, ${widget.operator.name}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 20,
-                            right: 20,
-                            child: widget.operator.imageId == ''
-                                ? Image.asset("assets/images/User Shield.png")
-                                : widget.imageData != null
-                                    ? ClipOval(
-                                        child: Image.memory(
-                                          widget.imageData!,
-                                          fit: BoxFit.cover,
-                                          width: 90,
-                                          height: 90,
-                                        ),
-                                      )
-                                    : ClipOval(
-                                        child: Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(
+                            Positioned(
+                              bottom: 20,
+                              right: 20,
+                              child: widget.operator.imageId == ''
+                                  ? Image.asset("assets/images/User Shield.png")
+                                  : widget.imageData != null
+                                      ? ClipOval(
+                                          child: Image.memory(
+                                            widget.imageData!,
+                                            fit: BoxFit.cover,
                                             width: 90,
                                             height: 90,
-                                            color: Colors
-                                                .white, // You can change this color to match your background
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              width: 90,
+                                              height: 90,
+                                              color: Colors
+                                                  .white, // You can change this color to match your background
+                                            ),
                                           ),
                                         ),
-                                      ),
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    subTitle('Features'),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18, right: 18.0),
+                      child: subTitle('Features'),
+                    ),
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 135,
@@ -152,6 +158,9 @@ class _DashBoardState extends State<DashBoard> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
+                          SizedBox(
+                            width: 18,
+                          ),
                           GestureDetector(
                             onTap: () {
                               showDialog(
@@ -174,7 +183,7 @@ class _DashBoardState extends State<DashBoard> {
                             //   context,
                             // ),
                           ),
-                          const SizedBox(width: 20),
+                          const SizedBox(width: 18),
                           GestureDetector(
                             onTap: () async {
                               push(CarAccess(), context);
@@ -193,7 +202,7 @@ class _DashBoardState extends State<DashBoard> {
                             // ),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 18,
                           ),
                           GestureDetector(
                             onTap: () async {
@@ -220,26 +229,29 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    subTitle('Fuel Prices'),
-                    Container(
-                      height: 350,
-                      child: FutureBuilder<List<Fuel>>(
-                        future: fuelListFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError || !snapshot.hasData) {
-                            return const Center(
-                                child: Text('Failed to load fuel data'));
-                          } else {
-                            List<Fuel> fuels = snapshot.data!;
-                            return RefreshIndicator(
-                              onRefresh: _refreshfuelPrices,
-                              child: ListView.builder(
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18, right: 18.0),
+                      child: subTitle('Fuel Prices'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 350,
+                        child: FutureBuilder<List<Fuel>>(
+                          future: fuelListFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError || !snapshot.hasData) {
+                              return const Center(
+                                  child: Text('Failed to load fuel data'));
+                            } else {
+                              List<Fuel> fuels = snapshot.data!;
+                              return ListView.builder(
                                 itemCount: fuels.length,
-                                // physics: const NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   Fuel fuel = fuels[index];
                                   double? recentPrice =
@@ -336,10 +348,10 @@ class _DashBoardState extends State<DashBoard> {
                                     ),
                                   );
                                 },
-                              ),
-                            );
-                          }
-                        },
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ],
