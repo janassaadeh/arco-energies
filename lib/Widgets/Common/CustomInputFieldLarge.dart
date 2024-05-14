@@ -5,7 +5,8 @@ class CustomInputFieldLarge extends StatelessWidget {
   final String imagePath;
   final String hintText;
 
-  const CustomInputFieldLarge({super.key, 
+  const CustomInputFieldLarge({
+    super.key,
     required this.controller,
     required this.imagePath,
     required this.hintText,
@@ -24,11 +25,12 @@ class CustomInputFieldLarge extends StatelessWidget {
         padding: const EdgeInsets.only(left: 10, right: 8, bottom: 8, top: 11),
         child: TextFormField(
           controller: controller,
-          obscureText: (hintText=="Password"),
+          obscureText: (hintText == "Password"),
           decoration: InputDecoration(
             border: const OutlineInputBorder(borderSide: BorderSide.none),
             hintText: hintText,
-                contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
 
             hintStyle: const TextStyle(
               color: Color.fromRGBO(0, 0, 0, 0.5),
@@ -36,12 +38,13 @@ class CustomInputFieldLarge extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.normal,
             ),
-            suffixIcon: Image.asset(imagePath,color: Color(0xff666666),),
+            suffixIcon: Image.asset(
+              imagePath,
+              color: Color(0xff666666),
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-

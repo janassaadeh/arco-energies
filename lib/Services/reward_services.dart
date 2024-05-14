@@ -10,7 +10,9 @@ import 'dart:typed_data';
 
 class RewardService {
   final Dio _dio = Dio();
+
   final String _baseUrl = 'https://arcoenergies.onrender.com';
+
   Future<Uint8List> getQrCode(String companyId, String rewardId) async {
     try {
       final authenticationService = AuthenticationService();
@@ -69,7 +71,8 @@ class RewardService {
       throw Exception('Failed to fetch rewards: $e');
     }
   }
-    Future<List<Reward>> getAllRewards() async {
+
+  Future<List<Reward>> getAllRewards() async {
     try {
       final authenticationService = AuthenticationService();
       final token = await authenticationService.getToken();
@@ -126,7 +129,8 @@ class RewardService {
       rethrow; // Rethrow the error for external handling
     }
   }
-    Future<dynamic> updateReward(String id, Reward reward) async {
+
+  Future<dynamic> updateReward(String id, Reward reward) async {
     try {
       final authenticationService = AuthenticationService();
       final token = await authenticationService.getToken();
@@ -134,12 +138,12 @@ class RewardService {
         final response = await _dio.put(
           '$_baseUrl/api/rewards/update/$id',
           data: {
-            "id":reward.id,
-            "name":reward.name,
-            "description":reward.description,
-            "pts":reward.pts,
-            "category":reward.category
-                      },
+            "id": reward.id,
+            "name": reward.name,
+            "description": reward.description,
+            "pts": reward.pts,
+            "category": reward.category
+          },
           options: Options(
             headers: {'Authorization': 'Bearer $token'},
           ),
@@ -153,7 +157,8 @@ class RewardService {
     }
   }
 
-    Future<dynamic> assignRewards(String name,String description,String category,int pts) async {
+  Future<dynamic> assignRewards(
+      String name, String description, String category, int pts) async {
     try {
       final authenticationService = AuthenticationService();
       final token = await authenticationService.getToken();
@@ -161,10 +166,10 @@ class RewardService {
         final response = await _dio.post(
           '$_baseUrl/api/rewards/assign/all',
           data: {
-            "name":name,
-            "description":description,
-            "category":category,
-            "pts":pts
+            "name": name,
+            "description": description,
+            "category": category,
+            "pts": pts
           },
           options: Options(
             headers: {'Authorization': 'Bearer $token'},
@@ -178,6 +183,7 @@ class RewardService {
       throw Exception('Failed to add reward: $e');
     }
   }
+
   Future<void> deleteReward(String id) async {
     try {
       final authenticationService = AuthenticationService();
@@ -197,33 +203,35 @@ class RewardService {
     }
   }
 
-    Future<List<RedemptionEvent>> getRedemptions() async {
-  try {
-    final authenticationService = AuthenticationService();
-    final token = await authenticationService.getToken();
-    if (token != null) {
-      final response = await _dio.get(
-        '$_baseUrl/api/rewards/redemptions',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
-      );
-      
-      // Check if response data is a String
-      if (response.data is String) {
-        // Handle the case where response data is a String
-        throw Exception('Response data is a String instead of a List<dynamic>');
-      }
-      
-      // Parse response data assuming it's a List<dynamic>
-      final List<dynamic> responseData = response.data;
-      return responseData.map((json) => RedemptionEvent.fromJson(json)).toList();
-    } else {
-      throw Exception('User is not logged in');
-    }
-  } catch (e) {
-    throw Exception('Failed to fetch redemptions: $e');
-  }
-}
+  Future<List<RedemptionEvent>> getRedemptions() async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.get(
+          '$_baseUrl/api/rewards/redemptions',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
 
+        // Check if response data is a String
+        if (response.data is String) {
+          // Handle the case where response data is a String
+          throw Exception(
+              'Response data is a String instead of a List<dynamic>');
+        }
+
+        // Parse response data assuming it's a List<dynamic>
+        final List<dynamic> responseData = response.data;
+        return responseData
+            .map((json) => RedemptionEvent.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch redemptions: $e');
+    }
+  }
 }

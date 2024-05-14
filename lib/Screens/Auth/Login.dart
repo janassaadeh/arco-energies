@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Stack(
                           children: <Widget>[
                             Positioned(
-                              top: -20,
+                              top: -80,
                               left: -26,
                               child: Image.asset(
                                 'assets/images/Ellipse 1.png',
@@ -75,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Positioned(
-                              top: 200,
-                              left: 160,
+                              top: 220,
+                              left: MediaQuery.sizeOf(context).width / 2.55,
                               child: SizedBox(
                                 width: 100,
                                 height: 100,
@@ -123,9 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            const Positioned(
-                              top: 315,
-                              left: 150,
+                            Positioned(
+                              top: 335,
+                              left: MediaQuery.sizeOf(context).width / 2.9,
                               child: Text(
                                 'Arco Energies',
                                 textAlign: TextAlign.left,
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   imagePath: "assets/images/Envelope.png",
                   hintText: "Email"),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               // CustomInputFieldLarge(controller: _passwordController, imagePath: "assets/images/Eye.png", hintText: "Password"),
 
@@ -203,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
                   push(const ForgotPassword(), context);
