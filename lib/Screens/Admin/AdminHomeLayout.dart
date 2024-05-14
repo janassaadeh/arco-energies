@@ -55,6 +55,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
   List<Pump> pumps = [];
   List<Vehicle> cars = [];
   List<RedemptionEvent> redemptions = [];
+  int _notificationCount=0;
   @override
   void initState() {
     super.initState();

@@ -11,7 +11,7 @@ class DepositService {
 
     try {
       final response = await _dio.post(
-        'http://192.168.6.114:8080/deposit/addCash',
+        'https://arcoenergies.onrender.com/deposit/addCash',
         data: {
           "cashAmount": cashAmount,
           "companyId": companyId,
@@ -51,7 +51,7 @@ class DepositService {
     final token = await authenticationService.getToken();
     try {
       final response = await _dio.get(
-        'http://192.168.6.114:8080/deposit/receipt/$receiptId',
+        'https://arcoenergies.onrender.com/deposit/receipt/$receiptId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -79,7 +79,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'http://192.168.6.114:8080/deposit/admin/$adminId',
+        'https://arcoenergies.onrender.com/deposit/admin/$adminId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -109,7 +109,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'http://192.168.6.114:8080/deposit/company/$companyId',
+        'https://arcoenergies.onrender.com/deposit/company/$companyId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
