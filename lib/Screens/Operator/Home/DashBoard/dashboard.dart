@@ -1,10 +1,13 @@
 import 'package:company_pages/Models/fuel.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
+import 'package:company_pages/Screens/Admin/qr_code.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/edit_prices_pop_up.dart';
 import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
 // import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
+import 'package:company_pages/Services/reward_services.dart';
+import 'package:company_pages/Widgets/Home/features.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -143,40 +146,81 @@ class _DashBoardState extends State<DashBoard> {
               const SizedBox(height: 15),
               subTitle('Features'),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const EditPricesPopUp();
-                        },
-                      );
-                    },
-                    child: gradientBox(
-                      'Daily Fuel Prices Editing',
-                      'assets/images/edit-price.png',
-                      const Color.fromRGBO(72, 177, 126, 1),
-                      const Color.fromRGBO(73, 209, 111, 0.6),
-                      context,
+            SizedBox(
+                  height: 135,
+                  width: double.infinity,
+              
+            child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const EditPricesPopUp();
+                          },
+                        );
+                      },
+                      child:
+                       Features(
+                            color: Color.fromRGBO(72, 177, 126, 1),
+                            imageAsset: "assets/images/edit-price.png",
+                            text: "Daily Fuel Prices Editing",
+                          ),
+                      //  gradientBox(
+                      //   'Daily Fuel Prices Editing',
+                      //   'assets/images/edit-price.png',
+                      //   const Color.fromRGBO(72, 177, 126, 1),
+                      //   const Color.fromRGBO(73, 209, 111, 0.6),
+                      //   context,
+                      // ),
                     ),
-                  ),
-                  const SizedBox(width: 25),
-                  GestureDetector(
-                    onTap: () async {
-                      push(CarAccess(), context);
-                    },
-                    child: gradientBox(
-                      'Start A New Transaction',
-                      'assets/images/cars.png',
-                      const Color.fromRGBO(232, 169, 69, 1),
-                      const Color.fromRGBO(237, 165, 49, .6),
-                      context,
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        push(CarAccess(), context);
+                      },
+                      child: 
+                                Features(
+                            color:  Color.fromRGBO(232, 169, 69, 1),
+                            imageAsset: "assets/images/cars.png",
+                            text: "Start A New Transaction",
+                          ),
+                      // gradientBox(
+                      //   'Start A New Transaction',
+                      //   'assets/images/cars.png',
+                      //   const Color.fromRGBO(232, 169, 69, 1),
+                      //   const Color.fromRGBO(237, 165, 49, .6),
+                      //   context,
+                      // ),
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(width: 10,),
+                      GestureDetector(
+                                onTap: () async {
+          //  push(QRViewExample(),context);
+                                  final qrText = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => QRViewExample()),
+                                  );
+                                  if (qrText != null) {
+                                    print("qrText $qrText");
+                                    List<String> parts = qrText.split(" ");
+                                    RewardService rewardService = RewardService();
+                                    rewardService.redeemReward(
+                                        parts[1], parts[0]);
+                                  }
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(0, 121, 140, 1),
+                                  imageAsset: "assets/images/Qr Code.png",
+                                  text: "Scan QR for company rewards.",
+                                ),
+                              ),
+                  ],
+                ),
+          ),
               const SizedBox(height: 20),
               subTitle('Fuel Prices'),
               Container(

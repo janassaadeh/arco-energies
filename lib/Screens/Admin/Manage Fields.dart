@@ -41,7 +41,7 @@ class ManageFields extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.normal,
             ),
-            suffixIcon: Image.asset(imagePath,color: Color(0xff666666),),
+            suffixIcon: (imagePath=='')?null:Image.asset(imagePath,color: Color(0xff666666),),
           ),
         ),
       ),

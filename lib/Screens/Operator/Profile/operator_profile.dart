@@ -1,6 +1,4 @@
-import 'package:company_pages/Screens/Company/Company%20Details.dart';
-import 'package:company_pages/Screens/Company/MyCars.dart';
-import 'package:company_pages/Screens/Company/my_transactions.dart';
+
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
 import 'package:company_pages/Screens/Auth/Login.dart';

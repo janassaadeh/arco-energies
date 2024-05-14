@@ -57,7 +57,9 @@ class AddCar extends StatelessWidget {
           children: [
             Column(
               children: [
-                Image.asset("assets/images/wallpaper.png"),
+                // Image.asset("assets/images/wallpaper.png"),
+                  Container(color: Color(0xff003D5B),width: double.infinity,height: 200,),
+
                 Container(
                   color: Colors.white,
                   height: 600,
@@ -68,15 +70,16 @@ class AddCar extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 120.0),
+              padding: const EdgeInsets.only(top: 90.0),
               child: Container(
-                height: 700,
+                height: 790,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25))),
+                    // borderRadius: BorderRadius.only(
+                    //     topLeft: Radius.circular(25),
+                    //     topRight: Radius.circular(25))
+                    ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -165,14 +168,16 @@ class AddCar extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-                top: 50,
-                right: 140,
+            Padding(
+              padding: const EdgeInsets.only(top:30.0),
+              child: Center(
                 child: CircleAvatar(
                   backgroundColor: Color(0xffC1BEBE),
                   radius: 67,
                   child: Image.asset("assets/images/car_profile.png"),
-                ))
+                ),
+              ),
+            )
           ],
         ),
       ),

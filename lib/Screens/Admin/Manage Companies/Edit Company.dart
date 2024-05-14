@@ -45,6 +45,7 @@ class _EditCompanyState extends State<EditCompany> {
 
   late TextEditingController _balanceController;
     dynamic base64Image1;
+    
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +429,10 @@ companyTransactions.sort((a, b) => b.date.compareTo(a.date));
                     onTap: ()async {
                       ImageService imageService =ImageService();
                       // print(base64Image1);
+                      if(base64Image1!=null){
                await  imageService.uploadImage(base64Image1, widget.company.id);
+
+                      }
                       _saveChanges(context);
                     },
                     child: CustomButton(buttonText: "Save"),

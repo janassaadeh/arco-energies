@@ -1,6 +1,10 @@
+import 'package:company_pages/Models/redemption_model.dart';
+import 'package:company_pages/Screens/Admin/Rewards/redemption.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
-import '../Screens/Company/RewardScreen.dart';
+// import '../Screens/Company/RewardScreen.dart';
+import '../Models/reward_model.dart';
 import 'Auth/AuthenticationService.dart';
 import 'dart:typed_data';
 
@@ -65,6 +69,26 @@ class RewardService {
       throw Exception('Failed to fetch rewards: $e');
     }
   }
+    Future<List<Reward>> getAllRewards() async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.get(
+          '$_baseUrl/api/rewards',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+        final List<dynamic> responseData = response.data;
+        return responseData.map((json) => Reward.fromJson(json)).toList();
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch rewards: $e');
+    }
+  }
 
   Future<void> redeemReward(String userId, String rewardId) async {
     // @PathVariable String userId, @RequestParam String rewardId
@@ -102,4 +126,104 @@ class RewardService {
       rethrow; // Rethrow the error for external handling
     }
   }
+    Future<dynamic> updateReward(String id, Reward reward) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.put(
+          '$_baseUrl/api/rewards/update/$id',
+          data: {
+            "id":reward.id,
+            "name":reward.name,
+            "description":reward.description,
+            "pts":reward.pts,
+            "category":reward.category
+                      },
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+        return true;
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to update operator: $e');
+    }
+  }
+
+    Future<dynamic> assignRewards(String name,String description,String category,int pts) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.post(
+          '$_baseUrl/api/rewards/assign/all',
+          data: {
+            "name":name,
+            "description":description,
+            "category":category,
+            "pts":pts
+          },
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+        return response.data;
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to add reward: $e');
+    }
+  }
+  Future<void> deleteReward(String id) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        await _dio.delete(
+          '$_baseUrl/api/rewards/delete/$id',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete operator: $e');
+    }
+  }
+
+    Future<List<RedemptionEvent>> getRedemptions() async {
+  try {
+    final authenticationService = AuthenticationService();
+    final token = await authenticationService.getToken();
+    if (token != null) {
+      final response = await _dio.get(
+        '$_baseUrl/api/rewards/redemptions',
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+      );
+      
+      // Check if response data is a String
+      if (response.data is String) {
+        // Handle the case where response data is a String
+        throw Exception('Response data is a String instead of a List<dynamic>');
+      }
+      
+      // Parse response data assuming it's a List<dynamic>
+      final List<dynamic> responseData = response.data;
+      return responseData.map((json) => RedemptionEvent.fromJson(json)).toList();
+    } else {
+      throw Exception('User is not logged in');
+    }
+  } catch (e) {
+    throw Exception('Failed to fetch redemptions: $e');
+  }
+}
+
 }

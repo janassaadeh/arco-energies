@@ -2,27 +2,22 @@ import 'dart:typed_data';
 
 import 'package:company_pages/Models/fuel.dart';
 import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Screens/Admin/NFC_Car_Wrte.dart';
-import 'package:company_pages/Screens/Company/MyCars.dart';
-import 'package:company_pages/Screens/Company/profile.dart';
-import 'package:company_pages/Screens/Admin/qr_code.dart';
+import 'package:company_pages/Screens/Admin/Rewards/rewards%20all.dart';
+
 import 'package:company_pages/Services/Operator/fuel_service.dart';
-import 'package:company_pages/Services/image_service.dart';
-import 'package:company_pages/Services/reward_services.dart';
+
 import 'package:flutter/material.dart';
-import 'package:company_pages/Widgets/Operator/horizontal_gradient_box.dart';
 import 'package:company_pages/Models/fuel_price.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Services/Auth/AuthenticationService.dart';
-import '../../Services/Auth/user_service.dart' as User;
-import '../../Widgets/Home/Cash.dart';
 import '../../Widgets/Home/features.dart';
-import '../../Widgets/Home/recentTransaction.dart';
 import '../Auth/Login.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart'
     as company;
@@ -34,6 +29,7 @@ class AdminHomeScreen extends StatefulWidget {
   List<op.Operator> operators;
 
   List<company.Company> companies;
+  List<Reward> rewards;
   dynamic admin;
   dynamic imageData;
     final List<Pump> pumps;
@@ -44,7 +40,9 @@ class AdminHomeScreen extends StatefulWidget {
       required this.operators,
       required this.imageData,
       required this.pumps,
-      required this.cars
+      required this.cars,
+      required this.rewards
+
       });
 
   @override
@@ -193,7 +191,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       onTap: () async {
                         var role = await authenticationService.getRole();
                         print(role);
-                        push(Operators(operators: widget.operators), context);
+                        push(Operators(operators: widget.operators,cars: widget.cars,pumps:widget.pumps,), context);
                       },
                       child: Container(
                         height: 135,
@@ -226,39 +224,52 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             const SizedBox(
                               width: 10,
                             ),
-                            GestureDetector(
-                              onTap: () async {
-//  push(QRViewExample(),context);
-                                final qrText = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => QRViewExample()),
-                                );
-                                if (qrText != null) {
-                                  print("qrText $qrText");
-                                  List<String> parts = qrText.split(" ");
-                                  RewardService rewardService = RewardService();
-                                  rewardService.redeemReward(
-                                      parts[1], parts[0]);
-                                }
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(0, 121, 140, 1),
-                                imageAsset: "assets/images/Qr Code.png",
-                                text: "Scan QR for company rewards.",
-                              ),
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
+//                             GestureDetector(
+//                               onTap: () async {
+// //  push(QRViewExample(),context);
+//                                 final qrText = await Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => QRViewExample()),
+//                                 );
+//                                 if (qrText != null) {
+//                                   print("qrText $qrText");
+//                                   List<String> parts = qrText.split(" ");
+//                                   RewardService rewardService = RewardService();
+//                                   rewardService.redeemReward(
+//                                       parts[1], parts[0]);
+//                                 }
+//                               },
+//                               child: Features(
+//                                 color: const Color.fromRGBO(0, 121, 140, 1),
+//                                 imageAsset: "assets/images/Qr Code.png",
+//                                 text: "Scan QR for company rewards.",
+//                               ),
+//                             ),
+                            // SizedBox(
+                            //   width: 18,
+                            // ),
                             GestureDetector(
                               onTap: () {
                                 push(WriteCarId(), context);
                               },
                               child: Features(
-                                color: const Color.fromRGBO(237, 174, 73, 1),
-                                imageAsset: "assets/images/Budget.png",
+                                color:Color.fromRGBO(72, 177, 126, 1),
+                                imageAsset: "assets/images/cars.png",
                                 text: "Write Car ID To NFC",
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                                    GestureDetector(
+                              onTap: () {
+                                push(AllRewards(rewards: widget.rewards,), context);
+                              },
+                              child: Features(
+                                color: Color.fromRGBO(2, 91, 135, 1),
+                                imageAsset: "assets/images/Gift.png",
+                                text: "Manage Rewards",
                               ),
                             ),
                             const SizedBox(
@@ -268,6 +279,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         ),
                       ),
                     ),
+                    
                   ],
                 ),
                 const SizedBox(

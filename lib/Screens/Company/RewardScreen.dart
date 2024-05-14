@@ -1,27 +1,28 @@
 
 
+import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widgets/Rewards/reward.dart';
 
-class Reward {
-  final String title;
-  final int points;
-  final String id;
-  final String description;
+// class Reward {
+//   final String title;
+//   final int points;
+//   final String id;
+//   final String description;
 
 
-  Reward({required this.title, required this.points,required this.id,required this.description});
-    factory Reward.fromJson(Map<String, dynamic> json) {
-    return Reward(
-      title: json['name'],
-      points: json['pts'],
-      id:json['id'],
-      description:json['description']
-    );
-  }
-}
+//   Reward({required this.title, required this.points,required this.id,required this.description});
+//     factory Reward.fromJson(Map<String, dynamic> json) {
+//     return Reward(
+//       title: json['name'],
+//       points: json['pts'],
+//       id:json['id'],
+//       description:json['description']
+//     );
+//   }
+// }
 
 class RewardScreen extends StatelessWidget {
   dynamic company;
@@ -161,7 +162,7 @@ class RewardScreen extends StatelessWidget {
                           height: 100,
                           child: Image.asset("assets/images/s1.png",fit:BoxFit.fill)),
           
-                    Text(rewards[index].title,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700),),
+                    Text(rewards[index].name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700),),
           SizedBox(height: 5,),
                     Container(
                       width: 320,
@@ -195,7 +196,7 @@ class RewardScreen extends StatelessWidget {
 );
 
           },
-          child: RewardCard(title: rewards[index].title, description: rewards[index].description, pointsText: rewards[index].points));}),
+          child: RewardCard(title: rewards[index].name, description: rewards[index].description, pointsText: rewards[index].pts));}),
               ),
                  SizedBox(height: 20,),
                     Divider(

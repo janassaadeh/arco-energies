@@ -1,6 +1,5 @@
-import 'package:company_pages/Screens/Company/Company%20Details.dart';
-import 'package:company_pages/Screens/Company/MyCars.dart';
-import 'package:company_pages/Screens/Company/my_transactions.dart';
+
+import 'package:company_pages/Screens/Auth/ForgotPassword.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
 import 'package:company_pages/Screens/Auth/Login.dart';
@@ -87,36 +86,46 @@ class AdminProfile extends StatelessWidget {
                     height: 1),
               ),
               SizedBox(height: 20,),
-               Container(
-                   width: 150,
-                   height: 45,
-                  decoration: BoxDecoration(
-                   borderRadius: BorderRadius.circular(30),
-                   gradient: const LinearGradient(
-                begin: Alignment(1.5, 1),
-                end: Alignment(-1.5, 1),
-                     colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
-              
-                   ),
-                 ),
-                 //                 decoration: BoxDecoration(
-                 //   borderRadius: BorderRadius.circular(10),
-                 //   color: const Color.fromRGBO(196, 196, 196, 0.2),
-                 // ),
-                   child: Padding(
-                     padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Text('Edit Profile',style: TextStyle(color: Colors.white,fontSize: 16),),
-                         Padding(
-                   padding: const EdgeInsets.only(left:8.0),
-                           child: Icon(Icons.edit,color: Colors.white,size: 21,)
-                         )
-                       ],
+               GestureDetector(
+                    onTap: (){
+                               Navigator.push(
+                             context,
+                             MaterialPageRoute(
+                               builder: (context) =>  ForgotPassword(),
+                             ),
+                           );
+                          },
+                 child: Container(
+                     width: 150,
+                     height: 45,
+                    decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(30),
+                     gradient: const LinearGradient(
+                  begin: Alignment(1.5, 1),
+                  end: Alignment(-1.5, 1),
+                       colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+                             
                      ),
                    ),
-                   ),
+                   //                 decoration: BoxDecoration(
+                   //   borderRadius: BorderRadius.circular(10),
+                   //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+                   // ),
+                     child: Padding(
+                       padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: [
+                           Text('Edit Profile',style: TextStyle(color: Colors.white,fontSize: 16),),
+                           Padding(
+                     padding: const EdgeInsets.only(left:8.0),
+                             child: Icon(Icons.edit,color: Colors.white,size: 21,)
+                           )
+                         ],
+                       ),
+                     ),
+                     ),
+               ),
               const SizedBox(
                 height: 40,
               ),

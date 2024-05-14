@@ -37,6 +37,7 @@ class _MyCompaniesState extends State<Companies> with SingleTickerProviderStateM
  late List<Company> filteredCompanies;
 List<dynamic?> imageDataList = [];
 
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +53,14 @@ List<dynamic?> imageDataList = [];
     fetchImageForFilteredCompanies();
 
   }
-  
+    Map<String, int> getCarCountsPerCompany() {
+    Map<String, int> carCounts = {};
+    for (Company company in widget.companies) {
+      int count = widget.allcars.where((car) => car.company!.id == company.id).length;
+      carCounts[company.name] = count;
+    }
+    return carCounts;
+  }
   Future<void> fetchImageForFilteredCompanies() async {
     ImageService _apiService = ImageService();
 
@@ -168,7 +176,7 @@ Future<void> refreshCompanies() async {
 
                         itemCount: filteredCompanies.length,
                         itemBuilder: (context, index) {
-                        
+                         Map<String, int> carCounts = getCarCountsPerCompany();
                           return 
                           
                           Column(
@@ -224,7 +232,7 @@ Future<void> refreshCompanies() async {
                                   child: Padding(
                                       padding: EdgeInsets.only(bottom:0.0),
                                     child: CompanyCard(
-                                      title: filteredCompanies[index].name,
+                                      title:' ${filteredCompanies[index].name} (${carCounts[filteredCompanies[index].name]})',
                                       subtitle1: filteredCompanies[index].email,
                                       subtitle2: filteredCompanies[index].contactName,
                                       // imageId: filteredCompanies[index].imageId,

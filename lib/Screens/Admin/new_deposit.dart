@@ -3,6 +3,7 @@ import 'package:company_pages/Screens/Admin/New%20Deposit/SelectCompany.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select_body.dart';
+import 'package:company_pages/Screens/Company/deposit_receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/fuel_price.dart';
 import 'package:company_pages/Models/transaction.dart';
@@ -45,50 +46,59 @@ class _NewDepositState extends State<NewDeposit> {
                 itemBuilder: (context, index) {
                   final deposit = widget.deposits[index];
                   // final total = fuelPrice.price * transaction.quantity;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          "assets/images/FullStop.png",
-                          width: 20,
-                        ),
-                        const SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              deposit.id,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                  return GestureDetector(
+                                                               onTap: () {
+                      print("hi");
+  Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>(DepositDetails(receipt: deposit)),
+        ));
+      },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            "assets/images/FullStop.png",
+                            width: 20,
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                deposit.id,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            Text(
-                              formatDate(deposit.timestamp).toString()
-                              ,
-                              style: const TextStyle(
-                                color: Colors.grey,
+                              Text(
+                                formatDate(deposit.timestamp).toString()
+                                ,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '\$${deposit.cashAmount.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Color.fromRGBO(182, 34, 34, 1),
+                            ],
+                          ),
+                          const Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$${deposit.cashAmount.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(182, 34, 34, 1),
+                                ),
                               ),
-                            ),
-  
-                          ],
-                        ),
-                      ],
+                    
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

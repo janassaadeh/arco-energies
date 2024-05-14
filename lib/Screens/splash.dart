@@ -41,6 +41,7 @@ class SplashScreen extends StatelessWidget {
                     else if (role == "ADMIN") {
                       return  AdminHomePageLayout();
                     } 
+                    // else if(authService.getToken())
                     else {
                       // Unknown role, redirect to login
                       return LoginScreen();

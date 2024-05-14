@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/redemption_model.dart';
+import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
@@ -13,6 +15,7 @@ import 'package:company_pages/Services/Operator/pump_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Services/image_service.dart';
+import 'package:company_pages/Services/reward_services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import '../../../Screens/Admin/Manage Companies/Company_Model.dart' as company;
@@ -45,14 +48,17 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
   List<company.Company> _companies =
       []; // State variable to store the fetched companies
   List<op.Operator> operators = [];
+  List<Reward> rewards=[];
   dynamic _imageData;
   List<Pump> pumps=[];
   List<Vehicle> cars=[];
+  List<RedemptionEvent> redemptions=[];
   @override
   void initState() {
     super.initState();
     _fetchCompanies();
     _fetchOperators();
+    // _fetchRedemptions();
     _fetchUserData().then((_) {
       // Call _getDepositList() only after _fetchUserData() completes
       _getDepositList();
@@ -61,6 +67,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       _fetchPumpsndVehicles();
       // print('image yes');
     });
+    _fetchRewards();
     setupPushNotifications();
   }
 
@@ -132,7 +139,38 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       print('Error fetching companies: $e');
     }
   }
+ Future<void> _fetchRewards() async {
+    try {
+      AuthenticationService authenticationService = AuthenticationService();
+      RewardService rewardService = RewardService();
+      List<Reward> _rewards = await rewardService.getAllRewards();
 
+      setState(() {
+        rewards = _rewards;
+      });
+      for (int i = 0; i < operators.length; i++) {
+        print(operators[i]);
+      }
+    } catch (e) {
+      // Handle error appropriately, e.g., show a snackbar
+      print('Error fetching companies: $e');
+    }
+  }
+  Future<void> _fetchRedemptions() async {
+    try {
+      AuthenticationService authenticationService = AuthenticationService();
+      RewardService rewardService = RewardService();
+      List<RedemptionEvent> _redemptions = await rewardService.getRedemptions();
+
+      setState(() {
+        redemptions = _redemptions;
+      });
+
+    } catch (e) {
+      // Handle error appropriately, e.g., show a snackbar
+      print('Error fetching redemptions: $e');
+    }
+  }
   Future<void> _fetchCompanies() async {
     try {
       AuthenticationService authenticationService = AuthenticationService();
@@ -207,7 +245,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
               operators: operators,
               imageData: _imageData,
               pumps:pumps,
-              cars:cars
+              cars:cars,rewards: rewards,
               );
         case 1:
           return NewDeposit(deposits: depositList);

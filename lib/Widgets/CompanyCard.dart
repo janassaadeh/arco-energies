@@ -54,10 +54,13 @@ class _CompanyCardState extends State<CompanyCard> {
                   
                   widget.imageData=='no image'?
                          Container(
-                    width: 78.86980438232422,
-                    height: 69.47300720214844,
+                      width: 69.86980438232422,
+                    height: 68.47300720214844,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
+                      // borderRadius: BorderRadius.circular(12),
+                      // shape: BoxShape.circle,
+  borderRadius: BorderRadius.circular(120),
+
                       gradient: LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
@@ -71,8 +74,8 @@ class _CompanyCardState extends State<CompanyCard> {
                     // ,
                     ):
                   Container(
-                    width: 78.86980438232422,
-                    height: 69.47300720214844,
+                    width: 69.86980438232422,
+                    height: 68.47300720214844,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       // gradient: LinearGradient(
@@ -82,31 +85,29 @@ class _CompanyCardState extends State<CompanyCard> {
                       // ),
                     ),
                     child:
-                    ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                      child: 
-                      
-                      
-                      widget.imageData!=null?
-                        
-                           Image.memory(
-                            widget.imageData!,
-                          fit: BoxFit.cover, // Cover the entire area of the container
-                                  width: double.infinity, // Set the width and height to fill the container
-                                  height: double.infinity,
-                          )
-                          // : CircularProgressIndicator():
-                          :
-                          
-                          Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.white,
-                  ),
-                )
-                    ),
-                    
+                 ClipRRect(
+  borderRadius: BorderRadius.circular(120),
+  child: Container(
+    width: double.infinity, // Set the width to fill the container
+    height: double.infinity, // Set the height to fill the container
+    decoration: BoxDecoration(
+      shape: BoxShape.circle, // This makes the container circular
+    ),
+    child: widget.imageData != null
+        ? Image.memory(
+            widget.imageData!,
+            fit: BoxFit.cover,
+          )
+        : Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              color: Colors.white,
+            ),
+          ),
+  ),
+),
+  
                   ),
                 ),
                 SizedBox(width: 15),

@@ -38,7 +38,7 @@ class Cash extends StatelessWidget {
          Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text('Total', textAlign: TextAlign.center, style: TextStyle(
+             Text('Balance', textAlign: TextAlign.center, style: TextStyle(
                   color: Color.fromRGBO(255, 255, 255, 1),
                   fontFamily: 'Inter',
                   fontSize: 20,

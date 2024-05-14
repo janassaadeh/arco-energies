@@ -25,7 +25,7 @@ import '../../../../Models/vehicle.dart';
 
 class CompanyTranscations extends StatefulWidget {
   final List<Transaction> transactions;
-  final Company company;
+  final dynamic company;
   List <Pump> pumps;
   List <Vehicle>cars;
 

@@ -1,6 +1,8 @@
 
 import 'dart:typed_data';
 
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/AddOperator.dart';
@@ -23,7 +25,9 @@ import 'operator_model.dart';
 
 class Operators extends StatefulWidget {
   final List <Operator> operators;
-  const Operators({Key? key,required this.operators}) : super(key: key);
+  List <Pump> pumps;
+  List <Vehicle>cars;
+   Operators({Key? key,required this.operators,required this.cars,required this.pumps}) : super(key: key);
 
   @override
   State<Operators> createState() => _MyOperatorsState();
@@ -202,7 +206,7 @@ Future<void> refreshOperators() async {
                                   onTap:  () async {
                                     final newOperator = await Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => EditOperator(operator:filteredOperators[index],imageData: imageDataList[index],)),
+                                      MaterialPageRoute(builder: (context) => EditOperator(operator:filteredOperators[index],imageData: imageDataList[index],cars:widget.cars,pumps:widget.pumps)),
                                     );
                                     if (newOperator!= filteredOperators[index]) {
                                       setState(() {

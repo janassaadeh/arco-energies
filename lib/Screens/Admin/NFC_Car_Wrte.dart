@@ -83,7 +83,11 @@ class _WriteCarIdState extends State<WriteCarId> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: screenSize.height * .1,
-        leading: Container(),
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
         title: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -96,14 +100,17 @@ class _WriteCarIdState extends State<WriteCarId> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
+           
+            ],
+          ),
+        ),
+        actions: [
+             Icon(
                 Icons.abc,
                 color: Color(0xff003D5B),
                 size: 40,
               )
-            ],
-          ),
-        ),
+        ],
         backgroundColor: const Color(0xff003D5B),
       ),
       backgroundColor: const Color(0xff003D58),
@@ -332,8 +339,8 @@ class _WriteCarIdState extends State<WriteCarId> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
                   ),
                 ),
               ),
@@ -353,19 +360,18 @@ class _WriteCarIdState extends State<WriteCarId> {
                     onChanged: (value) {
                       _searchVehicles(value);
                     },
-                    decoration: InputDecoration(
-                      border:
-                          const OutlineInputBorder(borderSide: BorderSide.none),
+               decoration: InputDecoration(
+                      border: InputBorder.none,
                       hintText: "Search Cars ...",
-                      hintStyle: const TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 0.5),
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
                         fontFamily: 'Mulish',
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                       ),
                       prefixIcon: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Image.asset('assets/images/green-search.png'),
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),

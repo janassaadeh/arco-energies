@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
+import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Screens/Company/HomeScreen.dart';
 import 'package:company_pages/Screens/Company/RewardScreen.dart';
+// import 'package:company_pages/Screens/Company/RewardScreen.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
@@ -150,7 +152,7 @@ Future<void> _getReward() async {
     }
 
     RewardService rewardService = RewardService();
-    List<Reward> rewardsList = await rewardService.getRewards(company.id);
+    List<Reward> rewardsList = await rewardService.getAllRewards();
     setState(() {
       rewards = rewardsList;
     });
@@ -158,7 +160,7 @@ Future<void> _getReward() async {
     if (rewards.isNotEmpty) {
       print('Rewards list fetched successfully:');
       rewards.forEach((reward) {
-        print('rewards ID: ${reward.id}, pts: ${reward.points}, desc: ${reward.description}');
+        print('rewards ID: ${reward.id}, pts: ${reward.pts}, desc: ${reward.description}');
       });
     } else {
       print('rewards list is empty.');
