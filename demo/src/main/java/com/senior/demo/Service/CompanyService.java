@@ -1,5 +1,8 @@
 package com.senior.demo.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.demo.Collections.Admin;
 import com.senior.demo.Collections.CashAdditionEvent;
 import com.senior.demo.Collections.Vehicle;
@@ -10,12 +13,18 @@ import com.senior.demo.Repository.UserRepository;
 import com.senior.demo.Repository.VehicleRepository;
 import com.senior.demo.Responses.AdminResponse;
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.DeviceTokensResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
+import java.util.ArrayList;
+=======
+import java.util.Comparator;
+>>>>>>> 71645cc148f82301001d6b002cc7734be7466069
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,12 +92,27 @@ public class CompanyService {
     // Method to get all admins
     public List<CompanyResponse> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
-        return companies.stream()
-                .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
-                company.getPts()
-,company.getImageId(),company.isActivated()
+
+        // Map Company objects to CompanyResponse objects
+        List<CompanyResponse> companyResponses = companies.stream()
+                .map(company -> new CompanyResponse(
+                        company.getId(),
+                        company.getEmail(),
+                        company.getPhone(),
+                        company.getName(),
+                        company.getBalance(),
+                        company.getContactName(),
+                        company.getLocation(),
+                        company.getPts(),
+                        company.getImageId(),
+                        company.isActivated()
                 ))
                 .collect(Collectors.toList());
+
+        // Sort CompanyResponse objects alphabetically by name
+        companyResponses.sort(Comparator.comparing(CompanyResponse::getName));
+
+        return companyResponses;
     }
     public List<CompanyResponse> getAllActivatedCompanies() {
         List<Company> companies = companyRepository.findByActivated(true);
@@ -182,5 +206,47 @@ public class CompanyService {
         companyRepository.deleteById(id);
         userRepository.deleteById(id);
     }
+
+    public void storeDeviceToken(String companyId, String deviceToken) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        List<String> deviceTokens = company.getDeviceTokens();
+        if (deviceTokens == null) {
+            deviceTokens = new ArrayList<>();
+        }
+
+        if (!deviceTokens.contains(deviceToken)) {
+            deviceTokens.add(deviceToken);
+
+            company.setDeviceTokens(deviceTokens);
+            companyRepository.save(company);
+        } else {
+            System.out.println("Device token already exists for company: " + companyId);
+        }
+    }
+
+    public List<DeviceTokensResponse> getAllCompanyDeviceTokens() {
+        List<DeviceTokensResponse> allAdminDeviceTokens = new ArrayList<>();
+
+        List<Company> companies = companyRepository.findAll();
+
+        for (Company company : companies) {
+            List<String> deviceTokens = company.getDeviceTokens();
+            DeviceTokensResponse adminResponse = new DeviceTokensResponse(company.getId(), deviceTokens);
+            allAdminDeviceTokens.add(adminResponse);
+        }
+
+        return allAdminDeviceTokens;
+    }
+
+    public void removeAllDeviceTokens(String companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        company.setDeviceTokens(new ArrayList<>());
+        companyRepository.save(company);
+    }
+
 }
 

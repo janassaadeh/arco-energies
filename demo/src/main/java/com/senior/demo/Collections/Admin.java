@@ -1,19 +1,32 @@
 package com.senior.demo.Collections;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.List;
 
 @Document(collection = "Admin")
 public class Admin extends User {
 
     private String dob;
+    @Field("deviceTokens")
+    private List<String> deviceTokens;
 
-    Admin(String id,String email, String password, Role role, String phone, String name, String dob,String imageId) {
+    Admin(String id,String email, String password, Role role, String phone, String name, String dob,String imageId, List<String> deviceTokens) {
         super(id, email, password, role, phone, name,imageId);
         this.dob = dob;
+        this.deviceTokens = deviceTokens;
     }
 
     public String getDob() {
         return dob;
+    }
+    public List<String> getDeviceTokens() {
+        return deviceTokens;
+    }
+
+    public void setDeviceTokens(List<String> deviceTokens) {
+        this.deviceTokens = deviceTokens;
     }
 
     public static class Builder {
@@ -25,6 +38,8 @@ public class Admin extends User {
         private String name;
         private String dob;
         private String imageId;
+        private List<String> deviceTokens;
+
         public Builder email(String email) {
             this.email = email;
             return this;
@@ -61,9 +76,13 @@ public class Admin extends User {
             this.imageId = imageId;
             return this;
         }
+        public Builder deviceToken(List<String> deviceTokens) {
+            this.deviceTokens = deviceTokens;
+            return this;
+        }
 
         public Admin build() {
-            return new Admin(id,email, password, role, phone, name, dob,imageId);
+            return new Admin(id,email, password, role, phone, name, dob,imageId, deviceTokens);
         }
     }
 }

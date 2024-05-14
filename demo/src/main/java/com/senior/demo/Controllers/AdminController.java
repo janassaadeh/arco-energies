@@ -4,6 +4,7 @@ import com.senior.demo.Collections.Admin;
 import com.senior.demo.Collections.Company;
 import com.senior.demo.Collections.Operator;
 import com.senior.demo.Responses.AdminResponse;
+import com.senior.demo.Responses.DeviceTokensResponse;
 import com.senior.demo.Responses.RegistrationResponse;
 import com.senior.demo.Service.AdminService;
 import com.senior.demo.Service.AuthenticationService;
@@ -69,5 +70,25 @@ public class AdminController {
     public ResponseEntity<Void> deleteAdmin(@PathVariable("id") String id) {
         adminService.deleteAdmin(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> storeDeviceToken(
+            @PathVariable("id") String id,
+            @RequestBody String deviceToken) {
+        adminService.storeDeviceToken(id, deviceToken);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/device-tokens")
+    public ResponseEntity<List<DeviceTokensResponse>> getAllAdminDeviceTokens() {
+        List<DeviceTokensResponse> allAdminDeviceTokens = adminService.getAllAdminDeviceTokens();
+        return ResponseEntity.ok(allAdminDeviceTokens);
+    }
+
+    @DeleteMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> removeAllDeviceTokens(@PathVariable("id") String id) {
+        adminService.removeAllDeviceTokens(id);
+        return ResponseEntity.ok().build();
     }
 }

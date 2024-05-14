@@ -2,6 +2,7 @@ package com.senior.demo.Collections;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,8 @@ public class Company extends User {
     private double balance;
     private String contactName;
     private String location;
+    @Field("deviceTokens")
+    private List<String> deviceTokens;
 
     public void setActivated(boolean activated) {
         this.activated = activated;
@@ -45,12 +48,13 @@ public class Company extends User {
 //        redeemedRewards.add(rewardId);
 //    }
     // Constructor with ID parameter
-    public Company(String id, String email, String password, Role role, String phone, String name, double balance, String contactName, String location,Integer pts, Set<Reward> redeemedRewards,List<Reward> rewards,String imageId ) {
+    public Company(String id, String email, String password, Role role, String phone, String name, double balance, String contactName, String location,Integer pts, Set<Reward> redeemedRewards,List<Reward> rewards,String imageId, List<String> deviceTokens ) {
         super(id,email, password, role, phone, name,imageId);
         this.balance = balance;
         this.contactName = contactName;
         this.location = location;
         this.pts = pts;
+        this.deviceTokens = deviceTokens;
         if (redeemedRewards != null) {
             this.redeemedRewards = redeemedRewards;
         } else {
@@ -77,6 +81,15 @@ public class Company extends User {
     public String getLocation() {
         return location;
     }
+
+    public List<String> getDeviceTokens() {
+        return deviceTokens;
+    }
+
+    public void setDeviceTokens(List<String> deviceTokens) {
+        this.deviceTokens = deviceTokens;
+    }
+
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
     }
@@ -102,6 +115,7 @@ public class Company extends User {
         private Set<Reward> redeemedRewards;
         private List <Reward> rewards;
         private String imageId;
+        private List<String> deviceTokens;
 
         public Builder id(String id) {
             this.id = id;
@@ -164,9 +178,14 @@ public class Company extends User {
             return this;
         }
 
+        public Builder deviceToken(List<String> deviceTokens) {
+            this.deviceTokens = deviceTokens;
+            return this;
+        }
+
         // Build method to create Company object
         public Company build() {
-            return new Company(id, email, password, role, phone, name, balance, contactName, location,pts,redeemedRewards,rewards,imageId);
+            return new Company(id, email, password, role, phone, name, balance, contactName, location,pts,redeemedRewards,rewards,imageId,deviceTokens);
         }
     }
 }

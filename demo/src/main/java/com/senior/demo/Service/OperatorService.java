@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,11 +33,25 @@ public class OperatorService {
     // Method to get all admins
     public List<OperatorResponse> getAllOperators() {
         List<Operator> operators = operatorRepository.findAll();
-        return operators.stream()
-                .map(operator ->new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress(),operator.getImageId()))
-                .collect(Collectors.toList());
-    }
 
+        // Map Operator objects to OperatorResponse objects
+        List<OperatorResponse> operatorResponses = operators.stream()
+                .map(operator -> new OperatorResponse(
+                        operator.getId(),
+                        operator.getEmail(),
+                        operator.getPhone(),
+                        operator.getName(),
+                        operator.getDob(),
+                        operator.getAddress(),
+                        operator.getImageId()
+                ))
+                .collect(Collectors.toList());
+
+        // Sort OperatorResponse objects alphabetically by name
+        operatorResponses.sort(Comparator.comparing(OperatorResponse::getName));
+
+        return operatorResponses;
+    }
     // Method to get an admin by ID
     public OperatorResponse getOperatorById(String id) {
         Operator operator=operatorRepository.findById(id).orElse(null);

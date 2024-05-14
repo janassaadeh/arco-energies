@@ -15,19 +15,28 @@ import com.google.firebase.FirebaseOptions;
 @Configuration
 public class FirebaseConfig {
 
+    private static FirebaseApp firebaseAppInstance;
+
     @Value("${app.firebase-configuration-file}")
     private String firebaseConfigPath;
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(
-                new ClassPathResource(firebaseConfigPath).getInputStream());
+        if (firebaseAppInstance == null) {
+            synchronized (FirebaseConfig.class) {
+                if (firebaseAppInstance == null) {
+                    GoogleCredentials googleCredentials = GoogleCredentials.fromStream(
+                            new ClassPathResource(firebaseConfigPath).getInputStream());
 
-        FirebaseOptions firebaseOptions = FirebaseOptions.builder()
-                .setCredentials(googleCredentials)
-                .build();
+                    FirebaseOptions firebaseOptions = FirebaseOptions.builder()
+                            .setCredentials(googleCredentials)
+                            .build();
 
-        return FirebaseApp.initializeApp(firebaseOptions);
+                    firebaseAppInstance = FirebaseApp.initializeApp(firebaseOptions);
+                }
+            }
+        }
+        return firebaseAppInstance;
     }
 
     @Bean

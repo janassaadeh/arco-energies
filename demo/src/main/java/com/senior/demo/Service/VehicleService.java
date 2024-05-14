@@ -13,8 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -143,7 +146,15 @@ public class VehicleService {
     private static final String VEHICLE_ID_PREFIX = "VEHICLE";
 
     public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+        // Fetch all vehicles from the repository
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+
+        // Sort the vehicles by company name in alphabetical order
+        List<Vehicle> sortedVehicles = allVehicles.stream()
+                .sorted(Comparator.comparing(v -> v.getCompany().getName()))
+                .collect(Collectors.toList());
+
+        return sortedVehicles;
     }
 
     public Vehicle getVehicleById(String id) {
