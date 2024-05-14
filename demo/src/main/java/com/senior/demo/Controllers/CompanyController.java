@@ -1,11 +1,13 @@
 package com.senior.demo.Controllers;
 
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.DeviceTokensResponse;
 import com.senior.demo.Service.CompanyService;
 import com.senior.demo.Service.DiscountCalculationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,6 +72,27 @@ public class CompanyController {
     public ResponseEntity<Void> deleteAdmin(@PathVariable("id") String id) {
         companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> storeCompanyDeviceToken(
+            @PathVariable("id") String id,
+            @RequestBody String deviceToken) {
+        companyService.storeDeviceToken(id, deviceToken);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAnyAuthority('COMPANY', 'OPERATOR')")
+    @GetMapping("/device-tokens")
+    public ResponseEntity<List<DeviceTokensResponse>> getAllCompanyDeviceTokens() {
+        List<DeviceTokensResponse> allCompanyDeviceTokens = companyService.getAllCompanyDeviceTokens();
+        return ResponseEntity.ok(allCompanyDeviceTokens);
+    }
+
+    @DeleteMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> removeAllDeviceTokens(@PathVariable("id") String id) {
+        companyService.removeAllDeviceTokens(id);
+        return ResponseEntity.ok().build();
     }
 
 }
