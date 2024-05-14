@@ -2,8 +2,10 @@ package com.senior.demo.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.demo.Collections.Company;
+import com.senior.demo.Collections.RedemptionEvent;
 import com.senior.demo.Collections.Reward;
 import com.senior.demo.Repository.CompanyRepository;
+import com.senior.demo.Repository.RedemptionEventRepository;
 import com.senior.demo.Repository.RewardRepository;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -33,6 +35,16 @@ public class RewardService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private RedemptionEventRepository redemptionEventRepository;
+    public List<RedemptionEvent> getRedemptions(){
+        try {
+            return redemptionEventRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch redemptions", e);
+        }
+    }
     private boolean canRedeemReward(Company company, Reward reward) {
         // Check if the company has enough balance to redeem the reward
         if (company.getPts() < reward.getPts()) {
@@ -77,8 +89,9 @@ public class RewardService {
         }
     }
 
-    public void addRewardToAllUsers(Reward reward) {
-        reward.setId(generateUniqueRewardId());
+    public String addRewardToAllUsers(Reward reward) {
+        String id=generateUniqueRewardId();
+        reward.setId(id);
 
         // Save the reward to the Reward collection
         rewardRepository.save(reward);
@@ -92,6 +105,7 @@ public class RewardService {
 
         // Save each user back to the database
         companyRepository.saveAll(users);
+        return id;
     }
 
 
@@ -161,15 +175,57 @@ public class RewardService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getRewards();
     }
+    public List<Reward> getAllRewards(String userId) {
+       return rewardRepository.findAll();
+    }
 
-    public void updateReward(Reward updatedReward) {
-        rewardRepository.save(updatedReward);
+    public void updateReward(Reward updatedReward,String rewardId) {
+        List<Company> companies = companyRepository.findAll();
+        Reward rewardToUpdate = rewardRepository.findById(rewardId).orElse(null);
+
+        for (Company company : companies) {
+            // Update rewards list for each company
+            List<Reward> rewards = company.getRewards();
+            for(Reward reward:rewards){
+              if ( reward.getId()==rewardId){
+                  reward.setName(rewardToUpdate.getName());
+                  reward.setCategory(rewardToUpdate.getCategory());
+                  reward.setDescription(rewardToUpdate.getDescription());
+                  reward.setPts(rewardToUpdate.getPts());
+                  rewardRepository.save(reward);
+                }
+            }
+
+            companyRepository.save(company);
+
+        }
+
     }
 
     // Method to delete a reward from the system
     public void deleteReward(String rewardId) {
-        rewardRepository.deleteById(rewardId);
+        // Find the reward to be deleted
+        Reward rewardToDelete = rewardRepository.findById(rewardId).orElse(null);
+        if (rewardToDelete != null) {
+            // Iterate over each company
+            List<Company> companies = companyRepository.findAll();
+            for (Company company : companies) {
+                // Remove the reward from the company's rewards list
+                List<Reward> rewards = company.getRewards();
+                rewards.removeIf(reward -> {
+                    String id = reward.getId();
+                    return id != null && id.equals(rewardId);
+                });
+                // Set the modified rewards list back to the company
+                company.setRewards(rewards);
+                // Save the updated company
+                companyRepository.save(company);
+            }
+            // Delete the reward from the repository
+            rewardRepository.deleteById(rewardId);
+        }
     }
+
 
     // Method to redeem a reward for a specific user
 
@@ -227,6 +283,7 @@ public class RewardService {
         }
         // Save all users with their updated rewards lists
         companyRepository.saveAll(users);
+
     }
 
 

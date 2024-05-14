@@ -20,7 +20,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+import java.util.Comparator;
+>>>>>>> 71645cc148f82301001d6b002cc7734be7466069
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,12 +92,27 @@ public class CompanyService {
     // Method to get all admins
     public List<CompanyResponse> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
-        return companies.stream()
-                .map(company ->new CompanyResponse(company.getId(), company.getEmail(), company.getPhone(),company.getName(),company.getBalance(),company.getContactName(),company.getLocation(),
-                company.getPts()
-,company.getImageId(),company.isActivated()
+
+        // Map Company objects to CompanyResponse objects
+        List<CompanyResponse> companyResponses = companies.stream()
+                .map(company -> new CompanyResponse(
+                        company.getId(),
+                        company.getEmail(),
+                        company.getPhone(),
+                        company.getName(),
+                        company.getBalance(),
+                        company.getContactName(),
+                        company.getLocation(),
+                        company.getPts(),
+                        company.getImageId(),
+                        company.isActivated()
                 ))
                 .collect(Collectors.toList());
+
+        // Sort CompanyResponse objects alphabetically by name
+        companyResponses.sort(Comparator.comparing(CompanyResponse::getName));
+
+        return companyResponses;
     }
     public List<CompanyResponse> getAllActivatedCompanies() {
         List<Company> companies = companyRepository.findByActivated(true);
