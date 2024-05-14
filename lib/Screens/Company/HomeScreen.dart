@@ -1,7 +1,7 @@
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Screens/Company/Cars.dart';
-import 'package:company_pages/Screens/Company/MyCars.dart';
+// import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/deposit_receipt.dart';
 import 'package:company_pages/Screens/Company/my_transactions.dart';
 // import 'package:company_pages/Screens/Company/MyCars.dart';
@@ -158,10 +158,8 @@ class HomeScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyCars(
-                                        cars: cars,
-                                        company: company,
-                                      )));
+                                  builder: (context) =>
+                                      MyCars(cars: cars, company: company)));
                         },
                         child: (company == null ||
                                 depositList == null ||

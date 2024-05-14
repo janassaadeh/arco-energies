@@ -499,8 +499,10 @@ class _EditCompanyState extends State<EditCompany> {
                     onTap: () async {
                       ImageService imageService = ImageService();
                       // print(base64Image1);
-                      await imageService.uploadImage(
-                          base64Image1, widget.company.id);
+                      if (base64Image1 != null) {
+                        await imageService.uploadImage(
+                            base64Image1, widget.company.id);
+                      }
                       _saveChanges(context);
                     },
                     child: CustomButton(buttonText: "Save"),

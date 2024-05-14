@@ -1,10 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:company_pages/Models/pump.dart';
+import 'package:company_pages/Models/redemption_model.dart';
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Models/vehicle.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Transactions/transactions.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/operator_model.dart';
+import 'package:company_pages/Screens/Admin/Rewards/redemption.dart';
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
+import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
+import 'package:company_pages/Services/reward_services.dart';
+import 'package:company_pages/Widgets/calendar_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:your_app_path_here/company_model.dart';
@@ -19,8 +28,10 @@ import '../Manage Fields.dart';
 class EditOperator extends StatefulWidget {
   final Operator operator; // Pass the Company object to the screen
    dynamic imageData;
-
-  EditOperator({required this.operator,this.imageData});
+  // final Company company;
+  List <Pump> pumps;
+  List <Vehicle>cars;
+  EditOperator({required this.operator,this.imageData,required this.cars,required this.pumps});
 
   @override
   State<EditOperator> createState() => _EditOperatorState();
@@ -39,6 +50,14 @@ class _EditOperatorState extends State<EditOperator> {
 
   // late TextEditingController _balanceController;
    dynamic base64Image1;
+ 
+
+void _handleDateSelection(DateTime date) {
+  // Format the selected date to your desired format
+  String formattedDate = "${date.year}-${date.month}-${date.day}";
+  // Set the formatted date to the _dobController
+  _dobController.text = formattedDate;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -72,86 +91,234 @@ class _EditOperatorState extends State<EditOperator> {
           // clipBehavior: Clip.none,
           children: [
                         SizedBox(height: 40,),
-     Padding(
-       padding: const EdgeInsets.only(bottom:40),
-       child: Center(
-         child: Stack(
-           children: [
-             CircleAvatar(
-               backgroundColor: Color(0xffC1BEBE),
-               radius: 67,
-               child:(widget.imageData==null)? Image.asset("assets/images/buisness_profile.png"):
-               ClipOval(
-                 child: Image.memory(
-                           widget.imageData!,
-                           fit: BoxFit.cover, // Adjust the fit as needed
-                           width: 134, // Set the width and height to ensure the image is circular
-                           height: 134,
-                         ),
+        Padding(
+       padding: const EdgeInsets.only(left:35.0,bottom: 40),
+       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+           Stack(
+             children: [
+               CircleAvatar(
+                 backgroundColor: Color(0xffC1BEBE),
+                 radius: 62,
+                 child:(widget.imageData==null)? Image.asset("assets/images/buisness_profile.png"):
+                 ClipOval(
+                   child: Image.memory(
+                             widget.imageData!,
+                             fit: BoxFit.cover, // Adjust the fit as needed
+                             width: 134, // Set the width and height to ensure the image is circular
+                             height: 134,
+                           ),
+                 ),
                ),
-             ),
-                 Positioned(
-               top: 5, 
-               right: 0, 
-               child: Container(
-                     width: 30, // Adjust the width of the container as needed
-                     height: 30, // Adjust the height of the container as needed
-                     decoration: BoxDecoration(
-             color: Colors.grey, // You can set your desired background color
-             shape: BoxShape.circle, // This makes it a circle
-             //           boxShadow: [
-             // BoxShadow(
-             //   color: Colors.black.withOpacity(0.3), // Shadow color
-             //   spreadRadius: 2, // Spread radius
-             //   blurRadius: 4, // Blur radius
-             //   offset: const Offset(0, 2), // Offset
-             // ),
-                     // ],
-                     ),
-                     child: Padding(
-             padding: const EdgeInsets.all(4),
-             child: GestureDetector(
-               onTap: (){
+                   Positioned(
+                 top: 5, 
+                 right: 0, 
+                 child: Container(
+                       width: 30, // Adjust the width of the container as needed
+                       height: 30, // Adjust the height of the container as needed
+                       decoration: BoxDecoration(
+               color: Color(0xffC1BEBE), // You can set your desired background color
+               shape: BoxShape.circle, // This makes it a circle
+               //           boxShadow: [
+               // BoxShadow(
+               //   color: Colors.black.withOpacity(0.3), // Shadow color
+               //   spreadRadius: 2, // Spread radius
+               //   blurRadius: 4, // Blur radius
+               //   offset: const Offset(0, 2), // Offset
+               // ),
+                       // ],
+                       ),
+                       child: Padding(
+               padding: const EdgeInsets.all(4),
+               child: GestureDetector(
+                 onTap: (){
+                     
+                   final picker = ImagePicker();
+                     
+                     Future<void> _openImagePicker() async {
+                       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                     
+                       if (pickedFile != null) {
+               final file = File(pickedFile.path);
+               final bytes = await file.readAsBytes();
+               final base64Image = base64Encode(bytes);
+               final image = "data:image/png;base64,$base64Image";
+                                       
+               // Now you have the base64-encoded image
+               // print("Base64 Image: $base64Image");
+                     // print(base64Image);
+                     
+               setState(() {
+                 widget.imageData = bytes; // Set the picked image file
+                  // Update the profileAvatar URL
+                  base64Image1=base64Image;
+               });
+               // print(base64Image1);
+     
                    
-                 final picker = ImagePicker();
-                   
-                   Future<void> _openImagePicker() async {
-                     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                   
-                     if (pickedFile != null) {
-             final file = File(pickedFile.path);
-             final bytes = await file.readAsBytes();
-             final base64Image = base64Encode(bytes);
-             final image = "data:image/png;base64,$base64Image";
-                                     
-             // Now you have the base64-encoded image
-             // print("Base64 Image: $base64Image");
-                   // print(base64Image);
-                   
-             setState(() {
-               widget.imageData = bytes; // Set the picked image file
-                // Update the profileAvatar URL
-                base64Image1=base64Image;
-             });
-             // print(base64Image1);
-       
-                 
-             // print(imgUrl);
-                     } else {
-             // Handle no image picked error
+               // print(imgUrl);
+                       } else {
+               // Handle no image picked error
+                       }
                      }
-                   }
-               _openImagePicker();
-               },
-               child: Center(
-                 child: Icon(Icons.add)
+                 _openImagePicker();
+                 },
+                 child: Center(
+                   child: Icon(Icons.add)
+                 ),
                ),
-             ),
-                     ),
+                       ),
+                 ),
                ),
-             ),
-           ],
-         ),
+             ],
+           ),
+          Column(
+            children: [
+                                  GestureDetector(
+                            onTap: ()async{
+        //                       VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
+        //                       final cars=await vehicleCompanyService.getVehiclesForCompany(widget.company.id);
+                              
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => Cars(cars:cars,company: widget.company,)));
+                                                            RewardService transactionService = RewardService();
+    List<RedemptionEvent> allTransactions = await transactionService.getRedemptions();
+    
+    // Filter transactions for the specific company
+    List<RedemptionEvent> opTransactions = allTransactions.where((transaction) => transaction.operator.id == widget.operator.id).toList();
+// Sort the companyTransactions list from newest to oldest
+// opTransactions.sort((a, b) => b.date.compareTo(a.date));
+
+// Now companyTransactions is sorted from newest to oldest
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Redemption(transactions: opTransactions,operator: widget.operator,)));
+                              
+                            },
+                child: Padding(
+                  padding: const EdgeInsets.only(right:40.0),
+                  child: Container(
+                      width: 190,
+                      height: 50,
+                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      gradient: const LinearGradient(
+                begin: Alignment(1.5, 1),
+                end: Alignment(-1.5, 1),
+                        colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+              
+                      ),
+                    ),
+                    //                 decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(10),
+                    //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+                    // ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:10.0,right: 10,top: 10,bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('View Redemptions',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      //       Padding(
+                      // padding: const EdgeInsets.only(left:8.0),
+                      //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),
+                      //       )
+                          ],
+                        ),
+                      ),
+                      ),
+                ),
+              ),
+              SizedBox(height: 15,),
+                              GestureDetector(
+                            onTap: ()async{
+                              TransactionService transactionService = TransactionService();
+    List<Transaction> allTransactions = await transactionService.getTransactions();
+    
+    // Filter transactions for the specific company
+    List<Transaction> opTransactions = allTransactions.where((transaction) => transaction.operator.id == widget.operator.id).toList();
+// Sort the companyTransactions list from newest to oldest
+// opTransactions.sort((a, b) => b.date.compareTo(a.date));
+
+// Now companyTransactions is sorted from newest to oldest
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyTranscations(transactions: opTransactions,cars:widget.cars,pumps:widget.pumps,company: widget.operator,)));
+                              
+                            },
+                child: Padding(
+                  padding: const EdgeInsets.only(right:40.0),
+                  child: Container(
+                      width: 190,
+                      height: 50,
+                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      gradient: const LinearGradient(
+                begin: Alignment(1.5, 1),
+                end: Alignment(-1.5, 1),
+                        colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+              
+                      ),
+                    ),
+                    //                 decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(10),
+                    //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+                    // ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:20.0,right: 18,top: 10,bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('View Transactions',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      //       Padding(
+                      // padding: const EdgeInsets.only(left:8.0),
+                      //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),
+                      //       )
+                          ],
+                        ),
+                      ),
+                      ),
+                ),
+              ),
+      //            Padding(
+      //       padding: const EdgeInsets.only(right:40.0),
+      //       child: Container(
+      //           width: 190,
+      //           height: 50,
+      //  decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(30),
+      //   // gradient: const LinearGradient(
+      //   //   begin: Alignment(1.5, 1),
+      //   //   end: Alignment(-1.5, 1),
+      //   //           colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
+
+      //   // ),
+      //   color: Colors.red.shade400
+      // ),
+      // //                 decoration: BoxDecoration(
+      // //   borderRadius: BorderRadius.circular(10),
+      // //   color: const Color.fromRGBO(196, 196, 196, 0.2),
+      // // ),
+      //           child: Padding(
+      //             padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: [
+      //                 Center(child: Text('Delete',style: TextStyle(color: Colors.white,fontSize: 18,),)),
+      //                 // Image.asset('assets/images/WhiteCar.png',color: Colors.white,)
+      //             Padding(
+      //               padding: const EdgeInsets.only(left:8.0),
+      //               child: Icon(Icons.delete,color: Colors.white,),
+      //             )
+                   
+      //               ],
+      //             ),
+      //           ),
+      //           ),
+      //     )
+     
+            ],
+          )
+     
+         ],
        ),
      ),
      
@@ -237,11 +404,45 @@ class _EditOperatorState extends State<EditOperator> {
                                     ),),
                     ),
                   ),
-     ManageFields(
-                    controller: _nameController,
-                    imagePath: 'assets/images/buis_name.png',
-                    hintText: "Date Of Birth",
-                  ),
+     GestureDetector(
+      onTap:(){
+showModalBottomSheet(
+  context: context,
+  builder: (BuildContext context) {
+    // Parse the date from the text field or use the default date if parsing fails
+// Parse the date from the text field or use the default date if parsing fails
+DateTime selectedDate;
+try {
+  // Split the date string into year, month, and day parts
+  List<String> parts = _dobController.text!.split('-');
+  int year = int.parse(parts[0]);
+  int month = int.parse(parts[1]);
+  int day = int.parse(parts[2]);
+
+  // Create a DateTime object from the parsed parts
+  selectedDate = DateTime(year, month, day);
+} catch (e) {
+  print('Error parsing date: $e');
+  // Use a default date if parsing fails
+  selectedDate = DateTime(2005, 1);
+}
+
+return CalendarBottomSheet(
+  selectedDate: selectedDate,
+  onDateSelected: _handleDateSelection,
+);
+
+  },
+);
+
+      },
+       child: ManageFields(
+                      controller: _dobController,
+                      imagePath: 'assets/images/Calendar.png',
+                      hintText: "Date Of Birth",
+                      enabled: false,
+                    ),
+     ),
            
                   // const SizedBox(height: 20),
                   const SizedBox(height: 40),
@@ -250,7 +451,8 @@ class _EditOperatorState extends State<EditOperator> {
                     onTap: () async{
                                ImageService imageService =ImageService();
                       // print(base64Image1);
-               await  imageService.uploadImage(base64Image1, widget.operator.id);
+                        if(base64Image1!=null){
+               await  imageService.uploadImage(base64Image1, widget.operator.id);}
                       _saveChanges(context);
                     },
                     child: CustomButton(buttonText: "Save"),

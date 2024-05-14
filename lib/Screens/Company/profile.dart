@@ -1,5 +1,6 @@
+import 'package:company_pages/Screens/Company/Cars.dart';
 import 'package:company_pages/Screens/Company/Company%20Details.dart';
-import 'package:company_pages/Screens/Company/MyCars.dart';
+// import 'package:company_pages/Widgets/MyCars.dart';
 import 'package:company_pages/Screens/Company/my_transactions.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
@@ -235,7 +236,8 @@ class Profile extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MyCars(cars: cars),
+                                  builder: (context) =>
+                                      MyCars(company: company, cars: cars),
                                 ),
                               );
                             },

@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 709,
                 height: 420,
                 child: Stack(
+                  alignment: Alignment.center,
                   children: <Widget>[
                     Positioned(
                       top: 0,

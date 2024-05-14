@@ -6,10 +6,10 @@ class Transactions extends StatelessWidget {
   final double price;
   final String type;
   final int day;
+  final String? company;
 
 
-
-  const Transactions({super.key, required this.id, required this.price,required this.type,required this.day});
+   Transactions({super.key, required this.id, required this.price,required this.type,required this.day, this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class Transactions extends StatelessWidget {
                             height: 10,
                             width: 10,
                             decoration:  BoxDecoration(
-                              color: type=="-"?Colors.red:const Color(0xff9DC284),
+                              color: type=="-"?Colors.red: type=="/"?Colors.amber: const Color(0xff9DC284),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -47,7 +47,7 @@ class Transactions extends StatelessWidget {
                 ),
               ],
             ),
-            Text("$type \$ ${price.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: type=="-"?Colors.red:const Color(0xff9DC284), fontWeight: FontWeight.bold)),
+            (type=='/')?Text("${company}", style: TextStyle(fontSize: 18, color: Colors.amber, fontWeight: FontWeight.bold)):Text("$type \$ ${price.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: type=="-"?Colors.red:const Color(0xff9DC284), fontWeight: FontWeight.bold)),
           ],
         ),
             const SizedBox(height: 30,)

@@ -34,11 +34,13 @@ class CarCard extends StatelessWidget {
                   child: 
                   
                   imageData=='no image'?
-                         Container(
-                    width: 78.86980438232422,
-                    height: 69.47300720214844,
+                                            Container(
+                      width: 69.86980438232422,
+                    height: 68.47300720214844,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
+                      // borderRadius: BorderRadius.circular(12),
+                      // shape: BoxShape.circle,
+  borderRadius: BorderRadius.circular(120),
                       gradient: LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
@@ -52,8 +54,8 @@ class CarCard extends StatelessWidget {
                     // ,
                     ):
                   Container(
-                    width: 78.86980438232422,
-                    height: 69.47300720214844,
+                  width: 69.86980438232422,
+                    height: 68.47300720214844,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       // gradient: LinearGradient(
@@ -64,7 +66,7 @@ class CarCard extends StatelessWidget {
                     ),
                     child:
                     ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(120),
                       child: 
                       
                       

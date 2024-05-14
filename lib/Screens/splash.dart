@@ -38,7 +38,9 @@ class SplashScreen extends StatelessWidget {
                                 return const Operator();
                               } else if (role == "ADMIN") {
                                 return AdminHomePageLayout();
-                              } else {
+                              }
+                              // else if(authService.getToken())
+                              else {
                                 // Unknown role, redirect to login
                                 return LoginScreen();
                               }

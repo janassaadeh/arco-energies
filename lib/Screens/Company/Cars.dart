@@ -1,56 +1,86 @@
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/CarCard.dart';
-
-import 'package:company_pages/Screens/Company/Car_Details.dart';
-// import 'package:company_pages/Screens/CarDetails.dart';
-
+import 'package:company_pages/Screens/Admin/Manage%20Cars/AddCar.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Cars/CarDetails.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Cars/EditCar.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
+import 'package:company_pages/Screens/Admin/dis.dart';
+import 'package:company_pages/Screens/Company/view%20car.dart';
+import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../Models/vehicle.dart';
+import '../../../Widgets/cars/CustomCarSearch.dart';
+// import '../Car_Model.dart';
 
 
-
-class Cars extends StatefulWidget {
+class MyCars extends StatefulWidget {
   final List<Vehicle> cars;
   final dynamic company;
 
-  const Cars({required this.cars,required this.company,Key? key}) : super(key: key);
+  const MyCars({required this.cars,required this.company,Key? key}) : super(key: key);
 
   @override
-  State<Cars> createState() => _MyCarsState();
+  State<MyCars> createState() => _MyCarsState();
 }
-class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
-
+class _MyCarsState extends State<MyCars> with SingleTickerProviderStateMixin {
+ late List<SlidableController> controllers;
+ double ratio=0.3;
  String searchQuery = '';
-
+   late List<TickerProvider> tickerProviders;
      late List <Vehicle> filteredCars ;
+     List<dynamic> imageDataList=[];
 
   @override
   void initState() {
     super.initState();
-
+    tickerProviders = List.generate(
+      widget.cars.length,
+      (index) => _TickerProvider(),
+    );
+    controllers = List.generate(
+      widget.cars.length,
+      (index) => SlidableController(tickerProviders[index]),
+    );
     filteredCars=filterCars();
+    fetchImageForFilteredCars();
+
   }
-  // final List<Car> cars = [
-  //   Car(
-  //     model: "Toyota",
-  //     plateNumber: "ABC123",
-  //     year: 2020,
-  //     color: "Red",
-  //     driverName: "John Doe",
-  //     modelName: "Camry",
-  //     carId: 1,
-  //   ),
-  //   Car(
-  //     model: "Honda",
-  //     plateNumber: "XYZ789",
-  //     year: 2018,
-  //     color: "Blue",
-  //     driverName: "Jane Smith",
-  //     modelName: "Accord",
-  //     carId: 2,
-  //   ),
-  // ];
+  
+  Future<void> fetchImageForFilteredCars() async {
+    ImageService _apiService = ImageService();
+
+    // Initialize imageDataList with null values
+    imageDataList = List.generate(filteredCars.length, (_) => null);
+
+    for (int index = 0; index < filteredCars.length; index++) {
+      String? imageId = filteredCars[index].imageId;
+      try {
+         if (imageId != '') {
+          // Fetch image data using the provided image ID
+          Uint8List imageData = await _apiService.getImageFromId(imageId!);
+          setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = imageData;
+
+          });
+          
+          
+    print("${index} done ");
+
+        }
+    
+      } catch (e) {
+        // Handle errors
+        print('Failed to fetch image for company at index $index: $e');
+      }
+    }
+  }
   // Method to filter companies based on search query
   List<Vehicle> filterCars() {
     return widget.cars.where((car) {
@@ -69,7 +99,11 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+      leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
         title: Center(
           child:  Text('All Cars',style: TextStyle(
                   color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
@@ -78,7 +112,7 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
         backgroundColor: const Color(0xff003D5B),
         actions: [ Padding(
           padding: EdgeInsets.only(right:8.0),
-          child: Icon(Icons.add,size:37,color: Color(0xff003D5B),),
+          child: Icon(Icons.add,size:37,color: const Color(0xff003D5B),),
         )],
       ),
       backgroundColor: Color(0xff003D58),
@@ -99,6 +133,7 @@ body:
                         color: Colors.white,
                         height: 652,
                       
+
                       child: ListView.builder(
                           padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
 
@@ -109,31 +144,35 @@ body:
                         return Column(
                           children: [
                         GestureDetector(
-                              onTap: ()  {
+                              onTap: () async {
                                               // Navigating to CarDetails
-                 Navigator.push(
+               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CarDetails(car: filteredCars[index], company: widget.company)),
+                  MaterialPageRoute(builder: (context) => ViewCar(car: filteredCars[index], company: widget.company,imageData: imageDataList[index],)),
                 );
 
                 // Handling the returned car object from CarDetails
-                
-
+              
                               },
 
           
-                          child: CarCard(
-                            title: filteredCars[index].driverName,
-                            subtitle1: filteredCars[index].model,
-                            subtitle2:filteredCars[index].year.toString(),
-                            imageData: '',
-                            // subtitle3: '#${cars[index].carId}',
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom:0.0),
+                            child: CarCard(
+                              title: filteredCars[index].driverName,
+                              subtitle1: filteredCars[index].model,
+                              subtitle2:filteredCars[index].year.toString(),
+                              imageData:(filteredCars[index].imageId=='')?'no image':imageDataList[index],
+                          
+                              // subtitle3: '#${cars[index].carId}',
+                            ),
                           ),
                         ),
                           ],
                         );}
                       ),
                     ),
+
                   ],
                 ),
                     Padding(
@@ -142,55 +181,127 @@ body:
                               height: 30,
                               decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                              // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
                             ),),
                     ),
-              Padding(
+                            Padding(
                 padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                child: Container(
-                  // width: 328,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                    child: TextFormField(
-                       onChanged: (value) {
-    setState(() {
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
       searchQuery = value;
       filteredCars = filterCars(); // Update filteredOperators when searchQuery changes
     });
-  },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
-                        // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                        hintText: "Search Cars ...",
-                        hintStyle: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Image.asset('assets/images/red-slider.png'),
-                        ),
-                        prefixIcon: Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.only(bottom:8.0),
-
-                          child: Image.asset('assets/images/green-search.png'),
-                        ),
-
+    fetchImageForFilteredCars();
+  
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Cars ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
             ],
           ),
         )
     );
-  }}
+  }
+ Future<void> _showCupertinoLikeDialog(BuildContext context, int index, List<Vehicle> filteredCars) async {
+  await showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text('Are you sure you want to delete this car?'),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Color(0xFF0169AA), fontWeight: FontWeight.normal),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              'Confirm',
+              style: TextStyle(color: Color(0xFF0169AA)),
+            ),
+            onPressed: () async {
+              try {
+                VehicleCompanyService vehicleCompanyService = VehicleCompanyService();
+                // Call deleteVehicleForCompany function to delete the car
+                await vehicleCompanyService.deleteVehicleForCompany(widget.company.id, filteredCars[index].id);
+                
+                // Remove the car from the original list
+                final carId = filteredCars[index].id;
+                final carIndex = widget.cars.indexWhere((car) => car.id == carId);
+                if (carIndex != -1) {
+                  setState(() {
+                    widget.cars.removeAt(carIndex);
+                  });
+                }
+
+                // Remove the car from the filtered list
+                setState(() {
+                  filteredCars.removeAt(index);
+                });
+
+                Navigator.pop(context);
+
+                // Show a success Snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Car deleted successfully'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } catch (error) {
+                // Show an error Snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to delete car: $error'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+}
+
+class _TickerProvider extends TickerProvider {
+  @override
+  Ticker createTicker(TickerCallback onTick) {
+    return Ticker(onTick);
+  }
+}
+void doNothing(BuildContext context) {}
+

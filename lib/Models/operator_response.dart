@@ -25,4 +25,5 @@ class OperatorResponse {
       address: json['address'],
     );
   }
+  
 }

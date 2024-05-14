@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart'; // Import jwt_decoder package
 
 class AuthenticationService {
   final Dio _dio = Dio();
@@ -38,7 +39,10 @@ class AuthenticationService {
   Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString(_tokenKey);
-    return token != null;
+    if (token != null) {
+      return !JwtDecoder.isExpired(token); // Check if token is not expired
+    }
+    return false;
   }
 
   Future<String?> getRole() async {

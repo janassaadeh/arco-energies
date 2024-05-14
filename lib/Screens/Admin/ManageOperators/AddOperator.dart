@@ -1,6 +1,8 @@
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Fields.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/operator_model.dart';
 import 'package:company_pages/Services/Auth/RegisterService.dart';
+import 'package:company_pages/Widgets/calendar_sheet.dart';
 import 'package:flutter/material.dart';
 // import 'package:your_app_path_here/company_model.dart';
 
@@ -17,6 +19,12 @@ class AddOperator extends StatelessWidget {
   final TextEditingController _dobController =TextEditingController();
   final TextEditingController _addressController=TextEditingController();
 
+void _handleDateSelection(DateTime date) {
+  // Format the selected date to your desired format
+  String formattedDate = "${date.year}-${date.month}-${date.day}";
+  // Set the formatted date to the _dobController
+  _dobController.text = formattedDate;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +122,46 @@ class AddOperator extends StatelessWidget {
                       imagePath: 'assets/images/Eye.png',
                       hintText: "Password",
                     ),
-               
+                    SizedBox(height: 20,),
+                      GestureDetector(
+      onTap:(){
+showModalBottomSheet(
+  context: context,
+  builder: (BuildContext context) {
+    // Parse the date from the text field or use the default date if parsing fails
+// Parse the date from the text field or use the default date if parsing fails
+DateTime selectedDate;
+try {
+  // Split the date string into year, month, and day parts
+  List<String> parts = _dobController.text!.split('-');
+  int year = int.parse(parts[0]);
+  int month = int.parse(parts[1]);
+  int day = int.parse(parts[2]);
+
+  // Create a DateTime object from the parsed parts
+  selectedDate = DateTime(year, month, day);
+} catch (e) {
+  print('Error parsing date: $e');
+  // Use a default date if parsing fails
+  selectedDate = DateTime(2005, 1);
+}
+
+return CalendarBottomSheet(
+  selectedDate: selectedDate,
+  onDateSelected: _handleDateSelection,
+);
+
+  },
+);
+
+      },
+       child: ManageFields(
+                      controller: _dobController,
+                      imagePath: 'assets/images/Calendar.png',
+                      hintText: "Date Of Birth",
+                      enabled: false,
+                    ),
+     ),
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
@@ -126,13 +173,14 @@ class AddOperator extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              top: 20,
-              right: 140,
-              child: CircleAvatar(
-                backgroundColor: Color(0xffC1BEBE),
-                radius: 67,
-                child: Image.asset("assets/images/buisness_profile.png"),
+            Padding(
+              padding: const EdgeInsets.only(top:30.0),
+              child: Center(
+                child: CircleAvatar(
+                  backgroundColor: Color(0xffC1BEBE),
+                  radius: 67,
+                  child: Image.asset("assets/images/buisness_profile.png"),
+                ),
               ),
             ),
           ],

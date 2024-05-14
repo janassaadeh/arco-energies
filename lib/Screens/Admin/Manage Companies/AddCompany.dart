@@ -129,13 +129,14 @@ class AddCompany extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              top: 20,
-              right: 140,
-              child: CircleAvatar(
-                backgroundColor: Color(0xffC1BEBE),
-                radius: 62,
-                child: Image.asset("assets/images/buisness_profile.png"),
+                Padding(
+              padding: const EdgeInsets.only(top:30.0),
+              child: Center(
+                child: CircleAvatar(
+                  backgroundColor: Color(0xffC1BEBE),
+                  radius: 62,
+                  child: Image.asset("assets/images/buisness_profile.png"),
+                ),
               ),
             ),
           ],

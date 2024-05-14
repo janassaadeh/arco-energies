@@ -32,6 +32,8 @@ class EditTransaction extends StatefulWidget {
   //  dynamic imageData;
   List<Pump> pumpsObjects;
   // List<String> pumps=[];
+  List<String> pumps=['Pump 1','Pump 2','Pump 3','Pump 4'];
+  
   List<Vehicle> cars;
   EditTransaction({required this.transaction,required this.cars,required this.pumpsObjects});
 
@@ -53,7 +55,6 @@ class _EditTransactionState extends State<EditTransaction> {
   // late TextEditingController _balanceController;
    dynamic base64Image1;
   // List<Pump> pumpsObjects=[];
-  List<String> pumps=[];
   // List<Vehicle> cars=[];
 
   int selectedPump=0;
@@ -213,8 +214,11 @@ class _EditTransactionState extends State<EditTransaction> {
                                 selectedIndex: selectedPump,
                                 onItemSelected: (index) {
                                   setState(() {
+
                                     selectedPump = index;
-                                    _pumpController.text=pumps[selectedPump];
+                                    _pumpController.text=widget.pumps[index];
+
+                                    print(index);
                                   });
                                   Navigator.pop(context); // Close the bottom sheet
                                 },
@@ -225,7 +229,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     },
                     child: ManageFields(
                       controller: _pumpController,
-                      imagePath: 'assets/images/buis_name.png',
+                      imagePath: '',
                       hintText: "Pump Name",
                       enabled: false,
                     ),
@@ -244,7 +248,7 @@ class _EditTransactionState extends State<EditTransaction> {
                   ),
                   ManageFields(
                     controller: _quantityController,
-                    imagePath: 'assets/images/blue pin.png',
+                    imagePath: '',
                     hintText: "Quantity",
                   ),
                   const SizedBox(height: 20),
@@ -286,7 +290,7 @@ class _EditTransactionState extends State<EditTransaction> {
 
                     child: ManageFields(
                       controller: _vehicleController,
-                      imagePath: 'assets/images/Letter.png',
+                      imagePath: '',
                       hintText: "Vehicle ID",
                       enabled:false
                     ),
@@ -305,7 +309,7 @@ class _EditTransactionState extends State<EditTransaction> {
                   ),
                   ManageFields(
                     controller: _odometerController,
-                    imagePath: 'assets/images/Letter.png',
+                    imagePath: '',
                     hintText: "Odometer",
                   ),
 //  Padding(
