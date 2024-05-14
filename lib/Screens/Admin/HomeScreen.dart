@@ -36,16 +36,15 @@ class AdminHomeScreen extends StatefulWidget {
   List<company.Company> companies;
   dynamic admin;
   dynamic imageData;
-    final List<Pump> pumps;
-  final List <Vehicle> cars;
+  final List<Pump> pumps;
+  final List<Vehicle> cars;
   AdminHomeScreen(
       {required this.companies,
       required this.admin,
       required this.operators,
       required this.imageData,
       required this.pumps,
-      required this.cars
-      });
+      required this.cars});
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
@@ -98,220 +97,223 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget build(BuildContext context) {
     return widget.admin == null
         ? Container()
-        : SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                    padding:
-                        const EdgeInsets.only(left: 18, right: 18.0, top: 18),
-                    child: Container(
-                      height: 130,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.fromRGBO(2, 91, 135, 1),
-                            Color.fromRGBO(0, 61, 91, .6),
-                          ], // Gradient colors
+        : RefreshIndicator(
+            onRefresh: _refreshfuelPrices,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                      padding:
+                          const EdgeInsets.only(left: 18, right: 18.0, top: 18),
+                      child: Container(
+                        height: 130,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color.fromRGBO(2, 91, 135, 1),
+                              Color.fromRGBO(0, 61, 91, .6),
+                            ], // Gradient colors
+                          ),
                         ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 20,
-                            left: 20,
-                            child: Text(
-                              widget.admin == null
-                                  ? ''
-                                  : 'Hello, ${widget.admin.name}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 20,
+                              left: 20,
+                              child: Text(
+                                widget.admin == null
+                                    ? ''
+                                    : 'Hello, ${widget.admin.name}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 20,
-                            right: 20,
-                            child: widget.admin.imageId == ''
-                                ? Image.asset("assets/images/User Shield.png")
-                                : widget.imageData != null
-                                    ? ClipOval(
-                                        child: Image.memory(
-                                          widget.imageData!,
-                                          fit: BoxFit.cover,
-                                          width: 90,
-                                          height: 90,
-                                        ),
-                                      )
-                                    : ClipOval(
-                                        child: Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(
+                            Positioned(
+                              bottom: 20,
+                              right: 20,
+                              child: widget.admin.imageId == ''
+                                  ? Image.asset("assets/images/User Shield.png")
+                                  : widget.imageData != null
+                                      ? ClipOval(
+                                          child: Image.memory(
+                                            widget.imageData!,
+                                            fit: BoxFit.cover,
                                             width: 90,
                                             height: 90,
-                                            color: Colors
-                                                .white, // You can change this color to match your background
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              width: 90,
+                                              height: 90,
+                                              color: Colors
+                                                  .white, // You can change this color to match your background
+                                            ),
                                           ),
                                         ),
-                                      ),
-                          ),
-                        ],
-                      ),
-                    )
-                    // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
-                    ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  // padding: const EdgeInsets.all(18.0),
-                  padding: const EdgeInsets.only(left: 18, right: 18.0),
-
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Features",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xffA9A7A7),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        var role = await authenticationService.getRole();
-                        print(role);
-                        push(Operators(operators: widget.operators), context);
-                      },
-                      child: Container(
-                        height: 135,
-                        width: double.infinity,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Features(
-                              color: const Color.fromRGBO(209, 73, 91, 1),
-                              imageAsset: "assets/images/Online Support.png",
-                              text: "Manage Operator",
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                push(Companies(companies: widget.companies,allcars: widget.cars,pumps:widget.pumps,),
-                                    context);
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(237, 174, 73, 1),
-                                imageAsset: "assets/images/Budget.png",
-                                text: "Manage Companies",
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-//  push(QRViewExample(),context);
-                                final qrText = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => QRViewExample()),
-                                );
-                                if (qrText != null) {
-                                  print("qrText $qrText");
-                                  List<String> parts = qrText.split(" ");
-                                  RewardService rewardService = RewardService();
-                                  rewardService.redeemReward(
-                                      parts[1], parts[0]);
-                                }
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(0, 121, 140, 1),
-                                imageAsset: "assets/images/Qr Code.png",
-                                text: "Scan QR for company rewards.",
-                              ),
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                push(WriteCarId(), context);
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(237, 174, 73, 1),
-                                imageAsset: "assets/images/Budget.png",
-                                text: "Write Car ID To NFC",
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
                             ),
                           ],
                         ),
+                      )
+                      // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  // padding: const EdgeInsets.all(18.0),
-                  padding: const EdgeInsets.only(left: 18, right: 18.0),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    // padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.only(left: 18, right: 18.0),
 
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Daily Fuel Prices",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xffA9A7A7),
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Features",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 350,
-                    child: FutureBuilder<List<Fuel>>(
-                      future: fuelListFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return const Center(
-                              child: Text('Failed to load fuel data'));
-                        } else {
-                          List<Fuel> fuels = snapshot.data!;
-                          return RefreshIndicator(
-                            onRefresh: _refreshfuelPrices,
-                            child: ListView.builder(
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          var role = await authenticationService.getRole();
+                          print(role);
+                          push(Operators(operators: widget.operators), context);
+                        },
+                        child: Container(
+                          height: 135,
+                          width: double.infinity,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SizedBox(
+                                width: 18,
+                              ),
+                              Features(
+                                color: const Color.fromRGBO(209, 73, 91, 1),
+                                imageAsset: "assets/images/Online Support.png",
+                                text: "Manage Operator",
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  push(
+                                      Companies(
+                                        companies: widget.companies,
+                                        allcars: widget.cars,
+                                        pumps: widget.pumps,
+                                      ),
+                                      context);
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(237, 174, 73, 1),
+                                  imageAsset: "assets/images/Budget.png",
+                                  text: "Manage Companies",
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  //  push(QRViewExample(),context);
+                                  final qrText = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => QRViewExample()),
+                                  );
+                                  if (qrText != null) {
+                                    print("qrText $qrText");
+                                    List<String> parts = qrText.split(" ");
+                                    RewardService rewardService =
+                                        RewardService();
+                                    rewardService.redeemReward(
+                                        parts[1], parts[0]);
+                                  }
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(0, 121, 140, 1),
+                                  imageAsset: "assets/images/Qr Code.png",
+                                  text: "Scan QR for company rewards.",
+                                ),
+                              ),
+                              SizedBox(
+                                width: 18,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  push(WriteCarId(), context);
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(237, 174, 73, 1),
+                                  imageAsset: "assets/images/Budget.png",
+                                  text: "Write Car ID To NFC",
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    // padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.only(left: 18, right: 18.0),
+
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Daily Fuel Prices",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 350,
+                      child: FutureBuilder<List<Fuel>>(
+                        future: fuelListFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError || !snapshot.hasData) {
+                            return const Center(
+                                child: Text('Failed to load fuel data'));
+                          } else {
+                            List<Fuel> fuels = snapshot.data!;
+                            return ListView.builder(
                               itemCount: fuels.length,
-                              // physics: const NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 Fuel fuel = fuels[index];
                                 double? recentPrice =
@@ -397,14 +399,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                   ),
                                 );
                               },
-                            ),
-                          );
-                        }
-                      },
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
   }

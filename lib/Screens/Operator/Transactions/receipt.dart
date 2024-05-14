@@ -157,7 +157,7 @@ class ReceiptPage extends StatelessWidget {
                 receiptDetailPositioned(
                     0.285, "Quantity", "${transaction.quantity} Liters"),
                 receiptDetailPositioned(.31, "Price Per Unit",
-                    "${transaction.pump.currency} ${transaction.pump.fuel.fuelPrice} Liter"),
+                    "\$ / Liter ${transaction.pump.fuel.fuelPrice}"),
                 receiptDivider(.335),
                 receiptDetailPositioned(
                     0.36, "Driver Name", transaction.vehicle.driverName),
@@ -170,10 +170,12 @@ class ReceiptPage extends StatelessWidget {
                     .47, "Odometer Number", transaction.odometer.toString()),
                 receiptDivider(.495),
                 receiptDetailPositioned(.52, "Amount",
-                    "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
+                    "${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
                 // receiptDetailPositioned(.545, "Tax", "\$ 13.88"),
+                receiptDetailPositioned(
+                    .545, "Pump Currency", "${transaction.pump.currency}"),
                 receiptDetailPositioned(.57, "Total",
-                    "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
+                    "\$ ${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
                 receiptDivider(.595),
                 receiptDetailPositioned(
                     .62, "Operator", transaction.operator.name),

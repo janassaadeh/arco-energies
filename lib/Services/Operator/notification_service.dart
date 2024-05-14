@@ -17,7 +17,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://172.20.10.2:8080/api/notifications',
+        'http://192.168.6.114:8080/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://172.20.10.2:8080/api/notifications/add',
+        'http://192.168.6.114:8080/api/notifications/add',
         data: {
           'type': notification.type,
           'price': notification.price,
@@ -87,7 +87,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://172.20.10.2:8080/api/notifications',
+        'http://192.168.6.114:8080/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -111,7 +111,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://172.20.10.2:8080/api/notifications/$id',
+        'http://192.168.6.114:8080/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://172.20.10.2:8080/api/notifications/$id',
+        'http://192.168.6.114:8080/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {
@@ -150,6 +150,128 @@ class NotificationService {
       }
     } catch (e) {
       throw Exception('Failed to delete notification: $e');
+    }
+  }
+
+  Future<void> storeCompanyDeviceToken(String id, String deviceToken) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'http://192.168.6.114:8080/api/company/device-tokens/$id',
+        data: {
+          'deviceToken': deviceToken,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Device token stored successfully');
+      } else {
+        throw Exception('Failed to store device token');
+      }
+    } catch (e) {
+      throw Exception('Failed to store device token: $e');
+    }
+  }
+
+  Future<List<String>> getAllCompanyDeviceTokens() async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.get(
+        'http://192.168.6.114:8080/api/company/device-tokens',
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic>? responseData = response.data;
+        if (responseData == null) {
+          throw Exception('Response data is null');
+        }
+
+        List<String> deviceTokens = [];
+        for (var deviceToken in responseData) {
+          if (deviceToken is String) {
+            deviceTokens.add(deviceToken.trim());
+          }
+        }
+        return deviceTokens;
+      } else {
+        throw Exception('Failed to load device tokens');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch device tokens: $e');
+    }
+  }
+
+  Future<void> storeAdminDeviceToken(String id, String deviceToken) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'http://192.168.6.114:8080/admins/device-tokens/$id',
+        data: deviceToken,
+      );
+
+      if (response.statusCode == 200) {
+        print('Device token stored successfully');
+      } else {
+        throw Exception('Failed to store device token');
+      }
+    } catch (e) {
+      throw Exception('Failed to store device token: $e');
+    }
+  }
+
+  Future<List<String>> getAllAdminDeviceTokens() async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.get(
+        'http://192.168.6.114:8080/admins/device-tokens',
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic>? responseData = response.data;
+        if (responseData == null) {
+          throw Exception('Response data is null');
+        }
+
+        List<String> deviceTokens = [];
+        for (var deviceToken in responseData) {
+          if (deviceToken is String) {
+            deviceTokens.add(deviceToken.trim());
+          }
+        }
+        return deviceTokens;
+      } else {
+        throw Exception('Failed to load device tokens');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch device tokens: $e');
     }
   }
 }

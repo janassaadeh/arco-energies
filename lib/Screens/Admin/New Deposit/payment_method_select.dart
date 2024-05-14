@@ -1,20 +1,19 @@
-
 import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry_body.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select_body.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodEntry extends StatelessWidget {
   String selectedCompany;
-   PaymentMethodEntry({required this.selectedCompany,super.key});
+  PaymentMethodEntry({required this.selectedCompany, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return    WillPopScope(
-        onWillPop: () async {
-          // Prevent back button press
-          return false;
-        },
-            child: Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent back button press
+        return false;
+      },
+      child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 100,
           title: const Center(
@@ -22,7 +21,7 @@ class PaymentMethodEntry extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                                 'New Deposit',
+                  'New Deposit',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 25,
@@ -48,7 +47,6 @@ class PaymentMethodEntry extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pop(context);
-    
             },
           ),
         ),
@@ -70,20 +68,21 @@ class PaymentMethodEntry extends StatelessWidget {
                       // _buildPathLine(),
                     ],
                   ),
-                      // Positioned(
-                      //   left:85,
-                      //   top:10,
-                      //   child: _buildPathLine(103,true)),
-                      //   Positioned(
-                      //   left:210,
-                      //   top:10,
-                      //   child: _buildPathLine(110,false)),
-    
+                  // Positioned(
+                  //   left:85,
+                  //   top:10,
+                  //   child: _buildPathLine(103,true)),
+                  //   Positioned(
+                  //   left:210,
+                  //   top:10,
+                  //   child: _buildPathLine(110,false)),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-             PaymentMethodEntryBody(selectedCompany: selectedCompany,),
+            PaymentMethodEntryBody(
+              selectedCompany: selectedCompany,
+            ),
           ],
         ),
       ),
@@ -99,13 +98,10 @@ class PaymentMethodEntry extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color:!isActive?Color(0xff939393): Colors.white,
+              color: !isActive ? Color(0xff939393) : Colors.white,
               width: 2,
             ),
-            color: isCompleted
-                ? Colors.white
-                : 
-                     Colors.transparent,
+            color: isCompleted ? Colors.white : Colors.transparent,
           ),
           child: isCompleted
               ? Center(
@@ -143,11 +139,11 @@ class PaymentMethodEntry extends StatelessWidget {
     );
   }
 
-  Widget _buildPathLine(double width,bool isActive) {
+  Widget _buildPathLine(double width, bool isActive) {
     return Container(
       height: 2,
       width: width,
-      color: !isActive?Color(0xff939393):Colors.white,
+      color: !isActive ? Color(0xff939393) : Colors.white,
     );
   }
 }

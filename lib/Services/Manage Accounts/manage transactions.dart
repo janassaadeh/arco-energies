@@ -5,22 +5,22 @@ import '../Auth/AuthenticationService.dart';
 
 class ManageTransactionService {
   final Dio _dio = Dio();
-  final String _baseUrl = 'http://10.0.2.2:8080';
-  
+  final String _baseUrl = 'http://192.168.6.114:8080';
 
-Future<void> updateTransaction(String id, String pumpId, String vehicleId, double quantity, double odometer) async {
-  try {
-    final authenticationService = AuthenticationService();
-    final token = await authenticationService.getToken();
-    if (token != null) {
-      final response = await _dio.put(
-        '$_baseUrl/api/transactions/$id',
-        queryParameters: {
-          'pumpId': pumpId,
-          'vehicleId': vehicleId,
-          'quantity': quantity,
-          'odometer': odometer,
-        },
+  Future<void> updateTransaction(String id, String pumpId, String vehicleId,
+      double quantity, double odometer) async {
+    try {
+      final authenticationService = AuthenticationService();
+      final token = await authenticationService.getToken();
+      if (token != null) {
+        final response = await _dio.put(
+          '$_baseUrl/api/transactions/$id',
+          queryParameters: {
+            'pumpId': pumpId,
+            'vehicleId': vehicleId,
+            'quantity': quantity,
+            'odometer': odometer,
+          },
           //     queryParameters: {
           //   'type': type??'',
           //   'year': year??'',
@@ -29,19 +29,18 @@ Future<void> updateTransaction(String id, String pumpId, String vehicleId, doubl
           //   'driverName': driverName??'',
           //   'color': color??'',
           // },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
-      );
-      // Handle response if needed
-    } else {
-      throw Exception('User is not logged in');
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+        // Handle response if needed
+      } else {
+        throw Exception('User is not logged in');
+      }
+    } catch (e) {
+      throw Exception('Failed to update transaction: $e');
     }
-  } catch (e) {
-    throw Exception('Failed to update transaction: $e');
   }
-}
-
 
   Future<void> deleteTransaction(String id) async {
     try {

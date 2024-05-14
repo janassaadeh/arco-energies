@@ -15,7 +15,7 @@ class RegistrationService {
   }) async {
     try {
       final response = await _dio.post(
-        'http://172.20.10.2:8080/api/v1/auth/company/register',
+        'http://192.168.6.114:8080/api/v1/auth/company/register',
         data: {
           'email': email,
           'password': password,
@@ -49,7 +49,7 @@ class RegistrationService {
       final token = await authenticationService.getToken();
       if (token != null) {
         final response = await _dio.post(
-          'http://172.20.10.2:8080/admins/company/register',
+          'http://192.168.6.114:8080/admins/company/register',
           data: {
             'email': email,
             'password': password,
@@ -86,7 +86,7 @@ class RegistrationService {
   }) async {
     try {
       final response = await _dio.post(
-        'http://172.20.10.2:8080/api/v1/auth/operator/register',
+        'http://192.168.6.114:8080/api/v1/auth/operator/register',
         data: {
           'email': email,
           'password': password,

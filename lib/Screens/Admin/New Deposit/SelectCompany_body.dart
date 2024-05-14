@@ -1,4 +1,3 @@
-
 import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/companies_deposit.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select.dart';
@@ -17,7 +16,6 @@ import '../../../Provider/company_provider.dart';
 
 import 'package:provider/provider.dart';
 
-
 class SelectCompanyBody extends StatefulWidget {
   const SelectCompanyBody({super.key});
 
@@ -30,58 +28,60 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
 
   @override
   Widget build(BuildContext context) {
-  List<Company> companyList = Provider.of<CompanyProvider>(context).companyList;
-  
+    List<Company> companyList =
+        Provider.of<CompanyProvider>(context).companyList;
+
     return Column(
       children: [
-        const SizedBox(height: 20),
+        // const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             children: [
               buildTitleWidget("Select Company", "1"),
-              const SizedBox(height: 10),
-              buildText(
-                  "Input the company name into the search bar."),
-              const SizedBox(height: 20),
+              const SizedBox(height: 2),
+              buildText("Input the company name into the search bar."),
+              const SizedBox(height: 12),
               buildImageContainer("assets/images/select_company.png", true),
-              const SizedBox(height: 30),
+              const SizedBox(height: 8),
               GestureDetector(
-                  onTap:  () async {
-              final id = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SelectCompanies(companies: companyList)),
-              );
-              if (id != null) {
-                setState(() {
-                  idController.text=id;
-                  
-                });
-              }
-            },
+                onTap: () async {
+                  final id = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SelectCompanies(companies: companyList)),
+                  );
+                  if (id != null) {
+                    setState(() {
+                      idController.text = id;
+                    });
+                  }
+                },
                 child: buildInputF(
-                       '  Search...',
+                  '  Search...',
                   Image.asset(
                     "assets/images/Search.png",
                     width: 25,
                   ),
-                  
                   true,
                   idController,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               buildSecondText(
                   "Verify your selected payment method to ensure accuracy."),
-              const SizedBox(height: 40),
-               GestureDetector(
-                onTap: (){
-                   Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PaymentMethodEntry(selectedCompany: idController.text)),
-            );
-                },
-                child: CustomButton(buttonText: 'Next')),
+              const SizedBox(height: 20),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PaymentMethodEntry(
+                              selectedCompany: idController.text)),
+                    );
+                  },
+                  child: CustomButton(buttonText: 'Next')),
             ],
           ),
         ),
@@ -102,7 +102,7 @@ Widget buildInputF(String hintText, Widget widgetAtLeft, bool withBorder,
               color: Colors.black,
               width: 1,
             )
-          :  Border(
+          : Border(
               bottom: BorderSide(
                 color: Colors.black,
                 width: 1,
@@ -124,7 +124,7 @@ Widget buildInputF(String hintText, Widget widgetAtLeft, bool withBorder,
                     ),
                   )
                 : TextFormField(
-                  enabled: false,
+                    enabled: false,
                     controller: textEditingController,
                     decoration: InputDecoration(
                       hintText: hintText,

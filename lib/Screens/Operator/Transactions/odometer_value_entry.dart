@@ -121,13 +121,16 @@ class _OdometerValueEntryState extends State<OdometerValueEntry> {
                       fn: () {
                         String odometerValue = odometerController.text;
                         if (odometerValue.isEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const ErrorPopUp(
-                                text: "Please enter a value!",
-                              );
-                            },
+                          odometerValue = "0.0";
+                          double.parse(odometerValue);
+                          Provider.of<TransactionProvider>(context,
+                                  listen: false)
+                              .setOdometerValue(odometerValue);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LitersValueEntry(),
+                            ),
                           );
                         } else {
                           try {

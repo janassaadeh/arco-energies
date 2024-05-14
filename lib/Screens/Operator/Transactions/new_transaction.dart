@@ -1,6 +1,7 @@
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
+import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +177,7 @@ class _NewTransactionState extends State<NewTransaction> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      'Total: ${transaction.pump.currency} ${total.toStringAsFixed(2)}',
+                                      'Total: \$ ${total.toStringAsFixed(2)}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,

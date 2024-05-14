@@ -50,32 +50,38 @@ class CarOption extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 80,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          colors: [
-                            Color.fromRGBO(209, 73, 91, 1),
-                            Color.fromRGBO(209, 73, 91, 0.5)
-                          ],
-                        ),
-                        boxShadow: isSelected
-                            ? [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ]
-                            : null,
-                      ),
-                      child: Image.asset("assets/images/WhiteCar.png"),
+                    SizedBox(
+                      width: 12,
                     ),
-                    const SizedBox(width: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromRGBO(209, 73, 91, 1),
+                              Color.fromRGBO(209, 73, 91, 0.5)
+                            ],
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Image.asset(
+                          "assets/images/WhiteCar.png",
+                        ),
+                      ),
+                    ),
                     const SizedBox(width: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,

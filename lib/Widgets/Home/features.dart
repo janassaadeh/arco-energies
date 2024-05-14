@@ -5,7 +5,11 @@ class Features extends StatelessWidget {
   final String imageAsset;
   final String text;
 
-  const Features({super.key, required this.color, required this.imageAsset, required this.text});
+  const Features(
+      {super.key,
+      required this.color,
+      required this.imageAsset,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,8 @@ class Features extends StatelessWidget {
           children: [
             Text(
               text,
-              style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w500),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

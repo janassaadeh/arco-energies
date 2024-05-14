@@ -17,7 +17,7 @@ class FuelService {
       _dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await _dio.get(
-        'http://172.20.10.2:8080/api/fuels', // Adjust the URL as per your API endpoint
+        'http://192.168.6.114:8080/api/fuels', // Adjust the URL as per your API endpoint
       );
 
       if (response.statusCode == 200) {

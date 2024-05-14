@@ -69,238 +69,246 @@ class _DashBoardState extends State<DashBoard> {
     // AuthenticationService authenticationService = AuthenticationService();
 
     return Scaffold(
-      body: (widget.operator==null)?Container():SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
-              //     "assets/images/gas-pump.png"),
-              Padding(
-                  padding: const EdgeInsets.only(left: 0, right: 0.0, top: 0),
-                  child: Container(
-                    height: 130,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color.fromRGBO(2, 91, 135, 1),
-                          Color.fromRGBO(0, 61, 91, .6),
-                        ], // Gradient colors
-                      ),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 20,
-                          left: 20,
-                          child: Text(
-                            widget.operator == null
-                                ? ''
-                                : 'Hello, ${widget.operator.name}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+      body: (widget.operator == null)
+          ? Container()
+          : RefreshIndicator(
+              onRefresh: _refreshfuelPrices,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 18),
+                      // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
+                      //     "assets/images/gas-pump.png"),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 0, right: 0.0, top: 0),
+                          child: Container(
+                            height: 130,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color.fromRGBO(2, 91, 135, 1),
+                                  Color.fromRGBO(0, 61, 91, .6),
+                                ], // Gradient colors
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: 20,
+                                  left: 20,
+                                  child: Text(
+                                    widget.operator == null
+                                        ? ''
+                                        : 'Hello, ${widget.operator.name}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  right: 20,
+                                  child: widget.operator.imageId == ''
+                                      ? Image.asset(
+                                          "assets/images/User Shield.png")
+                                      : widget.imageData != null
+                                          ? ClipOval(
+                                              child: Image.memory(
+                                                widget.imageData!,
+                                                fit: BoxFit.cover,
+                                                width: 90,
+                                                height: 90,
+                                              ),
+                                            )
+                                          : ClipOval(
+                                              child: Shimmer.fromColors(
+                                                baseColor: Colors.grey[300]!,
+                                                highlightColor:
+                                                    Colors.grey[100]!,
+                                                child: Container(
+                                                  width: 90,
+                                                  height: 90,
+                                                  color: Colors
+                                                      .white, // You can change this color to match your background
+                                                ),
+                                              ),
+                                            ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      const SizedBox(height: 20),
+                      subTitle('Features'),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const EditPricesPopUp();
+                                },
+                              );
+                            },
+                            child: gradientBox(
+                              'Daily Fuel Prices Editing',
+                              'assets/images/edit-price.png',
+                              const Color.fromRGBO(72, 177, 126, 1),
+                              const Color.fromRGBO(73, 209, 111, 0.6),
+                              context,
                             ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 20,
-                          right: 20,
-                          child: widget.operator.imageId == ''
-                              ? Image.asset("assets/images/User Shield.png")
-                              : widget.imageData != null
-                                  ? ClipOval(
-                                      child: Image.memory(
-                                        widget.imageData!,
-                                        fit: BoxFit.cover,
-                                        width: 90,
-                                        height: 90,
-                                      ),
-                                    )
-                                  : ClipOval(
-                                      child: Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          width: 90,
-                                          height: 90,
-                                          color: Colors
-                                              .white, // You can change this color to match your background
-                                        ),
-                                      ),
-                                    ),
-                        ),
-                      ],
-                    ),
-                  )),
-              const SizedBox(height: 15),
-              subTitle('Features'),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const EditPricesPopUp();
-                        },
-                      );
-                    },
-                    child: gradientBox(
-                      'Daily Fuel Prices Editing',
-                      'assets/images/edit-price.png',
-                      const Color.fromRGBO(72, 177, 126, 1),
-                      const Color.fromRGBO(73, 209, 111, 0.6),
-                      context,
-                    ),
-                  ),
-                  const SizedBox(width: 25),
-                  GestureDetector(
-                    onTap: () async {
-                      push(CarAccess(), context);
-                    },
-                    child: gradientBox(
-                      'Start A New Transaction',
-                      'assets/images/cars.png',
-                      const Color.fromRGBO(232, 169, 69, 1),
-                      const Color.fromRGBO(237, 165, 49, .6),
-                      context,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              subTitle('Fuel Prices'),
-              Container(
-                height: 350,
-                child: FutureBuilder<List<Fuel>>(
-                  future: fuelListFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError || !snapshot.hasData) {
-                      return const Center(
-                          child: Text('Failed to load fuel data'));
-                    } else {
-                      List<Fuel> fuels = snapshot.data!;
-                      return RefreshIndicator(
-                        onRefresh: _refreshfuelPrices,
-                        child: ListView.builder(
-                          itemCount: fuels.length,
-                          // physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            Fuel fuel = fuels[index];
-                            double? recentPrice =
-                                _getMostRecentFuelPrice(fuel.prices);
+                          const SizedBox(width: 25),
+                          GestureDetector(
+                            onTap: () async {
+                              push(CarAccess(), context);
+                            },
+                            child: gradientBox(
+                              'Start A New Transaction',
+                              'assets/images/cars.png',
+                              const Color.fromRGBO(232, 169, 69, 1),
+                              const Color.fromRGBO(237, 165, 49, .6),
+                              context,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      subTitle('Fuel Prices'),
+                      Container(
+                        height: 350,
+                        child: FutureBuilder<List<Fuel>>(
+                          future: fuelListFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError || !snapshot.hasData) {
+                              return const Center(
+                                  child: Text('Failed to load fuel data'));
+                            } else {
+                              List<Fuel> fuels = snapshot.data!;
+                              return ListView.builder(
+                                itemCount: fuels.length,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  Fuel fuel = fuels[index];
+                                  double? recentPrice =
+                                      _getMostRecentFuelPrice(fuel.prices);
 
-                            return GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const EditPricesPopUp();
-                                  },
-                                );
-                              },
-                              child: Card(
-                                color: Colors.white,
-                                surfaceTintColor: Colors.white,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 3,
-                                              offset: const Offset(0, 1),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const EditPricesPopUp();
+                                        },
+                                      );
+                                    },
+                                    child: Card(
+                                      color: Colors.white,
+                                      surfaceTintColor: Colors.white,
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 3,
+                                                    offset: const Offset(0, 1),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Icon(
+                                                  Icons.water_drop,
+                                                  size: 24,
+                                                  color: fuel.description
+                                                          .toLowerCase()
+                                                          .contains("fuel")
+                                                      ? const Color.fromARGB(
+                                                          153, 3, 110, 42)
+                                                      : const Color.fromARGB(
+                                                          255, 204, 113, 79),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 18.0),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  fuel.type,
+                                                  style: const TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  fuel.description,
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Spacer(),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  recentPrice != null
+                                                      ? '\$ / liter  ${recentPrice.toStringAsFixed(2)} '
+                                                      : 'No price available',
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 1, 14, 72),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.water_drop,
-                                            size: 24,
-                                            color: fuel.description
-                                                    .toLowerCase()
-                                                    .contains("fuel")
-                                                ? const Color.fromARGB(
-                                                    153, 3, 110, 42)
-                                                : const Color.fromARGB(
-                                                    255, 204, 113, 79),
-                                          ),
-                                        ),
                                       ),
-                                      const SizedBox(width: 18.0),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            fuel.type,
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            fuel.description,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            recentPrice != null
-                                                ? '${recentPrice.toStringAsFixed(2)} \$/liter'
-                                                : 'No price available',
-                                            style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 1, 14, 72),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           },
                         ),
-                      );
-                    }
-                  },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 

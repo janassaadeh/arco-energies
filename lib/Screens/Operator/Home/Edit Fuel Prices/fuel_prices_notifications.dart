@@ -9,6 +9,7 @@ import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
 import 'package:provider/provider.dart'; // Import your fuel price service
 import 'package:company_pages/Models/notification.dart' as not;
 import 'package:intl/intl.dart';
+import 'package:company_pages/Services/Auth/user_service.dart' as User;
 
 class FuelPricesScreen extends StatefulWidget {
   const FuelPricesScreen({Key? key}) : super(key: key);
@@ -24,6 +25,20 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
   final FuelPricesService fuelPricesService = FuelPricesService();
   final FuelService fuelService = FuelService();
   final NotificationService notificationService = NotificationService();
+  dynamic admin;
+
+  Future<void> _fetchUserData() async {
+    try {
+      User.UserService userService = User.UserService();
+      dynamic userData = await userService.fetchUserData();
+      setState(() {
+        admin = userData;
+      });
+    } catch (e) {
+      // Handle error appropriately, e.g., show a snackbar
+      print('Error fetching companies: $e');
+    }
+  }
 
   void setupPushNotifications() async {
     final fcm = FirebaseMessaging.instance;
@@ -32,6 +47,23 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
 
     final token = await fcm.getToken();
     print(token);
+    print("Admin ID: " + admin.id);
+
+    final fuelPricesService = FuelPricesService();
+
+    try {
+      final allDeviceTokens = await fuelPricesService.getAllDeviceTokens();
+      // Use the allDeviceTokens list
+      print(allDeviceTokens);
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    try {
+      await notificationService.storeAdminDeviceToken(admin.id, token!);
+    } catch (e) {
+      print('Failed to store device token: $e');
+    }
   }
 
   @override
@@ -39,6 +71,7 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
     super.initState();
     fuelPricesFuture = _fetchVehicles();
     notificationListFuture = _fetchNotifications();
+    _fetchUserData().then((_) => setupPushNotifications());
   }
 
   Future<List<FuelPrice>> _fetchVehicles() async {
@@ -281,40 +314,41 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
                               ),
                               const Spacer(),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    '${notification.price.toString()} \$',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 1, 14, 72),
-                                      fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Text(
+                                      '${notification.price.toString()} \$',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 1, 14, 72),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
+                                  Row(
+                                    // mainAxisSize: MainAxisSsize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.check),
+                                        onPressed: () {
+                                          _handleApprove(notification);
+                                        },
+                                        color: Colors.green,
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.close),
+                                        onPressed: () {
+                                          _handleDecline(notification);
+                                        },
+                                        color: Colors.red,
+                                      ),
+                                    ],
+                                  ),
                                 ],
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Divider(
-                              height: 1.5,
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.check),
-                                onPressed: () {
-                                  _handleApprove(notification);
-                                },
-                                color: Colors.green,
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  _handleDecline(notification);
-                                },
-                                color: Colors.red,
                               ),
                             ],
                           ),

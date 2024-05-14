@@ -21,7 +21,7 @@ class UserService {
 
       // Make GET request to the specified URL with the token
       Response response = await _dio.get(
-        'http://172.20.10.2:8080/users/identity',
+        'http://192.168.6.114:8080/users/identity',
         options: options,
       );
 

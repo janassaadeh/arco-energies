@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:company_pages/Models/pump.dart';
 import 'package:company_pages/Models/vehicle.dart';
+import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/admin_profile.dart';
@@ -9,6 +10,7 @@ import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/fuel_prices_notifications.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
+import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Services/Operator/pump_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
@@ -26,7 +28,7 @@ import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:flutter/material.dart';
-
+import 'package:company_pages/Models/notification.dart' as not;
 import '../../Services/Auth/user_service.dart';
 
 // import 'AfterLogin/adminHome.dart'; //
@@ -46,8 +48,10 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       []; // State variable to store the fetched companies
   List<op.Operator> operators = [];
   dynamic _imageData;
-  List<Pump> pumps=[];
-  List<Vehicle> cars=[];
+  List<Pump> pumps = [];
+  List<Vehicle> cars = [];
+  int _notificationCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +63,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       // if(admin.imageId=='')
       _fetchImage();
       _fetchPumpsndVehicles();
+      updateNotificationCount();
       // print('image yes');
     });
     setupPushNotifications();
@@ -98,23 +103,24 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
     final token = await fcm.getToken();
     print(token);
   }
-  Future <void> _fetchPumpsndVehicles() async {
-    try {
 
-      PumpService pumpService=PumpService();
-      
-      List <Pump>fetchedpumps=await pumpService.getPumps();
-      VehicleService vehicleService=VehicleService();
-        final List<Vehicle> vehicles = await vehicleService.getVehicles();
+  Future<void> _fetchPumpsndVehicles() async {
+    try {
+      PumpService pumpService = PumpService();
+
+      List<Pump> fetchedpumps = await pumpService.getPumps();
+      VehicleService vehicleService = VehicleService();
+      final List<Vehicle> vehicles = await vehicleService.getVehicles();
 
       setState(() {
-        pumps=fetchedpumps;
-        cars=vehicles;
+        pumps = fetchedpumps;
+        cars = vehicles;
       });
     } catch (e) {
       throw Exception('Failed to fetch pumps: $e');
     }
   }
+
   Future<void> _fetchOperators() async {
     try {
       AuthenticationService authenticationService = AuthenticationService();
@@ -196,8 +202,22 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
     }
   }
 
+  Future<void> updateNotificationCount() async {
+    // Get the initial notification count when the widget initializes
+    List<not.Notification> notifications =
+        await Provider.of<FuelPricesProvider>(context, listen: false)
+            .getNotifications();
+    setState(() {
+      _notificationCount = notifications.length;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // List<not.Notification> notifications =
+    //     Provider.of<FuelPricesProvider>(context, listen: false)
+    //         .cachedNotifications;
+
     Widget _getBody() {
       switch (_currentIndex) {
         case 0:
@@ -206,9 +226,8 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
               admin: admin,
               operators: operators,
               imageData: _imageData,
-              pumps:pumps,
-              cars:cars
-              );
+              pumps: pumps,
+              cars: cars);
         case 1:
           return NewDeposit(deposits: depositList);
         case 2:
@@ -226,7 +245,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
         leading: Container(),
         title: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 50.0),
+            padding: const EdgeInsets.only(left: 30.0),
             child: Row(
               children: [
                 Image.asset("assets/images/logoWhite.png"),
@@ -243,27 +262,50 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
         ),
         backgroundColor: const Color(0xff003D5B),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              onPressed: () {
-                push(FuelPricesScreen(), context);
-              },
-              icon: Icon(
-                Icons.notifications,
-                size: 37,
-                color: Colors.white,
+          Stack(
+            children: [
+              IconButton(
+                onPressed: () {
+                  push(FuelPricesScreen(), context);
+                },
+                icon: Icon(
+                  Icons.notifications,
+                  size: 37,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          )
+              Consumer<FuelPricesProvider>(
+                builder: (context, fuelPricesProvider, _) {
+                  List<not.Notification> notifications =
+                      fuelPricesProvider.cachedNotifications;
+                  return Positioned(
+                    right: 8,
+                    top: 3,
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                      child: Text(
+                        '${notifications.length}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ],
       ),
-      backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        selectedItemColor:
-            Color(0xffD1495B), // Set the color for the selected item
+        selectedItemColor: const Color(0xff003D58),
         unselectedItemColor: Colors.grey.shade600,
         currentIndex: _currentIndex,
         onTap: (index) {
