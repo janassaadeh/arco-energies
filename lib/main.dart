@@ -8,32 +8,38 @@ import 'package:company_pages/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'Provider/company_provider.dart';
 import 'Provider/fuel_prices_provider.dart';
 import 'Screens/Auth/Login.dart';
 import 'Services/Auth/AuthenticationService.dart';
 
-void main() async{
-  final AuthenticationService authService = AuthenticationService();
-    WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Ensure the timezone database is initialized
+  await initializeTimezones();
+  
+  final AuthenticationService authService = AuthenticationService();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<TransactionProvider>(
           create: (_) => TransactionProvider(),
         ),
-
         ChangeNotifierProvider<CompanyProvider>(
           create: (_) => CompanyProvider(),
         ),
         ChangeNotifierProvider<DepositProvider>(
           create: (_) => DepositProvider(),
         ),
-         
         ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
       ],
       child: MyApp(
@@ -43,6 +49,10 @@ void main() async{
   );
 }
 
+Future<void> initializeTimezones() async {
+  // Initialize timezone database
+  tz.initializeTimeZones();
+}
 
 class MyApp extends StatelessWidget {
   final AuthenticationService authService;
@@ -58,8 +68,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: 
-     SplashScreen()
+      home: SplashScreen(),
     );
   }
 }

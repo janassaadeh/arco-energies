@@ -41,7 +41,7 @@ class _DepositReceiptPageState extends State<DepositReceiptPage> {
 
   String formatDateTime(String inputDateTimeString) {
     DateTime dateTime = DateTime.parse(inputDateTimeString);
-
+print(inputDateTimeString);
     String formattedDateTimeString =
         DateFormat('EEE, MMM d, yyyy • h:mm:ss a').format(dateTime);
 
@@ -184,7 +184,7 @@ class _DepositReceiptPageState extends State<DepositReceiptPage> {
                             left: 0,
                             right: 0,
                             child: Text(
-                              formatDateTime(receipt.timestamp),
+                              formatDateTime((receipt.timestamp)),
                               textAlign: TextAlign.center,
                               style: GoogleFonts.robotoMono(
                                 textStyle: const TextStyle(

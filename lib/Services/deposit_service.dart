@@ -1,6 +1,8 @@
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:dio/dio.dart';
-
+import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 class DepositService {
   final Dio _dio = Dio();
   final AuthenticationService authenticationService = AuthenticationService();
@@ -210,7 +212,29 @@ class DepositReceipt {
       adminDob: json['admin']['dob'],
       paymentMethod: json['paymentMethod'],
       cashAmount: json['cashAmount'].toDouble(),
-      timestamp: json['timestamp'],
+      timestamp: convertToLebanonTime(json['timestamp']),
     );
   }
+}
+
+String convertToLebanonTime(String timestampStr) {
+  // Parse the timestamp to a DateTime object
+  DateTime inputTime = DateTime.parse(timestampStr);
+  // Get the Lebanon timezone
+  tz.Location lebanon = tz.getLocation('Asia/Beirut');
+
+  // Convert the input time to Lebanon time
+  tz.TZDateTime lebanonTime = tz.TZDateTime.from(inputTime, lebanon);
+
+  // Get the Lebanon timezone offset
+  Duration offset = lebanonTime.timeZoneOffset;
+
+  // Add the offset to the input time (convert to UTC)
+  DateTime utcTime = inputTime.add(offset);
+
+  // Format the Lebanon time
+  String formattedLebanonTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(utcTime);
+  print('hi'+formattedLebanonTime);
+
+  return formattedLebanonTime;
 }

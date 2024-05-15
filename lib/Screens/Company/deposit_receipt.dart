@@ -144,7 +144,7 @@ class _DepositReceiptPageState extends State<DepositDetails> {
                   left: 0,
                   right: 0,
                   child: Text(
-                    formatDateTime(widget.receipt.timestamp),
+                    formatDateTime((widget.receipt.timestamp)),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.robotoMono(
                       textStyle: const TextStyle(

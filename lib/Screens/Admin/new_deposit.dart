@@ -44,6 +44,7 @@ class _NewDepositState extends State<NewDeposit> {
               child: ListView.builder(
                 itemCount: widget.deposits.length,
                 itemBuilder: (context, index) {
+                  widget.deposits.sort((a, b) => b.timestamp.compareTo(a.timestamp));
                   final deposit = widget.deposits[index];
                   // final total = fuelPrice.price * transaction.quantity;
                   return GestureDetector(
@@ -74,7 +75,7 @@ class _NewDepositState extends State<NewDeposit> {
                                 ),
                               ),
                               Text(
-                                formatDate(deposit.timestamp).toString()
+                                formatDate(convertToLebanonTime(deposit.timestamp)).toString()
                                 ,
                                 style: const TextStyle(
                                   color: Colors.grey,

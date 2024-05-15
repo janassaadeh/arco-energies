@@ -282,8 +282,8 @@ class HomeScreen extends StatelessWidget {
                       ],
                     )
                   : Container(
-                      height: mergedAndSorted!.length *
-                          100.0, // Adjust the height as needed
+                      height: 
+                          300.0, // Adjust the height as needed
                       child: ListView.builder(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).padding.bottom +
@@ -305,7 +305,7 @@ class HomeScreen extends StatelessWidget {
                                   id: item.id,
                                   price: item.cashAmount,
                                   type: "+",
-                                  day: _calculateDaysAgo(item.timestamp),
+                                  day: _calculateDaysAgo(convertToLebanonTime(item.timestamp)),
                                 ),
                               ],
                             );
