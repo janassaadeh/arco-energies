@@ -50,6 +50,9 @@ class _EditCompanyState extends State<EditCompany> {
   late TextEditingController _balanceController;
   dynamic base64Image1;
 
+  bool _viewCarsLoading = false;
+  bool _viewTransactionsLoading = false;
+
   @override
   Widget build(BuildContext context) {
     // Initialize controllers with company data
@@ -220,6 +223,10 @@ class _EditCompanyState extends State<EditCompany> {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            _viewCarsLoading =
+                                true; // Set loading state to true
+                          });
                           VehicleCompanyService vehicleCompanyService =
                               VehicleCompanyService();
                           final cars = await vehicleCompanyService
@@ -259,11 +266,14 @@ class _EditCompanyState extends State<EditCompany> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'View Cars',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
+                                  _viewCarsLoading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          'View Cars',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: Image.asset(
@@ -284,6 +294,9 @@ class _EditCompanyState extends State<EditCompany> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            _viewTransactionsLoading = true;
+                          });
                           TransactionService transactionService =
                               TransactionService();
                           List<Transaction> allTransactions =
@@ -337,11 +350,14 @@ class _EditCompanyState extends State<EditCompany> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'View Transactions',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
+                                  _viewTransactionsLoading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          'View Transactions',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                   //       Padding(
                                   // padding: const EdgeInsets.only(left:8.0),
                                   //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),

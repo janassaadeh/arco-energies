@@ -55,6 +55,9 @@ class _EditOperatorState extends State<EditOperator> {
   // late TextEditingController _balanceController;
   dynamic base64Image1;
 
+  bool _viewRedemptionLoading = false;
+  bool _viewTransactionsLoading = false;
+
   void _handleDateSelection(DateTime date) {
     // Format the selected date to your desired format
     String formattedDate = "${date.year}-${date.month}-${date.day}";
@@ -194,6 +197,10 @@ class _EditOperatorState extends State<EditOperator> {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            _viewRedemptionLoading =
+                                true; // Set loading state to true
+                          });
                           //                       VehicleCompanyService vehicleCompanyService=VehicleCompanyService();
                           //                       final cars=await vehicleCompanyService.getVehiclesForCompany(widget.company.id);
 
@@ -246,11 +253,14 @@ class _EditOperatorState extends State<EditOperator> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'View Redemptions',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
+                                  _viewRedemptionLoading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          'View Redemptions',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                   //       Padding(
                                   // padding: const EdgeInsets.only(left:8.0),
                                   //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),
@@ -266,6 +276,10 @@ class _EditOperatorState extends State<EditOperator> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            _viewTransactionsLoading =
+                                true; // Set loading state to true
+                          });
                           TransactionService transactionService =
                               TransactionService();
                           List<Transaction> allTransactions =
@@ -317,11 +331,14 @@ class _EditOperatorState extends State<EditOperator> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'View Transactions',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
+                                  _viewTransactionsLoading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          'View Transactions',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                   //       Padding(
                                   // padding: const EdgeInsets.only(left:8.0),
                                   //         child: Image.asset('assets/images/WhiteCar.png',color: Colors.white,width: 27,height: 27,),
@@ -494,7 +511,7 @@ class _EditOperatorState extends State<EditOperator> {
                             selectedDate = DateTime(2005, 1);
                           }
 
-                          return CalendarBottomSheet  (
+                          return CalendarBottomSheet(
                             selectedDate: selectedDate,
                             onDateSelected: _handleDateSelection,
                           );
