@@ -189,7 +189,7 @@ class ReceiptPage extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 40,
           ),
           // Align(
           //   alignment: Alignment.bottomCenter,

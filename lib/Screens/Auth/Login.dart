@@ -25,6 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool isLocked = true;
+  bool isLoading = false;
+  bool showError = false;
+  bool emailPassError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -227,19 +230,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+              Visibility(
+                visible:
+                    showError, // Show error widget based on showError state
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "Authentication Error. Please check your credentials.",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: emailPassError,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "Please fill in all fields.",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
               GestureDetector(
-                  onTap: () async {
-                    print("hi");
-                    if (_emailController.text.isNotEmpty &&
-                        _passwordController.text.isNotEmpty) {
+                onTap: () async {
+                  bool isEmailValid = _emailController.text.isNotEmpty;
+                  bool isPasswordValid = _passwordController.text.isNotEmpty;
+
+                  if (isEmailValid && isPasswordValid && !isLoading) {
+                    setState(() {
+                      isLoading = true;
+                      showError = false;
+                    });
+
+                    try {
                       await authenticationService.authenticate(
                           _emailController.text, _passwordController.text);
-
-                      // Wait for getRole() to complete and then handle the role
                       String? role = await authenticationService.getRole();
                       print(role);
-
-                      // Handle the role accordingly
                       if (role == 'COMPANY') {
                         Navigator.push(
                             context,
@@ -257,9 +284,56 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialPageRoute(
                                 builder: (context) => AdminHomePageLayout()));
                       }
+                    } catch (e) {
+                      print('Authentication Error: $e');
+                      setState(() {
+                        showError = true;
+                      });
+                      Future.delayed(const Duration(seconds: 10), () {
+                        setState(() {
+                          showError = false;
+                        });
+                      });
                     }
-                  },
-                  child: const CustomButton(buttonText: "Sign In")),
+
+                    setState(() {
+                      isLoading = false;
+                    });
+                  } else {
+                    setState(() {
+                      emailPassError = true;
+                    });
+                    Future.delayed(const Duration(seconds: 10), () {
+                      setState(() {
+                        emailPassError = false;
+                      });
+                    });
+                  }
+                },
+                child: isLoading
+                    ? Container(
+                        width: 342,
+                        height: 62,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            begin: Alignment(1.5, 1),
+                            end: Alignment(-1.5, 1),
+                            colors: [
+                              Color.fromRGBO(0, 61, 91, 1),
+                              Color.fromRGBO(2, 91, 134, 0.8999999761581421)
+                            ],
+                          ),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : const CustomButton(buttonText: "Sign In"),
+              ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 90.0, top: 30),
                 child: Align(

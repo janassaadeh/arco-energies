@@ -1,4 +1,5 @@
 import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 // import 'package:company_pages/Screens/Admin/New%20Deposit/input_field.dart';
 import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
@@ -74,14 +75,27 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
               const SizedBox(height: 20),
               GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
+                    if (_PaymentMethodController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ErrorPopUp(
+                              text:
+                                  "Make sure you have selected the payment method!");
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
                           builder: (context) => CashAmountValueEntry(
-                              selectedCompany: widget.selectedCompany,
-                              selectedPaymentMethod:
-                                  _PaymentMethodController.text)),
-                    );
+                            selectedCompany: widget.selectedCompany,
+                            selectedPaymentMethod:
+                                _PaymentMethodController.text,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: CustomButton(buttonText: 'Next')),
             ],
