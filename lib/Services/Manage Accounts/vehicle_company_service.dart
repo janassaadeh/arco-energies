@@ -7,7 +7,7 @@ import '../Auth/AuthenticationService.dart';
 
 class VehicleCompanyService {
   Dio _dio = Dio(); // Create Dio instance
-  final String _baseUrl = 'http://10.0.2.2:8080/api';
+  final String _baseUrl = 'https://arcoenergies.onrender.com/api';
 
   Future<Vehicle> addVehicleForCompany(String companyId, String type, int year,
       String model, String plateNumber, String driverName, String color) async {

@@ -10,7 +10,9 @@ import 'dart:typed_data';
 
 class RewardService {
   final Dio _dio = Dio();
-  final String _baseUrl = 'http://10.0.2.2:8080';
+
+  final String _baseUrl = 'https://arcoenergies.onrender.com';
+
   Future<Uint8List> getQrCode(String companyId, String rewardId) async {
     try {
       final authenticationService = AuthenticationService();

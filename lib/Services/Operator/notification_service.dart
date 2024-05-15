@@ -17,7 +17,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/notifications',
+        'https://arcoenergies.onrender.com/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/notifications/add',
+        'https://arcoenergies.onrender.com/api/notifications/add',
         data: {
           'type': notification.type,
           'price': notification.price,
@@ -87,7 +87,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://10.0.2.2:8080/api/notifications',
+        'https://arcoenergies.onrender.com/api/notifications',
       );
 
       if (response.statusCode == 200) {
@@ -111,7 +111,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/notifications/$id',
+        'https://arcoenergies.onrender.com/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.delete(
-        'http://10.0.2.2:8080/api/notifications/$id',
+        'https://arcoenergies.onrender.com/api/notifications/$id',
       );
 
       if (response.statusCode == 200) {
@@ -164,7 +164,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/api/company/device-tokens/$id',
+        'https://arcoenergies.onrender.com/api/company/device-tokens/$id',
         data: {
           'deviceToken': deviceToken,
         },
@@ -191,7 +191,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/company/device-tokens',
+        'https://arcoenergies.onrender.com/api/company/device-tokens',
       );
 
       if (response.statusCode == 200) {
@@ -226,7 +226,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://10.0.2.2:8080/admins/device-tokens/$id',
+        'https://arcoenergies.onrender.com/admins/device-tokens/$id',
         data: deviceToken,
       );
 
@@ -251,7 +251,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/admins/device-tokens',
+        'https://arcoenergies.onrender.com/admins/device-tokens',
       );
 
       if (response.statusCode == 200) {

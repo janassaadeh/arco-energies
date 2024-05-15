@@ -18,7 +18,7 @@ class ImageService {
       if (token != null) {
         // Make a POST request to upload the image
         await _dio.post(
-          'http://10.0.2.2:8080/images/upload?userId=$userId',
+          'https://arcoenergies.onrender.com/images/upload?userId=$userId',
           data: {'base64Image': encodedImage},
           options: Options(
             headers: {'Authorization': 'Bearer $token'},
@@ -45,7 +45,7 @@ class ImageService {
 
         // Make a GET request to fetch the image
         final Response<Uint8List> response = await _dio.get(
-          'http://10.0.2.2:8080/images/$id',
+          'https://arcoenergies.onrender.com/images/$id',
           options: Options(responseType: ResponseType.bytes),
         );
 
@@ -74,7 +74,7 @@ class ImageService {
       if (token != null) {
         // Make a POST request to upload the image
         await _dio.post(
-          'http://10.0.2.2:8080/images/vehicle/upload?vehicleId=$carId',
+          'https://arcoenergies.onrender.com/images/vehicle/upload?vehicleId=$carId',
           data: {'base64Image': encodedImage},
           options: Options(
             headers: {'Authorization': 'Bearer $token'},

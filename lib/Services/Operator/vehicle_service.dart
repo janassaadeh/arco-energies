@@ -17,7 +17,7 @@ class VehicleService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://10.0.2.2:8080/api/vehicles',
+        'https://arcoenergies.onrender.com/api/vehicles',
       );
 
       if (response.statusCode == 200) {

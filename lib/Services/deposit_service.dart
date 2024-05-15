@@ -11,7 +11,7 @@ class DepositService {
 
     try {
       final response = await _dio.post(
-        'http://10.0.2.2:8080/deposit/addCash',
+        'https://arcoenergies.onrender.com/deposit/addCash',
         data: {
           "cashAmount": cashAmount,
           "companyId": companyId,

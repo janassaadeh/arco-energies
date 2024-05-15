@@ -81,7 +81,7 @@ class _EditCompanyState extends State<EditCompany> {
         backgroundColor: const Color(0xff003D5B),
         actions: [
           PopupMenuButton(
-            iconColor: Colors.white,
+            color: Colors.white,
             offset: Offset(-0, 52), // Adjusts the position closer to the bottom
             // shadowColor: Colors.transparent,
             padding: EdgeInsets.all(0.0),
@@ -117,7 +117,7 @@ class _EditCompanyState extends State<EditCompany> {
             onSelected: (value) {
               print('Selected: $value');
             },
-            color: Colors.white,
+            // color: Colors.white,
             iconSize: 27, // Changes menu background color
           ),
         ],
