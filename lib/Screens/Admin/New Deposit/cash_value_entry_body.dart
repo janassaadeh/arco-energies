@@ -1,5 +1,6 @@
 import 'package:company_pages/Screens/Admin/New%20Deposit/deposit_receipt.dart';
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
 import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Screens/Operator/Transactions/liters_value_entry.dart';
@@ -28,6 +29,7 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
   TextEditingController cashController = TextEditingController();
   final DepositService depositService =
       DepositService(); // Instantiate DepositService
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,36 +62,75 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
               buildSecondText("Double-check the cash amount to avoid errors."),
               const SizedBox(height: 20),
               GestureDetector(
-                  onTap: () async {
+                onTap: () async {
+                  if (!isLoading && cashController.text.isNotEmpty) {
+                    setState(() {
+                      isLoading = true;
+                    });
                     try {
+                      double cashAmount = double.parse(cashController.text);
                       var id = await depositService.addCashRequest(
-                        double.parse(cashController.text),
+                        cashAmount,
                         widget.selectedCompany,
                         widget.selectedPaymentMethod,
                       );
                       print(id);
-
-                      // Ensure that the ID is valid before attempting to fetch the receipt
                       if (id != null) {
-                        // Fetch the deposit receipt
-
-                        // After successfully fetching the deposit receipt, navigate to the DepositReceiptPage
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => DepositReceiptPage(id: id)),
                         );
                       } else {
-                        // Handle the case where the ID is null (e.g., if adding the cash request failed)
                         print('Failed to add cash request. Please try again.');
                       }
                     } catch (e) {
-                      // Handle any errors that occur during the process
                       print('Error occurred: $e');
-                      // Optionally, you can show an error message to the user
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ErrorPopUp(
+                              text: "Please enter a valid cash amount!");
+                        },
+                      );
+                    } finally {
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
-                  },
-                  child: CustomButton(buttonText: 'Next')),
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const ErrorPopUp(
+                            text: "Please enter the cash amount!");
+                      },
+                    );
+                  }
+                },
+                child: isLoading
+                    ? Container(
+                        width: 342,
+                        height: 62,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            begin: Alignment(1.5, 1),
+                            end: Alignment(-1.5, 1),
+                            colors: [
+                              Color.fromRGBO(0, 61, 91, 1),
+                              Color.fromRGBO(2, 91, 134, 0.8999999761581421)
+                            ],
+                          ),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : CustomButton(buttonText: 'Next'),
+              ),
             ],
           ),
         ),

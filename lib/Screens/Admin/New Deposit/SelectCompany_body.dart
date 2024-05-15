@@ -1,6 +1,7 @@
 import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/companies_deposit.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
 import 'package:company_pages/Widgets/Operator/second_text.dart';
@@ -74,12 +75,24 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
               const SizedBox(height: 20),
               GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
+                    if (idController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const ErrorPopUp(
+                              text: "Make sure you have selected a company!");
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
                           builder: (context) => PaymentMethodEntry(
-                              selectedCompany: idController.text)),
-                    );
+                            selectedCompany: idController.text,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: CustomButton(buttonText: 'Next')),
             ],
