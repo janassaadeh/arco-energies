@@ -17,11 +17,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-<<<<<<< HEAD
         'https://arcoenergies.onrender.com/api/fuel_prices',
-=======
-        'http://192.168.20.59:8080/api/fuel_prices',
->>>>>>> 57cf530c4d325344b29eefc639bcc10326482176
       );
 
       if (response.statusCode == 200) {
@@ -57,11 +53,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-<<<<<<< HEAD
         'https://arcoenergies.onrender.com/api/fuel_prices',
-=======
-        'http://192.168.20.59:8080/api/fuel_prices',
->>>>>>> 57cf530c4d325344b29eefc639bcc10326482176
         queryParameters: {
           'fuelType': fuelType,
         },
@@ -110,11 +102,7 @@ class FuelPricesService {
         notificationMessage['receiptToken'] =
             deviceToken; // Set device token in notification message
         final response = await dio.post(
-<<<<<<< HEAD
           'https://arcoenergies.onrender.com/api/notifications/push',
-=======
-          'http://192.168.20.59:8080/api/notifications/push',
->>>>>>> 57cf530c4d325344b29eefc639bcc10326482176
           data: notificationMessage,
         );
 
@@ -159,11 +147,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-<<<<<<< HEAD
         'https://arcoenergies.onrender.com/admins/device-tokens',
-=======
-        'http://192.168.20.59:8080/admins/device-tokens',
->>>>>>> 57cf530c4d325344b29eefc639bcc10326482176
       );
 
       if (response.statusCode == 200) {

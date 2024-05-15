@@ -10,6 +10,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Cars/CarDetails.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/EditCar.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Transactions/edittransaction.dart';
+import 'package:company_pages/Screens/Admin/Rewards/redmp_receipt.dart';
 import 'package:company_pages/Screens/Admin/dis.dart';
 import 'package:company_pages/Screens/Operator/operator_bottom_nav.dart';
 import 'package:company_pages/Services/Manage%20Accounts/manage%20transactions.dart';
@@ -148,13 +149,21 @@ body:
                               },
                             child: Padding(
                               padding: EdgeInsets.only(bottom:0.0),
-                              child: Transactions(
-                                
-                                                      id: filteredTransactions[index].id,
-                                                      price: 0,
-                                                      type: "/",
-                                                      company: filteredTransactions[index].company.name,
-                                                      day: 1),
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RedemptionReceipt(receipt: filteredTransactions[index] ,)),
+            );
+                                },
+                                child: Transactions(
+                                  
+                                                        id: filteredTransactions[index].id,
+                                                        price: 0,
+                                                        type: "/",
+                                                        company: filteredTransactions[index].company.name,
+                                                        day: _calculateDaysAgo(filteredTransactions[index].date.toString())),
+                              ),
                                                     ),
                             ),
                           
@@ -223,9 +232,17 @@ body:
 void doNothing(BuildContext context) {}
 
 
-  int _calculateDaysAgo(String transactionDateString) {
+  String _calculateDaysAgo(String transactionDateString) {
     final transactionDate = DateTime.parse(transactionDateString);
     final currentDate = DateTime.now();
     final difference = currentDate.difference(transactionDate);
-    return difference.inDays;
+      if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
+  }
   }

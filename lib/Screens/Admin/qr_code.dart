@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRViewExample extends StatefulWidget {
@@ -12,8 +10,17 @@ class QRViewExample extends StatefulWidget {
 
 class _QRViewExampleState extends State<QRViewExample> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
   QRViewController? controller;
+  bool isCameraInitialized = false;
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller?.pauseCamera();
+    }
+    controller?.resumeCamera();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +71,8 @@ class _QRViewExampleState extends State<QRViewExample> {
               ),
               child: IconButton(
                 icon: Icon(Icons.flashlight_on, color: Colors.white),
-                onPressed: () async{
+                onPressed: () async {
                   await controller?.toggleFlash();
-                  // Toggle flashlight
-                  
                 },
               ),
             ),
@@ -84,10 +89,8 @@ class _QRViewExampleState extends State<QRViewExample> {
               ),
               child: IconButton(
                 icon: Icon(Icons.flip_camera_ios_sharp, color: Colors.white),
-                onPressed: ()async {
-                  // Switch camera
+                onPressed: () async {
                   await controller?.flipCamera();
-
                 },
               ),
             ),
@@ -99,17 +102,15 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-        if (result != null) {
-          String? text=result!.code;
-          // Do something with the result, for example:
-          Navigator.pop(context,text);
-          print(text!); // Print the scanned QR code
-        }
+    if (!isCameraInitialized) {
+      controller.scannedDataStream.listen((scanData) {
+        setState(() {
+          controller.pauseCamera();  // Pause the camera after scan to prevent multiple triggers
+          Navigator.pop(context, scanData.code);  // Return the scanned result
+        });
       });
-    });
+      isCameraInitialized = true;
+    }
   }
 
   @override

@@ -1,6 +1,9 @@
 
+import 'dart:typed_data';
+
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
+import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -22,13 +25,48 @@ class SelectCompanies extends StatefulWidget {
 class _MyCompaniesState extends State<SelectCompanies>  {
 
   String searchQuery = '';
+ late List<Company> filteredCompanies;
+List<dynamic?> imageDataList = [];
+
 
   @override
   void initState() {
     super.initState();
+  
+    filteredCompanies = filterCompanies(); // Filtered list of companies
+    fetchImageForFilteredCompanies();
 
   }
 
+  Future<void> fetchImageForFilteredCompanies() async {
+    ImageService _apiService = ImageService();
+
+    // Initialize imageDataList with null values
+    imageDataList = List.generate(filteredCompanies.length, (_) => null);
+
+    for (int index = 0; index < filteredCompanies.length; index++) {
+      String imageId = filteredCompanies[index].imageId;
+      try {
+         if (imageId != '') {
+          // Fetch image data using the provided image ID
+          Uint8List imageData = await _apiService.getImageFromId(imageId);
+          setState(() {
+            // Update the imageDataList with fetched image data
+            imageDataList[index] = imageData;
+
+          });
+          
+          
+    print("${index} done ");
+
+        }
+    
+      } catch (e) {
+        // Handle errors
+        print('Failed to fetch image for company at index $index: $e');
+      }
+    }
+  }
   // Method to filter companies based on search query
   List<Company> filterCompanies() {
     return widget.companies.where((company) {
@@ -39,10 +77,20 @@ class _MyCompaniesState extends State<SelectCompanies>  {
       return name.contains(query) || email.contains(query) || contactName.contains(query);
     }).toList();
   }
+  
+
+Future<void> refreshCompanies() async {
+  CompanyService companyService = CompanyService();
+  List<Company> updatedCompanies = await companyService.getAllCompanies();
+  setState(() {
+    filteredCompanies = updatedCompanies;
+  });
+  fetchImageForFilteredCompanies();
+}
 
   @override
   Widget build(BuildContext context) {
-    final filteredCompanies = filterCompanies(); // Filtered list of companies
+    var filteredCompanies = filterCompanies(); // Filtered list of companies
 
     return     WillPopScope(
         onWillPop: () async {
@@ -88,8 +136,8 @@ class _MyCompaniesState extends State<SelectCompanies>  {
                                   title: filteredCompanies[index].name,
                                   subtitle1: filteredCompanies[index].email,
                                   subtitle2: filteredCompanies[index].contactName,
-                                  activated: true,
-                                  // subtitle3: '#${cars[index].carId}',
+                                     imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
+                                      activated: filteredCompanies[index].activated,
                                 ),
                               ),
                             ],
@@ -99,58 +147,54 @@ class _MyCompaniesState extends State<SelectCompanies>  {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top:100.0),
-                  child: Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
-                    ),),
+                  Padding(
+                padding: const EdgeInsets.only(top:100.0),
+                child: Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                  ),),
+              ),
+               Padding(
+                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                  child: Container(
-                    // width: 328,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10, right: 8, top: 12),
-                      child: TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            searchQuery = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(borderSide: BorderSide.none),
-                          // contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
-                          hintText: "Search Companies ...",
-                          hintStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.5),
-                            fontFamily: 'Mulish',
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(bottom:8.0),
-                            child: Image.asset('assets/images/red-slider.png'),
-                          ),
-                          prefixIcon: Padding(
-                            // padding: const EdgeInsets.all(8.0),
-                            padding: const EdgeInsets.only(bottom:8.0),
-    
-                            child: Image.asset('assets/images/green-search.png'),
-                          ),
-    
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
+      searchQuery = value;
+      filteredCompanies = filterCompanies(); // Update filteredOperators when searchQuery changes
+    });
+    fetchImageForFilteredCompanies();
+  
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Companies ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
+              ),
+            ),
               ],
             ),
           )

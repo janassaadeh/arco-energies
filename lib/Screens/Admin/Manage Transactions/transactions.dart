@@ -20,6 +20,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../Models/vehicle.dart';
+import 'package:local_auth/local_auth.dart';
 
 
 
@@ -170,9 +171,32 @@ body:
                                          
                                       children: [
                                          GestureDetector(
-                                          onTap: (){
+                                          onTap: () async {
                                            controllers[index].close();
+                                           Future<bool> _authenticate() async {
+  final LocalAuthentication auth = LocalAuthentication();
+  bool authenticated = false;
+  try {
+    authenticated = await auth.authenticate(
+      localizedReason: 'Please authenticate to delete the transaction',
+      options: const AuthenticationOptions(
+        useErrorDialogs: true,
+        stickyAuth: true,
+      ),
+ 
+    );
+
+  } catch (e) {
+    print(e);
+  }
+  return authenticated;
+}
+                                           final authenticated=await _authenticate();
+         if(authenticated){
                                              _showCupertinoLikeDialog(context,index,filteredTransactions);
+        // _showCupertinoLikeDialog()
+      }
+                                            //  _showCupertinoLikeDialog(context,index,filteredTransactions);
                                              
                                           },
                                            child: Padding(
@@ -227,7 +251,7 @@ body:
                                                                 id: filteredTransactions[index].id,
                                                                 price: price,
                                                                 type: "-",
-                                                                day: _calculateDaysAgo(filteredTransactions[index].date),
+                                                                day: formatTransactionDate(filteredTransactions[index].date),
                                                               ),
                                       ),
                                     ),
@@ -361,7 +385,9 @@ body:
     },
   );
 }
+
 }
+
 
 class _TickerProvider extends TickerProvider {
   @override
@@ -371,10 +397,19 @@ class _TickerProvider extends TickerProvider {
 }
 void doNothing(BuildContext context) {}
 
+String formatTransactionDate(String transactionDateString) {
+  final transactionDate = DateTime.parse(transactionDateString);
+  final currentDate = DateTime.now();
+  final difference = currentDate.difference(transactionDate).inDays;
 
-  int _calculateDaysAgo(String transactionDateString) {
-    final transactionDate = DateTime.parse(transactionDateString);
-    final currentDate = DateTime.now();
-    final difference = currentDate.difference(transactionDate);
-    return difference.inDays;
+  if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
   }
+}
+

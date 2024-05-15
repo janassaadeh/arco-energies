@@ -233,7 +233,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 ),
                               ),
                               SizedBox(
-                                width: 18,
+                                width: 10,
                               ),
                               GestureDetector(
                                 onTap: () {

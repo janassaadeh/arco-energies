@@ -5,7 +5,7 @@ class Transactions extends StatelessWidget {
   final String id;
   final double price;
   final String type;
-  final int day;
+  final dynamic day;
   final String? company;
 
 
@@ -41,7 +41,7 @@ class Transactions extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 35.0),
-                      child: Text(day==0?"Today":day==1?"1-day ago":"$day-days ago", style: const TextStyle(fontSize: 16, color: Color(0xff9E9C9C))),
+                      child: Text(day, style: const TextStyle(fontSize: 16, color: Color(0xff9E9C9C))),
                     ),
                   ],
                 ),

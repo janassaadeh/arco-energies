@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
   final DateTime selectedDate;
@@ -13,7 +13,6 @@ class CalendarBottomSheet extends StatefulWidget {
 }
 
 class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   int _displayedYear = DateTime.now().year;
   int _displayedMonth = DateTime.now().month;
@@ -85,60 +84,23 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               ),
             ],
           ),
-          TableCalendar(
-            firstDay: DateTime(1930, 1),
-            lastDay: DateTime(2005, 12),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Colors.grey[300],
-                shape: BoxShape.circle,
-              ),
-              rowDecoration: BoxDecoration(
-                border: Border(top: BorderSide(color: const Color.fromARGB(255, 195, 194, 194))),
-              ),
-              defaultTextStyle: TextStyle(fontSize: 13)
-            ),
-            selectedDayPredicate: (day) => isSameDay(widget.selectedDate, day),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-              });
-              widget.onDateSelected(selectedDay);
+          SfCalendar(
+            view: CalendarView.month,
+            headerHeight: 0,
+            todayHighlightColor: Colors.grey[300],
+            backgroundColor: Colors.transparent,
+            initialSelectedDate: widget.selectedDate,
+            monthViewSettings: MonthViewSettings(showTrailingAndLeadingDates: false),
+            onTap: (CalendarTapDetails details) {
+              widget.onDateSelected(details.date!);
               Navigator.pop(context);
             },
-            calendarBuilders: CalendarBuilders(
-              selectedBuilder: (context, date, _) {
-                return Center(
-                  child: Container(
-                    height:30,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            headerVisible: false,
+            onViewChanged: (ViewChangedDetails details) {
+              _focusedDay = details.visibleDates[0];
+            },
           ),
         ],
       ),
     );
   }
-}
-
-bool isSameDay(DateTime a, DateTime b) {
-  return a.year == b.year && a.month == b.month && a.day == b.day;
 }

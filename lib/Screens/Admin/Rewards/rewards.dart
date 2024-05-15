@@ -372,9 +372,34 @@ class _TickerProvider extends TickerProvider {
 void doNothing(BuildContext context) {}
 
 
-  int _calculateDaysAgo(String transactionDateString) {
+  String _calculateDaysAgo(String transactionDateString) {
     final transactionDate = DateTime.parse(transactionDateString);
     final currentDate = DateTime.now();
     final difference = currentDate.difference(transactionDate);
-    return difference.inDays;
+     if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
   }
+  }
+
+String formatTransactionDate(String transactionDateString) {
+  final transactionDate = DateTime.parse(transactionDateString);
+  final currentDate = DateTime.now();
+  final difference = currentDate.difference(transactionDate).inDays;
+
+  if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
+  }
+}
+

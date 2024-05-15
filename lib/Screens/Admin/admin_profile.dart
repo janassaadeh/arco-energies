@@ -1,25 +1,38 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:company_pages/Screens/Auth/ForgotPassword.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
 import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Services/image_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Widgets/profile/link.dart';
 
-class AdminProfile extends StatelessWidget {
-  AuthenticationService authenticationService = AuthenticationService();
+class AdminProfile extends StatefulWidget {
   dynamic admin;
   dynamic imageData;
+  
   // dynamic cars;
   // List<dynamic>? mergeAndSorted;
 
   AdminProfile({required this.admin, required this.imageData});
 
   @override
+  State<AdminProfile> createState() => _AdminProfileState();
+}
+
+class _AdminProfileState extends State<AdminProfile> {
+  AuthenticationService authenticationService = AuthenticationService();
+   dynamic base64Image1;
+
+  @override
   Widget build(BuildContext context) {
-    return (admin == null)
+    return (widget.admin == null)
         ? Container()
         : SingleChildScrollView(
             child: Column(
@@ -27,33 +40,93 @@ class AdminProfile extends StatelessWidget {
                 SizedBox(
                   height: 40,
                 ),
-                admin.imageId == ''
-                    ? CircleAvatar(
+                   Stack(
+                    children: [
+                      CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 62,
-                        child:
-                            Image.asset("assets/images/buisness_profile.png"))
-                    : imageData != null
-                        ? ClipOval(
-                            child: Image.memory(
-                              imageData!,
-                              fit: BoxFit.cover,
-                              width: 120,
-                              height: 120,
-                            ),
-                          )
-                        : ClipOval(
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                width: 120,
-                                height: 120,
-                                color: Colors
-                                    .white, // You can change this color to match your background
+                        child: (widget.imageData == null)
+                            ? Image.asset("assets/images/buisness_profile.png")
+                            : ClipOval(
+                                child: Image.memory(
+                                  widget.imageData!,
+                                  fit: BoxFit.cover, // Adjust the fit as needed
+                                  width:
+                                      134, // Set the width and height to ensure the image is circular
+                                  height: 134,
+                                ),
                               ),
+                      ),
+                      Positioned(
+                        top: 5,
+                        right: 0,
+                        child: Container(
+                          width:
+                              30, // Adjust the width of the container as needed
+                          height:
+                              30, // Adjust the height of the container as needed
+                          decoration: BoxDecoration(
+                            color: Color(
+                                0xffC1BEBE), // You can set your desired background color
+                            shape: BoxShape.circle, // This makes it a circle
+                            //           boxShadow: [
+                            // BoxShadow(
+                            //   color: Colors.black.withOpacity(0.3), // Shadow color
+                            //   spreadRadius: 2, // Spread radius
+                            //   blurRadius: 4, // Blur radius
+                            //   offset: const Offset(0, 2), // Offset
+                            // ),
+                            // ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: GestureDetector(
+                              onTap: () {
+                                final picker = ImagePicker();
+
+                                Future<void> _openImagePicker() async {
+                                  final pickedFile = await picker.pickImage(
+                                      source: ImageSource.gallery);
+
+                                  if (pickedFile != null) {
+                                    final file = File(pickedFile.path);
+                                    final bytes = await file.readAsBytes();
+                                    final base64Image = base64Encode(bytes);
+                                    final image =
+                                        "data:image/png;base64,$base64Image";
+
+                                    // Now you have the base64-encoded image
+                                    // print("Base64 Image: $base64Image");
+                                    // print(base64Image);
+
+                                    setState(() {
+                                      widget.imageData =
+                                          bytes; // Set the picked image file
+                                      // Update the profileAvatar URL
+                                      base64Image1 = base64Image;
+                                    });
+                                                                                               ImageService imageService =ImageService();
+              if (base64Image1 != null && base64Image1!=widget.imageData) {
+      ImageService imageService = ImageService();
+      await imageService.uploadImage(base64Image1, widget.admin.id);
+    } 
+                                    // print(base64Image1);
+
+                                    // print(imgUrl);
+                                  } else {
+                                    // Handle no image picked error
+                                  }
+                                }
+
+                                _openImagePicker();
+                              },
+                              child: Center(child: Icon(Icons.add)),
                             ),
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
                 SizedBox(
                   height: 20,
                 ),
@@ -62,7 +135,7 @@ class AdminProfile extends StatelessWidget {
                     // Figma Flutter Generator CompanynameWidget - TEXT
 
                     Text(
-                      admin.name,
+                      widget.admin.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1),
@@ -76,7 +149,7 @@ class AdminProfile extends StatelessWidget {
                     ),
 
                     Text(
-                      '+961 ${admin.phone}',
+                      '+961 ${widget.admin.phone}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(0xffA9A9AC),
@@ -172,7 +245,7 @@ class AdminProfile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            admin.email,
+                            widget.admin.email,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -206,7 +279,7 @@ class AdminProfile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            admin.dob,
+                            widget.admin.dob,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -240,7 +313,7 @@ class AdminProfile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            admin.id,
+                            widget.admin.id,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,

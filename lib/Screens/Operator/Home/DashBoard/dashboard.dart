@@ -8,6 +8,7 @@ import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:company_pages/Widgets/Home/features.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -204,21 +205,50 @@ class _DashBoardState extends State<DashBoard> {
                           SizedBox(
                             width: 18,
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              //  push(QRViewExample(),context);
-                              final qrText = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => QRViewExample()),
-                              );
-                              if (qrText != null) {
-                                print("qrText $qrText");
-                                List<String> parts = qrText.split(" ");
-                                RewardService rewardService = RewardService();
-                                rewardService.redeemReward(parts[1], parts[0]);
-                              }
-                            },
+
+// GestureDetector part of the code
+GestureDetector(
+  onTap: () async {
+    // Navigate to QRViewExample and wait for the result
+    final qrText = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => QRViewExample()),
+    );
+
+    void _showErrorDialog(String errorMessage) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ErrorPopUp(
+            text: errorMessage,
+          );
+        },
+      );
+    }
+
+    if (qrText != null) {
+      print("qrText $qrText");
+      List<String> parts = qrText.split(" ");
+      RewardService rewardService = RewardService();
+  
+      try {
+        // Attempt to redeem reward
+        await rewardService.redeemReward(parts[1], parts[0]);
+            if (mounted) {
+          _showErrorDialog('Reward has been redeemed successfully !');
+        }
+      } catch (e) {
+        // Show error dialog on failure
+        if (mounted) {
+          _showErrorDialog('Insufficient points balance to redeem the reward');
+        }
+      }
+    }
+  },
+
+
+
+
                             child: Features(
                               color: const Color.fromRGBO(0, 121, 140, 1),
                               imageAsset: "assets/images/Qr Code.png",

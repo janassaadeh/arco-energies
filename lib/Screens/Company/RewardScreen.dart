@@ -71,7 +71,7 @@ class RewardScreen extends StatelessWidget {
  
               Row(
                 children: [
-                   Text(company.pts.toString(), textAlign: TextAlign.center, style: TextStyle(
+                   Text(company!=null?company.pts.toString():'0', textAlign: TextAlign.center, style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontFamily: 'Inter',
                         fontSize: 32,

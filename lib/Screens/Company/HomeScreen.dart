@@ -330,14 +330,22 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-int _calculateDaysAgo(String transactionDateString) {
+String _calculateDaysAgo(String transactionDateString) {
   final transactionDate = DateTime.parse(transactionDateString);
   final currentDate = DateTime.now();
   final difference = currentDate.difference(transactionDate);
-  return difference.inDays;
+    if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
+  }
 }
 
-int _calculateDaysAgo2(String transactionDateString) {
+String _calculateDaysAgo2(String transactionDateString) {
   final List<String> dateParts = transactionDateString.split('-');
   final int year = int.parse(dateParts[0]);
   final int month = int.parse(dateParts[1]);
@@ -347,5 +355,13 @@ int _calculateDaysAgo2(String transactionDateString) {
   final DateTime currentDate = DateTime.now();
   final Duration difference = currentDate.difference(transactionDate);
 
-  return difference.inDays;
+    if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
+  }
 }

@@ -5,11 +5,7 @@ import '../Auth/AuthenticationService.dart';
 
 class ManageTransactionService {
   final Dio _dio = Dio();
-<<<<<<< HEAD
   final String _baseUrl = 'https://arcoenergies.onrender.com';
-=======
-  final String _baseUrl = 'http://192.168.20.59:8080';
->>>>>>> 57cf530c4d325344b29eefc639bcc10326482176
 
   Future<void> updateTransaction(String id, String pumpId, String vehicleId,
       double quantity, double odometer) async {
