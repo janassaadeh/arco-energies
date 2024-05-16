@@ -119,6 +119,8 @@ class _MyCarsState extends State<Cars> with SingleTickerProviderStateMixin {
             );
             if (newCar != null) {
                  setState(() {
+                  imageDataList.add('no image');
+                  widget.cars.add(newCar);
                   filteredCars.add(newCar); // Add the new company to the list
                   controllers.add(SlidableController(_TickerProvider())); // Add a new SlidableController
                   tickerProviders.add(_TickerProvider()); // Add a new TickerProvider

@@ -90,7 +90,7 @@ class _EditCarState extends State<EditCar> {
              CircleAvatar(
                backgroundColor: Color(0xffC1BEBE),
                radius: 67,
-               child:(widget.imageData==null)?Image.asset("assets/images/car_profile.png"):
+               child:(widget.imageData==null || widget.imageData=='no image' )?Image.asset("assets/images/car_profile.png"):
                ClipOval(
                  child: Image.memory(
                            widget.imageData!,

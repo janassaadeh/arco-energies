@@ -143,6 +143,8 @@ class _MyOperatorsState extends State<Operators>
                     );
                     if (newOperator != null) {
                       setState(() {
+                        imageDataList.add('no image');
+                        widget.operators.add(newOperator);
                         filteredOperators.add(
                             newOperator); // Add the new company to the list
                         controllers.add(SlidableController(

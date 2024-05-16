@@ -116,7 +116,7 @@ class _EditOperatorState extends State<EditOperator> {
                       CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 62,
-                        child: (widget.imageData == null)
+                        child: (widget.imageData == null||widget.imageData == 'no image')
                             ? Image.asset("assets/images/buisness_profile.png")
                             : ClipOval(
                                 child: Image.memory(

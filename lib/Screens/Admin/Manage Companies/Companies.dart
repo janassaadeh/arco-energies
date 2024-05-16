@@ -144,6 +144,8 @@ Future<void> refreshCompanies() async {
               );
               if (newCompany != null) {
                 setState(() {
+                  widget.companies.add(newCompany);
+                  imageDataList.add('no image');
                   filteredCompanies.add(newCompany); // Add the new company to the list
                   controllers.add(SlidableController(_TickerProvider())); // Add a new SlidableController
                   tickerProviders.add(_TickerProvider()); // Add a new TickerProvider
