@@ -138,8 +138,8 @@ class _MyOperatorsState extends State<AllRewards>
 
                         itemCount: filteredOperators.length,
                         itemBuilder: (context, index) {
-                          filteredOperators
-                              .sort((a, b) => b.date.compareTo(a.date));
+                          // filteredOperators
+                          //     .sort((a, b) => b.date.compareTo(a.date));
 
                           return Column(
                             children: [

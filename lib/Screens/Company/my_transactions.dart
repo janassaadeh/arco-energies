@@ -93,7 +93,7 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
             child: Icon(
               Icons.notifications,
               size: 37,
-              color: Colors.white,
+              color:Color(0xff003D5B),
             ),
           ),
         ],

@@ -226,6 +226,10 @@ class _EditOperatorState extends State<EditOperator> {
                                         transactions: opTransactions,
                                         operator: widget.operator,
                                       )));
+                                      setState(() {
+                            _viewRedemptionLoading =
+                                false; // Set loading state to true
+                          });
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 40.0),
@@ -254,7 +258,7 @@ class _EditOperatorState extends State<EditOperator> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewRedemptionLoading
-                                      ? CircularProgressIndicator()
+                                      ? CircularProgressIndicator(color: Colors.white)
                                       : Text(
                                           'View Redemptions',
                                           style: TextStyle(
@@ -304,6 +308,10 @@ class _EditOperatorState extends State<EditOperator> {
                                         pumps: widget.pumps,
                                         company: widget.operator,
                                       )));
+                                      setState(() {
+                            _viewTransactionsLoading =
+                                false; // Set loading state to true
+                          });
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 40.0),
@@ -332,7 +340,7 @@ class _EditOperatorState extends State<EditOperator> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewTransactionsLoading
-                                      ? CircularProgressIndicator()
+                                      ? CircularProgressIndicator(color: Colors.white)
                                       : Text(
                                           'View Transactions',
                                           style: TextStyle(

@@ -144,7 +144,7 @@ class _RedemptionReceiptState extends State<RedemptionReceipt> {
                   left: 0,
                   right: 0,
                   child: Text(
-                  formatDateTime(widget.receipt.date.toString()),
+                  formatDateTime(convertToLebanonTime( widget.receipt.date.toString())),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.robotoMono(
                       textStyle: const TextStyle(

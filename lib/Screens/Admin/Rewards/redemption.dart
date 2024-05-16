@@ -124,7 +124,8 @@ body:
                           itemCount:filteredTransactions.length,
                           itemBuilder: (context, index) {
                    
-                      
+                                         filteredTransactions
+                              .sort((a, b) => b.date.compareTo(a.date));
                           
                           return Column(
                             children: [

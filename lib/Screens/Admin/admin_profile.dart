@@ -432,9 +432,7 @@ class _AdminProfileState extends State<AdminProfile> {
                     ),
                     SizedBox(height: 15),
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 22, right: 22),
-                      child: GestureDetector(
+                    GestureDetector(
                         // onTap: (){
                         onTap: () async {
                           await authenticationService.logout();
@@ -443,31 +441,37 @@ class _AdminProfileState extends State<AdminProfile> {
                               MaterialPageRoute(
                                   builder: (context) => LoginScreen()));
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/logout.png',
-                                  color: Colors.black,
-                                  width: 30,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                ),
-                              ],
-                            ),
-                            // Icon(Icons.arrow_forward_ios,size: 20,)
-                          ],
+                      child: Container(
+                          color: Colors.transparent, 
+
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 22, right: 22),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/logout.png',
+                                    color: Colors.black,
+                                    width: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    'Logout',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1),
+                                  ),
+                                ],
+                              ),
+                              // Icon(Icons.arrow_forward_ios,size: 20,)
+                            ],
+                          ),
                         ),
                       ),
                     ),

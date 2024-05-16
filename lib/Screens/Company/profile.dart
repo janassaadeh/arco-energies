@@ -226,12 +226,7 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 22, right: 22),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
+                    GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -241,31 +236,39 @@ class Profile extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/car_w.png',
-                                  color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  'Cars',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                ),
-                              ],
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 22, right: 22),
+                        child: Container(
+                          color: Colors.transparent, 
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/car_w.png',
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    'Cars',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1),
+                                  ),
+                                ],
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 20,
+                              )
+                            ],
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          )
-                        ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -277,50 +280,55 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 22, right: 22),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllTransactions(
-                                company: company,
-                                mergedAndSorted: mergeAndSorted,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/Dollar Coin blue.png',
-                                  color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  'Transactions',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                ),
-                              ],
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 20,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                  GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AllTransactions(
+          company: company,
+          mergedAndSorted: mergeAndSorted,
+        ),
+      ),
+    );
+  },
+  child: Padding(
+    padding: const EdgeInsets.only(left: 22, right: 22),
+    child: Container(
+      color: Colors.transparent, // Ensure the entire area is tappable
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                'assets/images/Dollar Coin blue.png',
+                color: Colors.black,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                'Transactions',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  height: 1,
+                ),
+              ),
+            ],
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 20,
+          ),
+        ],
+      ),
+    ),
+  ),
+),
+
 
                     SizedBox(height: 15),
                     Container(
@@ -341,10 +349,7 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 15),
-
-                    Padding(
-                      padding: const EdgeInsets.only(left: 22, right: 22),
-                      child: GestureDetector(
+GestureDetector(
                         // onTap: (){
                         onTap: () async {
                           await authenticationService.logout();
@@ -353,31 +358,37 @@ class Profile extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) => LoginScreen()));
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/logout.png',
-                                  color: Colors.black,
-                                  width: 30,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                ),
-                              ],
-                            ),
-                            // Icon(Icons.arrow_forward_ios,size: 20,)
-                          ],
+                      child: Container(
+                          color: Colors.transparent, 
+
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 22, right: 22),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/logout.png',
+                                    color: Colors.black,
+                                    width: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    'Logout',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1),
+                                  ),
+                                ],
+                              ),
+                              // Icon(Icons.arrow_forward_ios,size: 20,)
+                            ],
+                          ),
                         ),
                       ),
                     ),

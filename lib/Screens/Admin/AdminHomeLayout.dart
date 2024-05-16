@@ -363,7 +363,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
             icon: Image.asset(
               "assets/images/Request Money.png",
               color: (_currentIndex == 1)
-                  ? Color(0xffD1495B)
+                  ? Color(0xff003D5B)
                   : Colors.grey.shade600,
             ),
             label: 'New Deposit',

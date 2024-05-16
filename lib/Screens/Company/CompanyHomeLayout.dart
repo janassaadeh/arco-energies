@@ -239,12 +239,12 @@ Future<void>_getCars()async{
         backgroundColor: const Color(0xff003D5B),
         actions: const [Padding(
           padding: EdgeInsets.only(right:8.0),
-          child: Icon(Icons.notifications,size:37,color: Colors.white,),
+          child: Icon(Icons.notifications,size:37,color:Color(0xff003D5B),),
         )],
       ),
       bottomNavigationBar: BottomNavigationBar(
       elevation:0.0,
-  selectedItemColor: const Color(0xffD1495B), // Set the color for the selected item
+  selectedItemColor: const Color(0xff003D5B), // Set the color for the selected item
   unselectedItemColor: Colors.grey.shade600, 
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -258,7 +258,7 @@ Future<void>_getCars()async{
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset("assets/images/Voucher.png",color: (_currentIndex==1)?const Color(0xffD1495B):Colors.grey.shade600,),
+            icon: Image.asset("assets/images/Voucher.png",color: (_currentIndex==1)?const Color(0xff003D5B):Colors.grey.shade600,),
             label: 'Offers',
           ),
           const BottomNavigationBarItem(
