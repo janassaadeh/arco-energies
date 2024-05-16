@@ -3,28 +3,39 @@ import 'package:company_pages/Screens/Admin/Manage%20Fields.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/operator_model.dart';
 import 'package:company_pages/Services/Auth/RegisterService.dart';
 import 'package:company_pages/Widgets/calendar_sheet.dart';
+// import 'package:company_pages/Widgets/calendar_sheet.dart';
 import 'package:flutter/material.dart';
 // import 'package:your_app_path_here/company_model.dart';
 
 import '../../../Widgets/Common/CustomButton.dart';
 import '../../../Widgets/Common/CustomInputFieldLarge.dart'; // Import your Company model
 
-class AddOperator extends StatelessWidget {
+class AddOperator extends StatefulWidget {
+  @override
+  State<AddOperator> createState() => _AddOperatorState();
+}
+
+class _AddOperatorState extends State<AddOperator> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
+
   final TextEditingController _passController = TextEditingController();
 
-  final TextEditingController _dobController =TextEditingController();
-  final TextEditingController _addressController=TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
 
-void _handleDateSelection(DateTime date) {
-  // Format the selected date to your desired format
-  String formattedDate = "${date.year}-${date.month}-${date.day}";
-  // Set the formatted date to the _dobController
-  _dobController.text = formattedDate;
-}
+  final TextEditingController _addressController = TextEditingController();
+
+  bool _addOpLoading = false;
+
+  void _handleDateSelection(DateTime date) {
+    // Format the selected date to your desired format
+    String formattedDate = "${date.year}-${date.month}-${date.day}";
+    // Set the formatted date to the _dobController
+    _dobController.text = formattedDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +72,11 @@ void _handleDateSelection(DateTime date) {
             Column(
               children: [
                 // Image.asset("assets/images/wallpaper.png"),
-                  Container(color: Color(0xff003D5B),width: double.infinity,height: 200,),
+                Container(
+                  color: Color(0xff003D5B),
+                  width: double.infinity,
+                  height: 200,
+                ),
                 Container(
                   color: Colors.white,
                   height: 600,
@@ -88,10 +103,10 @@ void _handleDateSelection(DateTime date) {
                 child: Column(
                   children: [
                     SizedBox(height: 80),
-                    
+
                     SizedBox(height: 25),
                     // Replace CustomInputFieldLarge with your desired input fields
-              
+
                     CustomInputFieldLarge(
                       controller: _nameController,
                       imagePath: 'assets/images/id.png',
@@ -122,59 +137,68 @@ void _handleDateSelection(DateTime date) {
                       imagePath: 'assets/images/Eye.png',
                       hintText: "Password",
                     ),
-                    SizedBox(height: 20,),
-                      GestureDetector(
-      onTap:(){
-showModalBottomSheet(
-  context: context,
-  builder: (BuildContext context) {
-    // Parse the date from the text field or use the default date if parsing fails
-// Parse the date from the text field or use the default date if parsing fails
-DateTime selectedDate;
-try {
-  // Split the date string into year, month, and day parts
-  List<String> parts = _dobController.text!.split('-');
-  int year = int.parse(parts[0]);
-  int month = int.parse(parts[1]);
-  int day = int.parse(parts[2]);
-
-  // Create a DateTime object from the parsed parts
-  selectedDate = DateTime(year, month, day);
-} catch (e) {
-  print('Error parsing date: $e');
-  // Use a default date if parsing fails
-  selectedDate = DateTime(2005, 1);
-}
-
-return CalendarBottomSheet  (
-  selectedDate: selectedDate,
-  onDateSelected: _handleDateSelection,
-);
-
-  },
-);
-
-      },
-       child: ManageFields(
-                      controller: _dobController,
-                      imagePath: 'assets/images/Calendar.png',
-                      hintText: "Date Of Birth",
-                      enabled: false,
+                    SizedBox(
+                      height: 20,
                     ),
-     ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            // Parse the date from the text field or use the default date if parsing fails
+// Parse the date from the text field or use the default date if parsing fails
+                            DateTime selectedDate;
+                            try {
+                              // Split the date string into year, month, and day parts
+                              List<String> parts =
+                                  _dobController.text!.split('-');
+                              int year = int.parse(parts[0]);
+                              int month = int.parse(parts[1]);
+                              int day = int.parse(parts[2]);
+
+                              // Create a DateTime object from the parsed parts
+                              selectedDate = DateTime(year, month, day);
+                            } catch (e) {
+                              print('Error parsing date: $e');
+                              // Use a default date if parsing fails
+                              selectedDate = DateTime(2005, 1);
+                            }
+
+                            return CalendarBottomSheet(
+                              selectedDate: selectedDate,
+                              onDateSelected: _handleDateSelection,
+                            );
+                          },
+                        );
+                      },
+                      child: ManageFields(
+                        controller: _dobController,
+                        imagePath: 'assets/images/Calendar.png',
+                        hintText: "Date Of Birth",
+                        enabled: false,
+                      ),
+                    ),
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
+                        setState(() {
+                          _addOpLoading = true;
+                        });
                         _addOperator(context);
+                        setState(() {
+                          _addOpLoading = false;
+                        });
                       },
-                      child: CustomButton(buttonText: "Add"),
+                      child: _addOpLoading
+                          ? CircularProgressIndicator()
+                          : CustomButton(buttonText: "Add"),
                     )
                   ],
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:30.0),
+              padding: const EdgeInsets.only(top: 30.0),
               child: Center(
                 child: CircleAvatar(
                   backgroundColor: Color(0xffC1BEBE),
@@ -189,49 +213,46 @@ return CalendarBottomSheet  (
     );
   }
 
- void _addOperator(BuildContext context) async {
-  
-  try {
-    RegistrationService registrationService = RegistrationService();
-    
-    // Register the new company
-    RegistrationResponse response = await registrationService.registerOperator(
-      name: _nameController.text,
-      // balance: 0.0,
-      email: _emailController.text,
-      password: _passController.text,
-      dob: _dobController.text,
-      phone: _phoneController.text,
-      address: _addressController.text,
-      
-    );
+  void _addOperator(BuildContext context) async {
+    try {
+      RegistrationService registrationService = RegistrationService();
 
-    // Extract the ID from the response
-    String operatorId = response.message ?? '';
+      // Register the new company
+      RegistrationResponse response =
+          await registrationService.registerOperator(
+        name: _nameController.text,
+        // balance: 0.0,
+        email: _emailController.text,
+        password: _passController.text,
+        dob: _dobController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+      );
 
-    // Create a new company object with the provided data
-    final newOperator = Operator(
-      id: operatorId,
-      name: _nameController.text,
-      dob: _dobController.text,
-      address: _addressController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-      imageId: ''
-    );
+      // Extract the ID from the response
+      String operatorId = response.message ?? '';
 
-    // If registration is successful, navigate back with the new company object
-    Navigator.pop(context, newOperator);
-  } catch (e) {
-    // Handle registration failure
-    print("Failed to register operator: $e");
-    // Show error message to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Failed to register operator. Please try again.'),
-      ),
-    );
+      // Create a new company object with the provided data
+      final newOperator = Operator(
+          id: operatorId,
+          name: _nameController.text,
+          dob: _dobController.text,
+          address: _addressController.text,
+          email: _emailController.text,
+          phone: _phoneController.text,
+          imageId: '');
+
+      // If registration is successful, navigate back with the new company object
+      Navigator.pop(context, newOperator);
+    } catch (e) {
+      // Handle registration failure
+      print("Failed to register operator: $e");
+      // Show error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to register operator. Please try again.'),
+        ),
+      );
+    }
   }
-}
-
 }

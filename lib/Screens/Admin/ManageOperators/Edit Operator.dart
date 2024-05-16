@@ -57,6 +57,7 @@ class _EditOperatorState extends State<EditOperator> {
 
   bool _viewRedemptionLoading = false;
   bool _viewTransactionsLoading = false;
+  bool _saveOpChangesLoading = false;
 
   void _handleDateSelection(DateTime date) {
     // Format the selected date to your desired format
@@ -116,7 +117,8 @@ class _EditOperatorState extends State<EditOperator> {
                       CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 62,
-                        child: (widget.imageData == null||widget.imageData == 'no image')
+                        child: (widget.imageData == null ||
+                                widget.imageData == 'no image')
                             ? Image.asset("assets/images/buisness_profile.png")
                             : ClipOval(
                                 child: Image.memory(
@@ -226,7 +228,7 @@ class _EditOperatorState extends State<EditOperator> {
                                         transactions: opTransactions,
                                         operator: widget.operator,
                                       )));
-                                      setState(() {
+                          setState(() {
                             _viewRedemptionLoading =
                                 false; // Set loading state to true
                           });
@@ -258,7 +260,8 @@ class _EditOperatorState extends State<EditOperator> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewRedemptionLoading
-                                      ? CircularProgressIndicator(color: Colors.white)
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white)
                                       : Text(
                                           'View Redemptions',
                                           style: TextStyle(
@@ -281,8 +284,7 @@ class _EditOperatorState extends State<EditOperator> {
                       GestureDetector(
                         onTap: () async {
                           setState(() {
-                            _viewTransactionsLoading =
-                                true; // Set loading state to true
+                            _viewTransactionsLoading = true;
                           });
                           TransactionService transactionService =
                               TransactionService();
@@ -308,9 +310,8 @@ class _EditOperatorState extends State<EditOperator> {
                                         pumps: widget.pumps,
                                         company: widget.operator,
                                       )));
-                                      setState(() {
-                            _viewTransactionsLoading =
-                                false; // Set loading state to true
+                          setState(() {
+                            _viewTransactionsLoading = false;
                           });
                         },
                         child: Padding(
@@ -340,7 +341,8 @@ class _EditOperatorState extends State<EditOperator> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewTransactionsLoading
-                                      ? CircularProgressIndicator(color: Colors.white)
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white)
                                       : Text(
                                           'View Transactions',
                                           style: TextStyle(
@@ -538,6 +540,9 @@ class _EditOperatorState extends State<EditOperator> {
                   const SizedBox(height: 40),
                   GestureDetector(
                     onTap: () async {
+                      setState(() {
+                        _saveOpChangesLoading = true;
+                      });
                       ImageService imageService = ImageService();
                       // print(base64Image1);
                       if (base64Image1 != null) {
@@ -545,8 +550,13 @@ class _EditOperatorState extends State<EditOperator> {
                             base64Image1, widget.operator.id);
                       }
                       _saveChanges(context);
+                      setState(() {
+                        _saveOpChangesLoading = false;
+                      });
                     },
-                    child: CustomButton(buttonText: "Save"),
+                    child: _saveOpChangesLoading
+                        ? CircularProgressIndicator()
+                        : CustomButton(buttonText: "Save"),
                   )
                 ],
               ),

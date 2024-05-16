@@ -142,7 +142,8 @@ class _EditCompanyState extends State<EditCompany> {
                       CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 62,
-                        child:(widget.imageData == null||widget.imageData == 'no image')
+                        child: (widget.imageData == null ||
+                                widget.imageData == 'no image')
                             ? Image.asset("assets/images/buisness_profile.png")
                             : ClipOval(
                                 child: Image.memory(
@@ -239,7 +240,7 @@ class _EditCompanyState extends State<EditCompany> {
                                         cars: cars,
                                         company: widget.company,
                                       )));
-                                            setState(() {
+                          setState(() {
                             _viewCarsLoading =
                                 false; // Set loading state to true
                           });
@@ -271,7 +272,8 @@ class _EditCompanyState extends State<EditCompany> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewCarsLoading
-                                      ? CircularProgressIndicator(color:Colors.white)
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white)
                                       : Text(
                                           'View Cars',
                                           style: TextStyle(
@@ -327,7 +329,7 @@ class _EditCompanyState extends State<EditCompany> {
                                       company: widget.company,
                                       cars: widget.allcars,
                                       pumps: widget.pumps)));
-                                         setState(() {
+                          setState(() {
                             _viewTransactionsLoading = false;
                           });
                         },
@@ -358,7 +360,8 @@ class _EditCompanyState extends State<EditCompany> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _viewTransactionsLoading
-                                      ? CircularProgressIndicator(color:Colors.white)
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white)
                                       : Text(
                                           'View Transactions',
                                           style: TextStyle(

@@ -8,7 +8,7 @@ import '../../Widgets/Rewards/reward.dart';
 class RewardScreen extends StatefulWidget {
   dynamic company;
   List<Reward> rewards;
-  
+
   RewardScreen({required this.company, required this.rewards, super.key});
 
   @override
@@ -48,15 +48,20 @@ class _RewardScreenState extends State<RewardScreen> {
                 height: 152,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
-                  boxShadow: [BoxShadow(
-                    color: Color.fromRGBO(132, 177, 203, 0.30000001192092896),
-                    offset: Offset(0, 3),
-                    blurRadius: 10,
-                  )],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(132, 177, 203, 0.30000001192092896),
+                      offset: Offset(0, 3),
+                      blurRadius: 10,
+                    )
+                  ],
                   gradient: LinearGradient(
                     begin: Alignment(-1.5, 1),
                     end: Alignment(1.5, 1),
-                    colors: [Color.fromRGBO(0, 61, 91, 1), Color.fromRGBO(2, 91, 134, 0.8999999761581421)],
+                    colors: [
+                      Color.fromRGBO(0, 61, 91, 1),
+                      Color.fromRGBO(2, 91, 134, 0.8999999761581421)
+                    ],
                   ),
                 ),
                 child: Padding(
@@ -70,7 +75,9 @@ class _RewardScreenState extends State<RewardScreen> {
                           Row(
                             children: [
                               Text(
-                                widget.company != null ? widget.company.pts.toString() : '0',
+                                widget.company != null
+                                    ? widget.company.pts.toString()
+                                    : '0',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 1),
@@ -130,14 +137,16 @@ class _RewardScreenState extends State<RewardScreen> {
               SizedBox(
                 height: widget.rewards.length * 110.0,
                 child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).padding.bottom + 50),
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.rewards.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () async {
                         RewardService rewardService = RewardService();
-                        var imageData = await rewardService.getQrCode(widget.company.id, widget.rewards[index].id);
+                        var imageData = await rewardService.getQrCode(
+                            widget.company.id, widget.rewards[index].id);
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -157,27 +166,37 @@ class _RewardScreenState extends State<RewardScreen> {
                                         const SizedBox(height: 5),
                                         Container(
                                           width: 76,
-                                          child: const Divider(thickness: 4, color: Color(0xffDEDEDE)),
+                                          child: const Divider(
+                                              thickness: 4,
+                                              color: Color(0xffDEDEDE)),
                                         ),
                                         const Padding(
                                           padding: EdgeInsets.all(12.0),
                                           child: Text(
                                             'Redeem Reward',
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
                                           ),
                                         ),
-                                        const Divider(thickness: 1, color: Color(0xffDEDEDE)),
+                                        const Divider(
+                                            thickness: 1,
+                                            color: Color(0xffDEDEDE)),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
                                             width: 100,
                                             height: 100,
-                                            child: Image.asset("assets/images/s1.png", fit: BoxFit.fill),
+                                            child: Image.asset(
+                                                "assets/images/s1.png",
+                                                fit: BoxFit.fill),
                                           ),
                                         ),
                                         Text(
                                           widget.rewards[index].name,
-                                          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                                          style: const TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w700),
                                         ),
                                         const SizedBox(height: 15),
                                         Container(
@@ -186,7 +205,9 @@ class _RewardScreenState extends State<RewardScreen> {
                                             child: Text(
                                               textAlign: TextAlign.center,
                                               'Visit our gas station and have one of our staff members scan your QR code to claim your reward.',
-                                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500),
                                             ),
                                           ),
                                         ),
@@ -196,7 +217,8 @@ class _RewardScreenState extends State<RewardScreen> {
                                           height: 280,
                                           child: Column(
                                             children: [
-                                              Image.memory(imageData, fit: BoxFit.fill),
+                                              Image.memory(imageData,
+                                                  fit: BoxFit.fill),
                                             ],
                                           ),
                                         ),
