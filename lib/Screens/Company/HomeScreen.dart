@@ -171,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                             : Features(
                                 color: Color.fromRGBO(237, 174, 73, 1),
                                 imageAsset: "assets/images/Traffic Jam.png",
-                                text: "Manage your cars.",
+                                text: "View your cars",
                               ),
                       ),
                       const SizedBox(
@@ -184,10 +184,21 @@ class HomeScreen extends StatelessWidget {
                               width: 152,
                               height: 135,
                             )
-                          : Features(
-                              color: Color.fromRGBO(0, 121, 140, 1),
-                              imageAsset: "assets/images/Money Bag.png",
-                              text: "Track your transactions.",
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AllTransactions(
+                                              mergedAndSorted: mergedAndSorted,
+                                              company: company,
+                                            )));
+                              },
+                              child: Features(
+                                color: Color.fromRGBO(0, 121, 140, 1),
+                                imageAsset: "assets/images/Money Bag.png",
+                                text: "Track your transactions",
+                              ),
                             ),
                       const SizedBox(
                         width: 18,
@@ -282,8 +293,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     )
                   : Container(
-                      height: 
-                          300.0, // Adjust the height as needed
+                      height: 300.0, // Adjust the height as needed
                       child: ListView.builder(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).padding.bottom +
@@ -305,7 +315,8 @@ class HomeScreen extends StatelessWidget {
                                   id: item.id,
                                   price: item.cashAmount,
                                   type: "+",
-                                  day: _calculateDaysAgo(convertToLebanonTime(item.timestamp)),
+                                  day: _calculateDaysAgo(
+                                      convertToLebanonTime(item.timestamp)),
                                 ),
                               ],
                             );
@@ -334,7 +345,7 @@ String _calculateDaysAgo(String transactionDateString) {
   final transactionDate = DateTime.parse(transactionDateString);
   final currentDate = DateTime.now();
   final difference = currentDate.difference(transactionDate);
-    if (difference == 0) {
+  if (difference == 0) {
     return "Today";
   } else if (difference == 1) {
     return "Yesterday";
@@ -355,7 +366,7 @@ String _calculateDaysAgo2(String transactionDateString) {
   final DateTime currentDate = DateTime.now();
   final Duration difference = currentDate.difference(transactionDate);
 
-    if (difference == 0) {
+  if (difference == 0) {
     return "Today";
   } else if (difference == 1) {
     return "Yesterday";

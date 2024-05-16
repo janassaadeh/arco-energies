@@ -25,7 +25,7 @@ import '../Manage Fields.dart';
 class EditCar extends StatefulWidget {
   final Vehicle car;
   final dynamic company;
-   dynamic imageData;
+  dynamic imageData;
 
   EditCar({required this.car, required this.company, required this.imageData});
 
@@ -47,12 +47,13 @@ class _EditCarState extends State<EditCar> {
   late TextEditingController _modelNameController;
 
   late TextEditingController _carIdController;
-   dynamic base64Image1;
+  dynamic base64Image1;
 
   @override
   Widget build(BuildContext context) {
     _modelController = TextEditingController(text: widget.car.model);
-    _plateNumberController = TextEditingController(text: widget.car.plateNumber);
+    _plateNumberController =
+        TextEditingController(text: widget.car.plateNumber);
     _yearController = TextEditingController(text: widget.car.year.toString());
     _colorController = TextEditingController(text: widget.car.color);
     _driverNameController = TextEditingController(text: widget.car.driverName);
@@ -60,116 +61,129 @@ class _EditCarState extends State<EditCar> {
     _carIdController = TextEditingController(text: widget.car.id.toString());
 
     return Scaffold(
-  appBar: AppBar(
+      appBar: AppBar(
         leading: GestureDetector(
-          onTap: (){
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            )),
         title: Center(
-          child:  Text('Edit Car',style: TextStyle(
-                  color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
-                ),),
+          child: Text(
+            'Edit Car',
+            style: TextStyle(
+                color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
+          ),
         ),
         backgroundColor: const Color(0xff003D5B),
-        actions: [const Padding(
-          padding: EdgeInsets.only(right:8.0),
-          child: Icon(Icons.edit,size:37,color: const Color(0xff003D5B)),
-        )],
+        actions: [
+          const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.edit, size: 37, color: const Color(0xff003D5B)),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           // clipBehavior: Clip.none,
           children: [
-                        SizedBox(height: 40,),
-     Padding(
-       padding: const EdgeInsets.only(bottom:40),
-       child: Center(
-         child: Stack(
-           children: [
-             CircleAvatar(
-               backgroundColor: Color(0xffC1BEBE),
-               radius: 67,
-               child:(widget.imageData==null)?Image.asset("assets/images/car_profile.png"):
-               ClipOval(
-                 child: Image.memory(
-                           widget.imageData!,
-                           fit: BoxFit.cover, // Adjust the fit as needed
-                           width: 134, // Set the width and height to ensure the image is circular
-                           height: 134,
-                         ),
-               ),
-             ),
-                 Positioned(
-               top: 5, 
-               right: 0, 
-               child: Container(
-                     width: 30, // Adjust the width of the container as needed
-                     height: 30, // Adjust the height of the container as needed
-                     decoration: BoxDecoration(
-             color: Colors.grey, // You can set your desired background color
-             shape: BoxShape.circle, // This makes it a circle
-             //           boxShadow: [
-             // BoxShadow(
-             //   color: Colors.black.withOpacity(0.3), // Shadow color
-             //   spreadRadius: 2, // Spread radius
-             //   blurRadius: 4, // Blur radius
-             //   offset: const Offset(0, 2), // Offset
-             // ),
-                     // ],
-                     ),
-                     child: Padding(
-             padding: const EdgeInsets.all(4),
-             child: GestureDetector(
-               onTap: (){
-                   
-                 final picker = ImagePicker();
-                   
-                   Future<void> _openImagePicker() async {
-                     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                   
-                     if (pickedFile != null) {
-             final file = File(pickedFile.path);
-             final bytes = await file.readAsBytes();
-             final base64Image = base64Encode(bytes);
-             final image = "data:image/png;base64,$base64Image";
-                                     
-             // Now you have the base64-encoded image
-             // print("Base64 Image: $base64Image");
-                   // print(base64Image);
-                   
-             setState(() {
-               widget.imageData = bytes; // Set the picked image file
-                // Update the profileAvatar URL
-                base64Image1=base64Image;
-             });
-             // print(base64Image1);
-       
-                 
-             // print(imgUrl);
-                     } else {
-             // Handle no image picked error
-                     }
-                   }
-               _openImagePicker();
-               },
-               child: Center(
-                 child: Icon(Icons.add)
-               ),
-             ),
-                     ),
-               ),
-             ),
-           ],
-         ),
-       ),
-     ),
-     
+            SizedBox(
+              height: 40,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Color(0xffC1BEBE),
+                      radius: 67,
+                      child: (widget.imageData == null ||
+                              widget.imageData == 'no image')
+                          ? Image.asset("assets/images/car_profile.png")
+                          : ClipOval(
+                              child: Image.memory(
+                                widget.imageData!,
+                                fit: BoxFit.cover, // Adjust the fit as needed
+                                width:
+                                    134, // Set the width and height to ensure the image is circular
+                                height: 134,
+                              ),
+                            ),
+                    ),
+                    Positioned(
+                      top: 5,
+                      right: 0,
+                      child: Container(
+                        width:
+                            30, // Adjust the width of the container as needed
+                        height:
+                            30, // Adjust the height of the container as needed
+                        decoration: BoxDecoration(
+                          color: Colors
+                              .grey, // You can set your desired background color
+                          shape: BoxShape.circle, // This makes it a circle
+                          //           boxShadow: [
+                          // BoxShadow(
+                          //   color: Colors.black.withOpacity(0.3), // Shadow color
+                          //   spreadRadius: 2, // Spread radius
+                          //   blurRadius: 4, // Blur radius
+                          //   offset: const Offset(0, 2), // Offset
+                          // ),
+                          // ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: GestureDetector(
+                            onTap: () {
+                              final picker = ImagePicker();
+
+                              Future<void> _openImagePicker() async {
+                                final pickedFile = await picker.pickImage(
+                                    source: ImageSource.gallery);
+
+                                if (pickedFile != null) {
+                                  final file = File(pickedFile.path);
+                                  final bytes = await file.readAsBytes();
+                                  final base64Image = base64Encode(bytes);
+                                  final image =
+                                      "data:image/png;base64,$base64Image";
+
+                                  // Now you have the base64-encoded image
+                                  // print("Base64 Image: $base64Image");
+                                  // print(base64Image);
+
+                                  setState(() {
+                                    widget.imageData =
+                                        bytes; // Set the picked image file
+                                    // Update the profileAvatar URL
+                                    base64Image1 = base64Image;
+                                  });
+                                  // print(base64Image1);
+
+                                  // print(imgUrl);
+                                } else {
+                                  // Handle no image picked error
+                                }
+                              }
+
+                              _openImagePicker();
+                            },
+                            child: Center(child: Icon(Icons.add)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 0.0),
               child: Column(
                 children: [
-                 
                   // Text(
                   //   widget.company.name,
                   //   textAlign: TextAlign.center,
@@ -183,14 +197,17 @@ class _EditCarState extends State<EditCar> {
                   SizedBox(
                     height: 25,
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Plate Number",style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffA9A7A7),
-                                    ),),
+                      child: Text(
+                        "Plate Number",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
                     ),
                   ),
                   ManageFields(
@@ -201,14 +218,17 @@ class _EditCarState extends State<EditCar> {
                   const SizedBox(
                     height: 20,
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Year",style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffA9A7A7),
-                                    ),),
+                      child: Text(
+                        "Year",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
                     ),
                   ),
                   ManageFields(
@@ -219,14 +239,17 @@ class _EditCarState extends State<EditCar> {
                   const SizedBox(
                     height: 20,
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Color",style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffA9A7A7),
-                                    ),),
+                      child: Text(
+                        "Color",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
                     ),
                   ),
                   ManageFields(
@@ -237,14 +260,17 @@ class _EditCarState extends State<EditCar> {
                   const SizedBox(
                     height: 20,
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Driver Name",style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffA9A7A7),
-                                    ),),
+                      child: Text(
+                        "Driver Name",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
                     ),
                   ),
                   ManageFields(
@@ -255,14 +281,17 @@ class _EditCarState extends State<EditCar> {
                   const SizedBox(
                     height: 20,
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(left:40.0,bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Model Name",style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xffA9A7A7),
-                                    ),),
+                      child: Text(
+                        "Model Name",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
                     ),
                   ),
                   ManageFields(
@@ -275,8 +304,6 @@ class _EditCarState extends State<EditCar> {
                   ),
                   GestureDetector(
                       onTap: () async {
-
-
                         final editedCar = Vehicle(
                             model: _modelController.text,
                             plateNumber: _plateNumberController.text,
@@ -291,7 +318,6 @@ class _EditCarState extends State<EditCar> {
                         VehicleCompanyService vehicleCompanyService =
                             VehicleCompanyService();
                         try {
-                          
                           await vehicleCompanyService.updateVehicleForCompany(
                               widget.company.id,
                               widget.car.id,
@@ -301,11 +327,13 @@ class _EditCarState extends State<EditCar> {
                               editedCar.plateNumber,
                               editedCar.driverName,
                               editedCar.color);
-                                                           ImageService imageService =ImageService();
-              if (base64Image1 != null && base64Image1!=widget.imageData) {
-      ImageService imageService = ImageService();
-      await imageService.uploadImageForCar(base64Image1, widget.car.id);
-    } 
+                          ImageService imageService = ImageService();
+                          if (base64Image1 != null &&
+                              base64Image1 != widget.imageData) {
+                            ImageService imageService = ImageService();
+                            await imageService.uploadImageForCar(
+                                base64Image1, widget.car.id);
+                          }
                           Navigator.pop(context,
                               editedCar); // Pass edited company object back to the previous screen
                         } catch (e) {
@@ -318,11 +346,12 @@ class _EditCarState extends State<EditCar> {
                         }
                       },
                       child: CustomButton(buttonText: "Save"))
-
                 ],
               ),
             ),
-         SizedBox(height: 40,)
+            SizedBox(
+              height: 40,
+            )
           ],
         ),
       ),

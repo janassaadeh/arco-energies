@@ -184,7 +184,7 @@ class _DashBoardState extends State<DashBoard> {
                             //   context,
                             // ),
                           ),
-                          const SizedBox(width: 18),
+                          const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () async {
                               push(CarAccess(), context);
@@ -203,57 +203,60 @@ class _DashBoardState extends State<DashBoard> {
                             // ),
                           ),
                           SizedBox(
-                            width: 18,
+                            width: 10,
                           ),
 
 // GestureDetector part of the code
-GestureDetector(
-  onTap: () async {
-    // Navigate to QRViewExample and wait for the result
-    final qrText = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => QRViewExample()),
-    );
+                          GestureDetector(
+                            onTap: () async {
+                              // Navigate to QRViewExample and wait for the result
+                              final qrText = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QRViewExample()),
+                              );
 
-    void _showErrorDialog(String errorMessage) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ErrorPopUp(
-            text: errorMessage,
-          );
-        },
-      );
-    }
+                              void _showErrorDialog(String errorMessage) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ErrorPopUp(
+                                      text: errorMessage,
+                                    );
+                                  },
+                                );
+                              }
 
-    if (qrText != null) {
-      print("qrText $qrText");
-      List<String> parts = qrText.split(" ");
-      RewardService rewardService = RewardService();
-  
-      try {
-        // Attempt to redeem reward
-        await rewardService.redeemReward(parts[1], parts[0]);
-            if (mounted) {
-          _showErrorDialog('Reward has been redeemed successfully !');
-        }
-      } catch (e) {
-        // Show error dialog on failure
-        if (mounted) {
-          _showErrorDialog('Insufficient points balance to redeem the reward');
-        }
-      }
-    }
-  },
+                              if (qrText != null) {
+                                print("qrText $qrText");
+                                List<String> parts = qrText.split(" ");
+                                RewardService rewardService = RewardService();
 
-
-
-
+                                try {
+                                  // Attempt to redeem reward
+                                  await rewardService.redeemReward(
+                                      parts[1], parts[0]);
+                                  if (mounted) {
+                                    _showErrorDialog(
+                                        'Reward has been redeemed successfully !');
+                                  }
+                                } catch (e) {
+                                  // Show error dialog on failure
+                                  if (mounted) {
+                                    _showErrorDialog(
+                                        'Insufficient points balance to redeem the reward');
+                                  }
+                                }
+                              }
+                            },
                             child: Features(
                               color: const Color.fromRGBO(0, 121, 140, 1),
                               imageAsset: "assets/images/Qr Code.png",
-                              text: "Scan QR for company rewards.",
+                              text: "Scan QR for company rewards",
                             ),
+                          ),
+                          SizedBox(
+                            width: 18,
                           ),
                         ],
                       ),
@@ -362,7 +365,7 @@ GestureDetector(
                                               children: [
                                                 Text(
                                                   recentPrice != null
-                                                      ? '\$ / liter  ${recentPrice.toStringAsFixed(2)} '
+                                                      ? '\$/ltr  ${recentPrice.toStringAsFixed(2)} '
                                                       : 'No price available',
                                                   style: const TextStyle(
                                                     color: Color.fromARGB(

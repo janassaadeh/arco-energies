@@ -250,7 +250,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  push(AllRewards(rewards:widget.rewards), context);
+                                  push(AllRewards(rewards: widget.rewards),
+                                      context);
                                 },
                                 child: Features(
                                   color: Color.fromRGBO(209, 73, 91, 1),
@@ -259,7 +260,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 ),
                               ),
                               const SizedBox(
-                                width: 10,
+                                width: 18,
                               ),
                             ],
                           ),

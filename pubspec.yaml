@@ -53,7 +53,11 @@ dependencies:
   jwt_decoder: ^2.0.1
   # table_calendar: ^2.3.3
   local_auth: ^2.1.8
-  syncfusion_flutter_calendar: ^19.4.47
+  timezone: ^0.9.3
+  # syncfusion_flutter_calendar: ^25.2.4
+  table_calendar: ^3.0.9
+  # syncfusion_flutter_calendar: ^25.2.4
+  # syncfusion_flutter_calendar: ^19.4.47
   # firebase_core: ^2.27.0
   # firebase_messaging: ^14.7.19
 

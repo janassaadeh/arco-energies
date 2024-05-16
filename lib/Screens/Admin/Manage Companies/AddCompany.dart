@@ -6,15 +6,27 @@ import 'package:flutter/material.dart';
 import '../../../Widgets/Common/CustomButton.dart';
 import '../../../Widgets/Common/CustomInputFieldLarge.dart'; // Import your Company model
 
-class AddCompany extends StatelessWidget {
+class AddCompany extends StatefulWidget {
+  @override
+  State<AddCompany> createState() => _AddCompanyState();
+}
+
+class _AddCompanyState extends State<AddCompany> {
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _contactNameController = TextEditingController();
+
   final TextEditingController _locationController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
+
   final TextEditingController _balanceController = TextEditingController();
+
   final TextEditingController _passController = TextEditingController();
-  
+
+  bool _addCoLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +63,11 @@ class AddCompany extends StatelessWidget {
             Column(
               children: [
                 // Image.asset("assets/images/wallpaper.png"),
-                Container(color: Color(0xff003D5B),width: double.infinity,height: 200,),
+                Container(
+                  color: Color(0xff003D5B),
+                  width: double.infinity,
+                  height: 200,
+                ),
                 Container(
                   color: Colors.white,
                   height: 600,
@@ -78,7 +94,7 @@ class AddCompany extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 80),
-                    
+
                     SizedBox(height: 25),
                     // Replace CustomInputFieldLarge with your desired input fields
                     CustomInputFieldLarge(
@@ -117,20 +133,28 @@ class AddCompany extends StatelessWidget {
                       imagePath: 'assets/images/Eye.png',
                       hintText: "Password",
                     ),
-               
+
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
+                        setState(() {
+                          _addCoLoading = true;
+                        });
                         _addCompany(context);
+                        setState(() {
+                          _addCoLoading = false;
+                        });
                       },
-                      child: CustomButton(buttonText: "Add"),
+                      child: _addCoLoading
+                          ? CircularProgressIndicator()
+                          : CustomButton(buttonText: "Add"),
                     )
                   ],
                 ),
               ),
             ),
-                Padding(
-              padding: const EdgeInsets.only(top:30.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
               child: Center(
                 child: CircleAvatar(
                   backgroundColor: Color(0xffC1BEBE),
@@ -145,50 +169,48 @@ class AddCompany extends StatelessWidget {
     );
   }
 
- void _addCompany(BuildContext context) async {
-  
-  try {
-    RegistrationService registrationService = RegistrationService();
-    
-    // Register the new company
-    RegistrationResponse response = await registrationService.registerCompanyByAdmin(
-      name: _nameController.text,
-      balance: 0.0,
-      email: _emailController.text,
-      password: _passController.text,
-      contactName: _contactNameController.text,
-      phone: _phoneController.text,
-      location: _locationController.text,
-    );
+  void _addCompany(BuildContext context) async {
+    try {
+      RegistrationService registrationService = RegistrationService();
 
-    // Extract the ID from the response
-    String companyId = response.message ?? '';
+      // Register the new company
+      RegistrationResponse response =
+          await registrationService.registerCompanyByAdmin(
+        name: _nameController.text,
+        balance: 0.0,
+        email: _emailController.text,
+        password: _passController.text,
+        contactName: _contactNameController.text,
+        phone: _phoneController.text,
+        location: _locationController.text,
+      );
 
-    // Create a new company object with the provided data
-    final newCompany = Company(
-      id: companyId,
-      name: _nameController.text,
-      contactName: _contactNameController.text,
-      location: _locationController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-      balance: 0.0,
-      imageId: '' ,
-      activated: true
-    );
+      // Extract the ID from the response
+      String companyId = response.message ?? '';
 
-    // If registration is successful, navigate back with the new company object
-    Navigator.pop(context, newCompany);
-  } catch (e) {
-    // Handle registration failure
-    print("Failed to register company: $e");
-    // Show error message to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Failed to register company. Please try again.'),
-      ),
-    );
+      // Create a new company object with the provided data
+      final newCompany = Company(
+          id: companyId,
+          name: _nameController.text,
+          contactName: _contactNameController.text,
+          location: _locationController.text,
+          email: _emailController.text,
+          phone: _phoneController.text,
+          balance: 0.0,
+          imageId: '',
+          activated: true);
+
+      // If registration is successful, navigate back with the new company object
+      Navigator.pop(context, newCompany);
+    } catch (e) {
+      // Handle registration failure
+      print("Failed to register company: $e");
+      // Show error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to register company. Please try again.'),
+        ),
+      );
+    }
   }
-}
-
 }

@@ -131,7 +131,7 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
           ),
           const SizedBox(height: 10),
           _buildSection(
-            title: 'Fuel Diesel Price',
+            title: 'Diesel Price',
             child: buildInput(
               "Enter Diesel Price",
               dollarText(),

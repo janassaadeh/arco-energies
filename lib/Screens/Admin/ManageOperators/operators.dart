@@ -44,6 +44,8 @@ class _MyOperatorsState extends State<Operators>
   late List<Operator> filteredOperators;
   List<dynamic?> imageDataList = [];
 
+  bool operaotDeletionLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -143,6 +145,8 @@ class _MyOperatorsState extends State<Operators>
                     );
                     if (newOperator != null) {
                       setState(() {
+                        imageDataList.add('no image');
+                        widget.operators.add(newOperator);
                         filteredOperators.add(
                             newOperator); // Add the new company to the list
                         controllers.add(SlidableController(
@@ -199,10 +203,10 @@ class _MyOperatorsState extends State<Operators>
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 18,
-                                              left: 22,
-                                              bottom: 18,
-                                              right: 10),
+                                            top: 18,
+                                            left: 22,
+                                            bottom: 18,
+                                          ),
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.red,
@@ -369,12 +373,17 @@ class _MyOperatorsState extends State<Operators>
               },
             ),
             CupertinoDialogAction(
-              child: Text(
-                'Confirm',
-                style: TextStyle(color: Color(0xFF0169AA)),
-              ),
+              child: operaotDeletionLoading
+                  ? CircularProgressIndicator()
+                  : Text(
+                      'Confirm',
+                      style: TextStyle(color: Color(0xFF0169AA)),
+                    ),
               onPressed: () async {
                 try {
+                  setState(() {
+                    operaotDeletionLoading = true;
+                  });
                   OperatorService operatorService = OperatorService();
                   // Call deleteOperator function to delete the operator
                   await operatorService
@@ -393,6 +402,10 @@ class _MyOperatorsState extends State<Operators>
                   }
 
                   Navigator.pop(context);
+
+                  setState(() {
+                    operaotDeletionLoading = false;
+                  });
 
                   // Show a success Snackbar
                   ScaffoldMessenger.of(context).showSnackBar(
