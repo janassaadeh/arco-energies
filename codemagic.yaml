@@ -11,13 +11,5 @@ workflows:
           cd ios
           pod install
           cd ..
-      - name: Install fastlane
-        script: |
-          gem install fastlane -NV
-          fastlane install_plugins
       - name: Build iOS
-        script: |
-          flutter build ios --release
-      - name: Code Signing
-        script: |
-          fastlane match appstore
+        script: flutter build ios --release
