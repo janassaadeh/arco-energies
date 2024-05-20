@@ -12,4 +12,4 @@ workflows:
           pod install
           cd ..
       - name: Build iOS
-        script: flutter build ios --release
+        script: flutter build ios --debug
