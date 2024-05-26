@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface CashAdditionEventRepository extends MongoRepository<CashAdditionEvent, String> {
     List<CashAdditionEvent> findByCompanyId(String companyId);
-    List<CashAdditionEvent> findByAdminId(String adminId);
+    List<CashAdditionEvent> findByOperatorId(String adminId);
     // You can define custom query methods here if needed
 }

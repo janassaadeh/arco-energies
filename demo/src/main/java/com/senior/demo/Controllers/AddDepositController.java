@@ -45,9 +45,9 @@ public class AddDepositController {
         List<CashAdditionEvent> cashEvents = addDepositService.getCashAdditionEventsByCompanyId(companyId);
         return new ResponseEntity<>(cashEvents, HttpStatus.OK);
     }
-    @GetMapping("/admin/{adminId}")
-    public ResponseEntity<List<CashAdditionEvent>> getCashAdditionEventsByAdminId(@PathVariable String adminId) {
-        List<CashAdditionEvent> cashEvents = addDepositService.getCashAdditionEventsByAdminId(adminId);
+    @GetMapping("/operator/{operatorId}")
+    public ResponseEntity<List<CashAdditionEvent>> getCashAdditionEventsByOperatorId(@PathVariable String operatorId) {
+        List<CashAdditionEvent> cashEvents = addDepositService.getCashAdditionEventsByAdminId(operatorId);
         return new ResponseEntity<>(cashEvents, HttpStatus.OK);
     }
     @GetMapping("/receipt/{id}")

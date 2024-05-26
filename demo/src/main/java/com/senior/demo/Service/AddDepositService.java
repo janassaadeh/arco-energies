@@ -6,6 +6,7 @@ import com.senior.demo.Collections.Company;
 import com.senior.demo.Repository.CashAdditionEventRepository;
 import com.senior.demo.Repository.CompanyRepository;
 import com.senior.demo.Responses.AdminResponse;
+import com.senior.demo.Responses.OperatorResponse;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -45,7 +46,7 @@ public class AddDepositService {
 
     // Method to get cash addition events by admin ID
     public List<CashAdditionEvent> getCashAdditionEventsByAdminId(String adminId) {
-        return cashAdditionEventRepository.findByAdminId(adminId);
+        return cashAdditionEventRepository.findByOperatorId(adminId);
     }
 
     public Map<String, Object> addCashAndSendEmail(String companyId, double cashAmount, String paymentMethod, Authentication authentication) {
@@ -57,7 +58,7 @@ public class AddDepositService {
         company.setBalance(newBalance);
         companyRepository.save(company);
 
-        AdminResponse admin = userService.getAdmin(authentication);
+        OperatorResponse admin = userService.getOperator(authentication);
         if (admin == null) {
             throw new RuntimeException("Admin not found");
         }
