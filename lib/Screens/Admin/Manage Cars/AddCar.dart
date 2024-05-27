@@ -3,6 +3,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
+import 'package:company_pages/Widgets/Common/select.dart';
 //
 import 'package:flutter/material.dart';
 
@@ -14,16 +15,31 @@ import '../../../Widgets/profile/link.dart';
 import '../../Auth/Login.dart';
 import '../Car_Model.dart';
 
-class AddCar extends StatelessWidget {
+class AddCar extends StatefulWidget {
   final Company company;
   AddCar({required this.company});
+
+  @override
+  State<AddCar> createState() => _AddCarState();
+}
+
+class _AddCarState extends State<AddCar> {
   final TextEditingController _modelController = TextEditingController();
+
   final TextEditingController _plateNumberController = TextEditingController();
+
+  final TextEditingController _plateNumberPrefixController = TextEditingController();
+
   final TextEditingController _yearController = TextEditingController();
+
   final TextEditingController _colorController = TextEditingController();
+
   final TextEditingController _driverNameController = TextEditingController();
+
   // final TextEditingController _modelNameController = TextEditingController();
   final TextEditingController _carIdController = TextEditingController();
+  List<String> list=['A','B','O','T'];
+  int selectedIndex=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +102,7 @@ class AddCar extends StatelessWidget {
                       height: 90,
                     ),
                     Text(
-                      company.name,
+                      widget.company.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1),
@@ -98,10 +114,103 @@ class AddCar extends StatelessWidget {
                     SizedBox(
                       height: 25,
                     ),
-                    CustomInputFieldLarge(
-                      controller: _plateNumberController,
-                      imagePath: 'assets/images/Licence Plate.png',
-                      hintText: "Plate Number",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // CustomInputFieldLarge(
+                        //   controller: _plateNumberController,
+                        //   imagePath: 'assets/images/Licence Plate.png',
+                        //   hintText: "Plate Number",
+                        // ),
+                             GestureDetector(
+                    onTap: (){
+                      
+                                showModalBottomSheet(
+                                  barrierColor: Colors.transparent,
+                      
+                                        context: context,
+                                        builder: (BuildContext context) {
+                            return Material(
+                              child: SelectionList(
+                                itemList: list,
+                                selectedIndex: selectedIndex,
+                                onItemSelected: (index) {
+                                  setState(() {
+
+                                    selectedIndex = index;
+                                    _plateNumberPrefixController.text=list[index];
+
+                                    print(index);
+                                  });
+                                  Navigator.pop(context); // Close the bottom sheet
+                                },
+                              ),
+                            );
+                                        },
+                                      );
+                    },
+                             child: Container(
+                                 width: 70,
+                                 height: 62,
+                                 decoration: BoxDecoration(
+                                   borderRadius: BorderRadius.circular(10),
+                                   color: const Color.fromRGBO(196, 196, 196, 0.2),
+                                 ),
+                                 child: Padding(
+                                   padding: const EdgeInsets.only(left: 18, right: 8, bottom: 25, top: 11),
+                                   child: TextFormField(
+                                     controller: _plateNumberPrefixController,
+                                     enabled: false,
+                                     decoration: InputDecoration(
+                                       border: const OutlineInputBorder(borderSide: BorderSide.none),
+                                      
+                                       contentPadding: const EdgeInsets.symmetric(
+                                           vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+                           
+                                       hintStyle: const TextStyle(
+                                         color: Color.fromRGBO(0, 0, 0, 0.5),
+                                         fontFamily: 'Mulish',
+                                         fontSize: 16,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                      
+                                     ),
+                                   ),
+                                 ),
+                               ),
+                           ),
+    SizedBox(width: 10,),
+                         Container(
+      width: 250,
+      height: 62,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromRGBO(196, 196, 196, 0.2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 8, bottom: 8, top: 11),
+        child: TextFormField(
+          controller: _plateNumberController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(borderSide: BorderSide.none),
+            hintText: "Plate Number",
+            
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 15.0, horizontal: 10.0), // Adjust padding as needed
+
+            hintStyle: const TextStyle(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              fontFamily: 'Mulish',
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
+           
+          ),
+        ),
+      ),
+    )
+                      ],
                     ),
                     const SizedBox(
                       height: 20,
@@ -144,18 +253,19 @@ class AddCar extends StatelessWidget {
                               VehicleCompanyService();
                           final car =
                               await vehicleCompanyService.addVehicleForCompany(
-                                  company.id,
+                                  widget.company.id,
                                   'car',
                                   int.parse(_yearController.text),
                                   _modelController.text,
-                                  _plateNumberController.text,
+                                 _plateNumberPrefixController.text+_plateNumberController.text,
                                   _driverNameController.text,
                                   _colorController.text);
                           final newCar = Vehicle(
                             id: car.id,
                             type: 'Car',
                             model: _modelController.text,
-                            plateNumber: _plateNumberController.text,
+                            plateNumber: _plateNumberPrefixController.text+_plateNumberController.text,
+
                             year: int.tryParse(_yearController.text) ?? 0,
                             color: _colorController.text,
                             driverName: _driverNameController.text,

@@ -21,8 +21,9 @@ class PaymentMethodEntryBody extends StatefulWidget {
 }
 
 class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
+  int selectedMethod = 1;
   TextEditingController _PaymentMethodController = TextEditingController();
-  int selectedMethod = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,7 +64,7 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
                   );
                 },
                 child: buildInputF(
-                  "Select Payment Method",
+                  "Cash",
                   Image.asset('assets/images/down.png'),
                   true,
                   _PaymentMethodController,

@@ -118,7 +118,7 @@ class _MyOperatorsState extends State<Operators>
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+               Navigator.pop(context,widget.operators);
               },
               child: Icon(
                 Icons.arrow_back_ios,

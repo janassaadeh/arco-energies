@@ -81,7 +81,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'https://arcoenergies.onrender.com/deposit/admin/$adminId',
+        'https://arcoenergies.onrender.com/deposit/operator/$adminId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

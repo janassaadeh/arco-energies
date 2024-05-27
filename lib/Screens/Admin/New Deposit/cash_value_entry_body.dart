@@ -46,18 +46,51 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
               const SizedBox(height: 12),
               buildImageContainer("assets/images/cash_amount.png", true),
               const SizedBox(height: 8),
-              buildInput(
-                "Cash Amount",
-                const Text(
+              // buildInput(
+              //   "Cash Amount",
+              //   const Text(
+              //     "Dollars (\$)",
+              //     style: TextStyle(
+              //       color: Color.fromRGBO(114, 212, 171, 1),
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              //   true,
+              //   cashController,
+              // ),
+               Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromRGBO(196, 196, 196, 0.2),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding:const EdgeInsets.symmetric(horizontal: 18.0),
+            child: TextFormField(
+                    controller: cashController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: 'Cash Amount',
+                      border: InputBorder.none,
+                    ),
+                  ),
+          ),
+        ),
+        const Text(
                   "Dollars (\$)",
                   style: TextStyle(
                     color: Color.fromRGBO(114, 212, 171, 1),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                true,
-                cashController,
-              ),
+        const SizedBox(
+          width: 15,
+        )
+      ],
+    ),
+  ),
               const SizedBox(height: 5),
               buildSecondText("Double-check the cash amount to avoid errors."),
               const SizedBox(height: 20),

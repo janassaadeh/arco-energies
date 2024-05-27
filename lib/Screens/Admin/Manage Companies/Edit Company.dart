@@ -499,6 +499,7 @@ class _EditCompanyState extends State<EditCompany> {
                     controller: _emailController,
                     imagePath: 'assets/images/Letter.png',
                     hintText: "Email",
+                    enabled: false,
                   ),
                   const SizedBox(height: 20),
                   Padding(

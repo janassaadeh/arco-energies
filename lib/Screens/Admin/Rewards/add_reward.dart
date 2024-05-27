@@ -123,8 +123,10 @@ class _AddRewardState extends State<AddReward> {
                                 itemList:categories,
                                 selectedIndex: selectedCategory,
                                 onItemSelected: (index) {
+                                  print(categories[selectedCategory]);
                                   setState(() {
                                     selectedCategory = index;
+                                    
                                     _categoryController.text=categories[selectedCategory];
                                   });
                                   Navigator.pop(context); // Close the bottom sheet
@@ -135,7 +137,7 @@ class _AddRewardState extends State<AddReward> {
                                       );
                     },
                     child: ManageFields(
-                      controller: _ptsController,
+                      controller: _categoryController,
                       imagePath: '',
                       hintText: "Cateory",
                       enabled: false,
