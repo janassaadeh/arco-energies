@@ -57,6 +57,7 @@ class _AddCompanyState extends State<AddCompany> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
