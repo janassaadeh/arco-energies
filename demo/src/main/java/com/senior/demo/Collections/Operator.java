@@ -2,6 +2,7 @@ package com.senior.demo.Collections;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +12,21 @@ import java.util.List;
 public class Operator extends User {
     private String dob;
     private String address;
-    private List<Transaction> transactions=new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
-//    private  String imageId;
-    public Operator(String id,String email, String password, Role role, String phone, String name, String dob, String address,String imageId) {
-        super(id,email, password, role, phone, name,imageId);
+    @Field("deviceTokens")
+    private List<String> deviceTokens;
+
+    public Operator(String id, String email, String password, Role role, String phone, String name, String dob, String address, String imageId, List<String> deviceTokens) {
+        super(id, email, password, role, phone, name, imageId);
         this.dob = dob;
         this.address = address;
+        this.deviceTokens = deviceTokens;
     }
-
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
-
 
     public void removeTransaction(Transaction transaction) {
         transactions.remove(transaction);
@@ -38,9 +40,16 @@ public class Operator extends User {
         return address;
     }
 
+    public List<String> getDeviceTokens() {
+        return deviceTokens;
+    }
+
+    public void setDeviceTokens(List<String> deviceTokens) {
+        this.deviceTokens = deviceTokens;
+    }
+
     public static class Builders {
         private String id;
-
         private String email;
         private String password;
         private Role role;
@@ -49,7 +58,8 @@ public class Operator extends User {
         private String dob;
         private String address;
         private String imageId;
-//private String id;
+        private List<String> deviceTokens;
+
         public Operator.Builders email(String email) {
             this.email = email;
             return this;
@@ -59,10 +69,12 @@ public class Operator extends User {
             this.password = password;
             return this;
         }
+
         public Operator.Builders id(String id) {
             this.id = id;
             return this;
         }
+
         public Operator.Builders role(Role role) {
             this.role = role;
             return this;
@@ -93,8 +105,13 @@ public class Operator extends User {
             return this;
         }
 
+        public Operator.Builders deviceTokens(List<String> deviceTokens) {
+            this.deviceTokens = deviceTokens;
+            return this;
+        }
+
         public Operator build() {
-            return new Operator(id,email, password, role, phone, name, dob, address,imageId);
+            return new Operator(id, email, password, role, phone, name, dob, address, imageId, deviceTokens);
         }
     }
 }
