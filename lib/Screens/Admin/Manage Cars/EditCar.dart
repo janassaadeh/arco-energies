@@ -6,6 +6,7 @@ import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Widgets/Common/Info.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 //
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,6 +49,8 @@ class _EditCarState extends State<EditCar> {
 
   late TextEditingController _carIdController;
   dynamic base64Image1;
+   final RegExp _plateNumberRegExp = RegExp(r'^[A-Za-z0-9]+$');
+  final RegExp _yearRegExp = RegExp(r'^\d{4}$');
 
   @override
   Widget build(BuildContext context) {
@@ -303,48 +306,67 @@ class _EditCarState extends State<EditCar> {
                     height: 30,
                   ),
                   GestureDetector(
-                      onTap: () async {
-                        final editedCar = Vehicle(
-                            model: _modelController.text,
-                            plateNumber: _plateNumberController.text,
-                            year: int.tryParse(_yearController.text) ?? 0,
-                            color: _colorController.text,
-                            driverName: _driverNameController.text,
-                            type: 'car',
+                    onTap: () async {
+                      // Validate plate number
+                      if (!_plateNumberRegExp.hasMatch(_plateNumberController.text)) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const ErrorPopUp(text: "Please enter a valid plate number.");
+                          },
+                        );
+                        return;
+                      }
 
-                            // modelName: _modelNameController.text,
-                            id: widget.car.id);
+                      // Validate year
+                      if (!_yearRegExp.hasMatch(_yearController.text)) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const ErrorPopUp(text: "Please enter a valid year.");
+                          },
+                        );
+                        return;
+                      }
 
-                        VehicleCompanyService vehicleCompanyService =
-                            VehicleCompanyService();
-                        try {
-                          await vehicleCompanyService.updateVehicleForCompany(
-                              widget.company.id,
-                              widget.car.id,
-                              editedCar.type,
-                              editedCar.year,
-                              editedCar.model,
-                              editedCar.plateNumber,
-                              editedCar.driverName,
-                              editedCar.color);
+                      // All validations passed, proceed with saving changes
+                      final editedCar = Vehicle(
+                        model: _modelController.text,
+                        plateNumber: _plateNumberController.text,
+                        year: int.tryParse(_yearController.text) ?? 0,
+                        color: _colorController.text,
+                        driverName: _driverNameController.text,
+                        type: 'car',
+                        id: widget.car.id,
+                      );
+
+                      VehicleCompanyService vehicleCompanyService = VehicleCompanyService();
+                      try {
+                        await vehicleCompanyService.updateVehicleForCompany(
+                          widget.company.id,
+                          widget.car.id,
+                          editedCar.type,
+                          editedCar.year,
+                          editedCar.model,
+                          editedCar.plateNumber,
+                          editedCar.driverName,
+                          editedCar.color,
+                        );
+
+                        // Upload new image if it has changed
+                        if (base64Image1 != null && base64Image1 != widget.imageData) {
                           ImageService imageService = ImageService();
-                          if (base64Image1 != null &&
-                              base64Image1 != widget.imageData) {
-                            ImageService imageService = ImageService();
-                            await imageService.uploadImageForCar(
-                                base64Image1, widget.car.id);
-                          }
-                          Navigator.pop(context,
-                              editedCar); // Pass edited company object back to the previous screen
-                        } catch (e) {
-                          // Handle error
-                          print("Error updating company: $e");
-                          // Show error message to the user
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Failed to update company"),
-                          ));
+                          await imageService.uploadImageForCar(base64Image1, widget.car.id);
                         }
-                      },
+
+                        Navigator.pop(context, editedCar); // Pass edited car object back to the previous screen
+                      } catch (e) {
+                        print("Error updating car: $e");
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Failed to update car"),
+                        ));
+                      }
+                    },
                       child: CustomButton(buttonText: "Save"))
                 ],
               ),

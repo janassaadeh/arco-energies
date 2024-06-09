@@ -79,18 +79,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Positioned(
                               top: 220,
-                              left: MediaQuery.sizeOf(context).width / 2.55,
+                              left: MediaQuery.sizeOf(context).width / 2.65,
                               child: SizedBox(
-                                width: 100,
-                                height: 100,
+                                width: 120,
+                                height: 120,
                                 child: Stack(
                                   children: <Widget>[
                                     Positioned(
                                       top: 0,
                                       left: 0,
                                       child: Container(
-                                        width: 100,
-                                        height: 100,
+                                        width: 120,
+                                        height: 120,
                                         decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(22),
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                               color:
-                                                  Color.fromRGBO(0, 0, 0, 0.3),
+                                                  Color.fromRGBO(0, 0, 0, 0.2),
                                               offset: Offset(0, 4),
                                               blurRadius: 4,
                                             ),
@@ -110,38 +110,38 @@ class _LoginScreenState extends State<LoginScreen> {
                                               Color.fromRGBO(255, 255, 255, 1),
                                         ),
                                         child: Container(
-                                          width: 80,
-                                          height: 80,
+                                          width: 100,
+                                          height: 100,
                                           decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: AssetImage(
-                                                  'assets/images/logo.png'),
+                                                  "assets/images/arco.jpg"),
                                               // fit: BoxFit.fitWidth
                                             ),
                                           ),
-                                        ),
+                                         
                                       ),
-                                    ),
+                                      ))
                                   ],
                                 ),
                               ),
                             ),
-                            Positioned(
-                              top: 335,
-                              left: MediaQuery.sizeOf(context).width / 2.9,
-                              child: Text(
-                                'Arco Energies',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                  fontFamily: 'Inter',
-                                  fontSize: 22,
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1,
-                                ),
-                              ),
-                            ),
+                            // Positioned(
+                            //   top: 335,
+                            //   left: MediaQuery.sizeOf(context).width / 2.9,
+                            //   child: Text(
+                            //     'Arco Energies',
+                            //     textAlign: TextAlign.left,
+                            //     style: TextStyle(
+                            //       color: Color.fromRGBO(0, 0, 0, 1),
+                            //       fontFamily: 'Inter',
+                            //       fontSize: 22,
+                            //       letterSpacing: 0,
+                            //       fontWeight: FontWeight.bold,
+                            //       height: 1,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

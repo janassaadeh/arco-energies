@@ -1,5 +1,6 @@
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
 import 'package:company_pages/Services/Auth/RegisterService.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:flutter/material.dart';
 // import 'package:your_app_path_here/company_model.dart';
 
@@ -25,7 +26,8 @@ class _AddCompanyState extends State<AddCompany> {
   final TextEditingController _balanceController = TextEditingController();
 
   final TextEditingController _passController = TextEditingController();
-
+ final RegExp _emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final RegExp _phoneRegExp = RegExp(r'^\d{10}$');
   bool _addCoLoading = false;
 
   @override
@@ -136,15 +138,55 @@ class _AddCompanyState extends State<AddCompany> {
 
                     const SizedBox(height: 30),
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _addCoLoading = true;
-                        });
-                        _addCompany(context);
-                        setState(() {
-                          _addCoLoading = false;
-                        });
-                      },
+  onTap: () {
+    // Check for empty fields
+    if (_nameController.text.isEmpty ||
+        _contactNameController.text.isEmpty ||
+        _locationController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _passController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please fill in all fields.");
+        },
+      );
+      return;
+    }
+
+    // Validate email
+    if (!_emailRegExp.hasMatch(_emailController.text)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please enter a valid email address.");
+        },
+      );
+      return;
+    }
+
+    // Validate phone number
+    if (!_phoneRegExp.hasMatch(_phoneController.text)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please enter a valid phone number.");
+        },
+      );
+      return;
+    }
+
+    // All validations passed, proceed with adding the company
+    setState(() {
+      _addCoLoading = true;
+    });
+    _addCompany(context);
+    setState(() {
+      _addCoLoading = false;
+    });
+  },
+
                       child: _addCoLoading
                           ? CircularProgressIndicator()
                           : CustomButton(buttonText: "Add"),

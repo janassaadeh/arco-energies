@@ -10,6 +10,7 @@ class CustomInputFieldLarge extends StatelessWidget {
     required this.controller,
     required this.imagePath,
     required this.hintText,
+
   });
 
   @override
@@ -25,6 +26,7 @@ class CustomInputFieldLarge extends StatelessWidget {
         padding: const EdgeInsets.only(left: 10, right: 8, bottom: 8, top: 11),
         child: TextFormField(
           controller: controller,
+          keyboardType:(hintText=='Year')?TextInputType.number:TextInputType.name,
           obscureText: (hintText == "Password"),
           decoration: InputDecoration(
             border: const OutlineInputBorder(borderSide: BorderSide.none),

@@ -82,7 +82,7 @@ print(inputDateTimeString);
     return WillPopScope(
       onWillPop: () async {
         // Prevent back button press
-        return false;
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -151,34 +151,28 @@ print(inputDateTimeString);
                             width: receiptMaxWidth,
                             height: receiptMaxHeight,
                           ),
-                          Positioned(
-                            top: receiptMaxHeight * 0.12,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 5.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/logoBlue.png",
-                                      width: 30,
-                                    ),
-                                    Text(
-                                      'rco Energies',
-                                      style: GoogleFonts.inter(
-                                        textStyle: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                           Positioned(
+                  top: receiptMaxHeight * 0.02,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                         Container(
+                                          width: 140,
+                                          height: 140,
+                                          child: Image.asset(
+                                                  "assets/images/arco_logo.png",color:Colors.black),
+                                         
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                           Positioned(
                             top: receiptMaxHeight * 0.18,
                             left: 0,
@@ -205,11 +199,11 @@ print(inputDateTimeString);
                               .318, "Company Address", receipt.companyLocation),
                           receiptDivider(.364),
                           receiptDetailPositioned(
-                              0.4, "Admin Name", receipt.adminName),
+                              0.4, "Operator Name", receipt.adminName),
                           receiptDetailPositioned(
-                              0.435, "Admin ID", receipt.adminId),
+                              0.435, "Operator ID", receipt.adminId),
                           receiptDetailPositioned(
-                              .466, "Admin Contact", receipt.adminPhone),
+                              .466, "Operator Contact", receipt.adminPhone),
                           receiptDivider(.5),
                           receiptDetailPositioned(0.539, "Deposit Amount",
                               receipt.cashAmount.toString()),

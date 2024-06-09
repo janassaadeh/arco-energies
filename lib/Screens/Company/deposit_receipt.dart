@@ -112,7 +112,7 @@ class _DepositReceiptPageState extends State<DepositDetails> {
                   height: receiptMaxHeight,
                 ),
                 Positioned(
-                  top: receiptMaxHeight * 0.12,
+                  top: receiptMaxHeight * 0.02,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -121,19 +121,13 @@ class _DepositReceiptPageState extends State<DepositDetails> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/logoBlue.png",
-                            width: 30,
-                          ),
-                          Text(
-                            'rco Energies',
-                            style: GoogleFonts.inter(
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                         Container(
+                                          width: 140,
+                                          height: 140,
+                                          child: Image.asset(
+                                                  "assets/images/arco_logo.png",color:Colors.black),
+                                         
+                                      ),
                         ],
                       ),
                     ),
@@ -164,10 +158,10 @@ class _DepositReceiptPageState extends State<DepositDetails> {
                 receiptDetailPositioned(
                     .318, "Company Address", widget.receipt.companyLocation),
                 receiptDivider(.364),
-                receiptDetailPositioned(0.4, "Admin Name", widget.receipt.adminName),
-                receiptDetailPositioned(0.435, "Admin ID", widget.receipt.adminId),
+                receiptDetailPositioned(0.4, "Operator Name", widget.receipt.adminName),
+                receiptDetailPositioned(0.435, "Operator ID", widget.receipt.adminId),
                 receiptDetailPositioned(
-                    .466, "Admin Contact", widget.receipt.adminPhone),
+                    .466, "Operator Contact", widget.receipt.adminPhone),
                 receiptDivider(.5),
                 receiptDetailPositioned(0.539, "Deposit Amount",
                     widget.receipt.cashAmount.toString()),

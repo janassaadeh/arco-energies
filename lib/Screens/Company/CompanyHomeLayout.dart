@@ -232,28 +232,21 @@ class _CompanyHomePageLayoutState extends State<CompanyHomePageLayout> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(),
+     appBar: AppBar(
+          // leading: Container(),
         toolbarHeight: 80,
+        leading: Container(),
         title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/images/logoWhite.png"),
-              const Text(
-                'rco Energies',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Icon(
-                Icons.abc,
-                color: Color(0xff003D5B),
-                size: 40,
-              )
-            ],
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30.0),
+            child: Row(
+              children: [
+                Container(
+                height: 80,
+                width:200,
+                child: Image.asset(fit:BoxFit.fill,"assets/images/arco_logo.png",color: Colors.white,)),
+              ],
+            ),
           ),
         ),
         backgroundColor: const Color(0xff003D5B),

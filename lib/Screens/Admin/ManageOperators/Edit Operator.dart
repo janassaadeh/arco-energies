@@ -13,6 +13,7 @@ import 'package:company_pages/Services/Manage%20Accounts/operator_manage_service
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/calendar_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -538,26 +539,45 @@ class _EditOperatorState extends State<EditOperator> {
 
                   // const SizedBox(height: 20),
                   const SizedBox(height: 40),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        _saveOpChangesLoading = true;
-                      });
-                      ImageService imageService = ImageService();
-                      // print(base64Image1);
-                      if (base64Image1 != null) {
-                        await imageService.uploadImage(
-                            base64Image1, widget.operator.id);
-                      }
-                      _saveChanges(context);
-                      setState(() {
-                        _saveOpChangesLoading = false;
-                      });
-                    },
-                    child: _saveOpChangesLoading
-                        ? CircularProgressIndicator()
-                        : CustomButton(buttonText: "Save"),
-                  )
+                 GestureDetector(
+  onTap: () async {
+    // Check for empty fields
+    if (_nameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        // _passController.text.isEmpty ||
+        _dobController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please fill in all fields.");
+        },
+      );
+      return;
+    }
+
+    setState(() {
+      _saveOpChangesLoading = true;
+    });
+
+    ImageService imageService = ImageService();
+    if (base64Image1 != null) {
+      await imageService.uploadImage(
+          base64Image1, widget.operator.id);
+    }
+
+    _saveChanges(context);
+
+    setState(() {
+      _saveOpChangesLoading = false;
+    });
+  },
+  child: _saveOpChangesLoading
+      ? CircularProgressIndicator()
+      : CustomButton(buttonText: "Save"),
+)
+
                 ],
               ),
             ),

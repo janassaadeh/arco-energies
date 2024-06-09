@@ -269,9 +269,9 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
             cars: cars,
             rewards: rewards,
           );
+        // case 1:
+        //   return NewDeposit(deposits: depositList);
         case 1:
-          return NewDeposit(deposits: depositList);
-        case 2:
           return AdminProfile(
             admin: admin,
             imageData: _imageData,
@@ -283,20 +283,18 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
 
     return Scaffold(
       appBar: AppBar(
+          // leading: Container(),
+        toolbarHeight: 80,
         leading: Container(),
         title: Center(
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0),
             child: Row(
               children: [
-                Image.asset("assets/images/logoWhite.png"),
-                const Text(
-                  'rco Energies',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
-                ),
+                Container(
+                height: 80,
+                width:200,
+                child: Image.asset(fit:BoxFit.fill,"assets/images/arco_logo.png",color: Colors.white,)),
               ],
             ),
           ),
@@ -359,15 +357,15 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              "assets/images/Request Money.png",
-              color: (_currentIndex == 1)
-                  ? Color(0xff003D5B)
-                  : Colors.grey.shade600,
-            ),
-            label: 'New Deposit',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Image.asset(
+          //     "assets/images/Request Money.png",
+          //     color: (_currentIndex == 1)
+          //         ? Color(0xff003D5B)
+          //         : Colors.grey.shade600,
+          //   ),
+          //   label: 'New Deposit',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
