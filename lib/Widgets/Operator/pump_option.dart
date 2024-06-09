@@ -25,8 +25,7 @@ class PumpOption extends StatelessWidget {
             elevation: isSelected ? 6 : 0,
             borderRadius: BorderRadius.circular(12),
             child: Container(
-              width: 140,
-              height: 130,
+      
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: isSelected

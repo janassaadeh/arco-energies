@@ -4,18 +4,21 @@ import 'package:company_pages/Screens/Admin/qr_code.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/edit_prices_pop_up.dart';
 import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
+import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
 // import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
+import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:company_pages/Widgets/Home/features.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:company_pages/Services/Auth/user_service.dart' as User;
+import 'package:company_pages/Models/notification.dart' as not;
 
 import '../../../../Models/fuel_price.dart';
-import 'package:company_pages/Widgets/Operator/gradient_box.dart';
-import '../../../../../../../../Widgets/Operator/horizontal_gradient_box.dart';
 import '../../../../../../Widgets/Operator/sub_title.dart';
 
 class DashBoard extends StatefulWidget {
@@ -30,13 +33,56 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   late Future<List<Fuel>> fuelListFuture;
+  late Future<List<not.Notification>> notificationListFuture;
 
   final FuelService fuelService = FuelService();
+  final FuelPricesService fuelPricesService = FuelPricesService();
+  final NotificationService notificationService = NotificationService();
+  dynamic operator;
 
   @override
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
+    _fetchUserData().then((_) => setupPushNotifications());
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      User.UserService  userService = User.UserService();
+      dynamic userData = await userService.fetchUserData();
+      setState(() {
+        operator = userData;
+      });
+    } catch (e) {
+      print('Error fetching operator data: $e');
+    }
+  }
+
+  void setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    final token = await fcm.getToken();
+    print(token);
+    print("Operator ID: " + operator.id);
+
+    final fuelPricesService = FuelPricesService();
+
+    try {
+      final allDeviceTokens = await fuelPricesService.getAllOpDeviceTokens();
+      // Use the allDeviceTokens list
+      print(allDeviceTokens);
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    try {
+      await notificationService.storeOperatorDeviceToken(operator.id, token!);
+    } catch (e) {
+      print('Failed to store device token: $e');
+    }
   }
 
   Future<List<Fuel>> _fetchFuels() async {

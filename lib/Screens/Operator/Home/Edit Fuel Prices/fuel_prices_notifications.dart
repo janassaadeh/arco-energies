@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/fuel_price.dart';
 import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
-import 'package:provider/provider.dart'; // Import your fuel price service
+import 'package:provider/provider.dart';
 import 'package:company_pages/Models/notification.dart' as not;
 import 'package:intl/intl.dart';
 import 'package:company_pages/Services/Auth/user_service.dart' as User;
@@ -35,7 +35,6 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
         admin = userData;
       });
     } catch (e) {
-      // Handle error appropriately, e.g., show a snackbar
       print('Error fetching companies: $e');
     }
   }
@@ -52,7 +51,7 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
     final fuelPricesService = FuelPricesService();
 
     try {
-      final allDeviceTokens = await fuelPricesService.getAllDeviceTokens();
+      final allDeviceTokens = await fuelPricesService.getAllAdDeviceTokens();
       // Use the allDeviceTokens list
       print(allDeviceTokens);
     } catch (e) {
@@ -141,22 +140,43 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
     showDialog(
       context: context,
       builder: (ctx) => ConfirmationDialog(
-          content: 'Delete all notifications?',
-          onCancel: () {
+        content: 'Delete all notifications?',
+        onCancel: () {
+          Navigator.pop(ctx);
+        },
+        onConfirm: () async {
+          try {
             Navigator.pop(ctx);
-          },
-          onConfirm: () async {
-            try {
-              Navigator.pop(ctx);
-              await notificationService.deleteAllNotifications();
-              Provider.of<FuelPricesProvider>(context, listen: false)
-                  .clearCachedNotifications();
-              _refreshNotifications();
-            } catch (e) {
-              print('Failed to delete notifications: $e');
+            final notifications =
+                Provider.of<FuelPricesProvider>(context, listen: false)
+                    .cachedNotifications;
+
+            for (final notification in notifications) {
+              await _handleDeclineAndDelete(notification);
             }
-          }),
+          
+            await notificationService.deleteAllNotifications();
+
+            Provider.of<FuelPricesProvider>(context, listen: false)
+                .clearCachedNotifications();
+            _refreshNotifications();
+          } catch (e) {
+            print('Failed to delete notifications: $e');
+          }
+        },
+      ),
     );
+  }
+
+  Future<void> _handleDeclineAndDelete(not.Notification notification) async {
+    try {
+      await _deleteNotificationById(notification.id);
+
+      await fuelPricesService.pushOperatorDeclinedNotification(notification);
+      _refreshNotifications();
+    } catch (e) {
+      print('Failed to decline and delete notification: $e');
+    }
   }
 
   @override
@@ -226,13 +246,13 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
                 final formattedDate =
                     DateFormat.yMMMd().add_jms().format(dateTime);
 
-                String displayType;
-                if (notification.type.toLowerCase().contains('diesel')) {
-                  displayType = notification.type; // Keep 'Diesel' as is
-                } else {
-                  displayType =
-                      'Fuel ${notification.type}'; // Prefix with 'Fuel'
-                }
+                // String displayType;
+                // if (notification.type.toLowerCase().contains('diesel')) {
+                //   displayType = notification.type; // Keep 'Diesel' as is
+                // } else {
+                //   displayType =
+                //       'Fuel ${notification.type}'; // Prefix with 'Fuel'
+                // }
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(
@@ -367,28 +387,23 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
 
   void _handleApprove(not.Notification fuelPrice) async {
     try {
-      // Add the fuel price based on the notification
       await fuelPricesService.addFuelPrice(
-        fuelPrice.type, // Assuming type is the fuel type
+        fuelPrice.type,
         fuelPrice.price,
         DateTime.now(),
       );
 
-      // Delete the notification from the list
+      await fuelPricesService.pushOperatorApprovedNotification(fuelPrice);
+
       await _deleteNotificationById(fuelPrice.id);
 
-      // Refresh the fuel prices list
       _refreshFuelPrices();
-      _refreshNotifications(); // Refresh notifications after updating
+      _refreshNotifications();
 
-      // Update cached notifications in the provider
       Provider.of<FuelPricesProvider>(context, listen: false)
-          .removeCachedNotification(
-              fuelPrice); // Implement this method in your provider
+          .removeCachedNotification(fuelPrice);
     } catch (e) {
-      // Handle errors
       print('Failed to approve fuel price: $e');
-      // Optionally show error message to the user
     }
   }
 
@@ -396,6 +411,8 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
     try {
       // Delete the notification from the list
       await _deleteNotificationById(fuelPrice.id);
+
+      await fuelPricesService.pushOperatorDeclinedNotification(fuelPrice);
 
       // Refresh the fuel prices list
       _refreshFuelPrices();

@@ -153,7 +153,7 @@ class NotificationService {
     }
   }
 
-  Future<void> storeCompanyDeviceToken(String id, String deviceToken) async {
+  Future<void> storeOperatorDeviceToken(String id, String deviceToken) async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
       if (!isLoggedIn) {
@@ -164,10 +164,8 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'https://arcoenergies.onrender.com/api/company/device-tokens/$id',
-        data: {
-          'deviceToken': deviceToken,
-        },
+        'http://192.168.6.119:8080/api/operator/device-tokens/$id',
+        data: deviceToken,
       );
 
       if (response.statusCode == 200) {
@@ -180,7 +178,7 @@ class NotificationService {
     }
   }
 
-  Future<List<String>> getAllCompanyDeviceTokens() async {
+  Future<List<String>> getAllOperatorDeviceTokens() async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
       if (!isLoggedIn) {
@@ -191,7 +189,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'https://arcoenergies.onrender.com/api/company/device-tokens',
+        'https://arcoenergies.onrender.com/api/operator/device-tokens',
       );
 
       if (response.statusCode == 200) {

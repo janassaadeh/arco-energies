@@ -137,13 +137,12 @@ class _PumpSelectionState extends State<PumpSelection> {
                           },
                           color: const Color(0xff003D5B),
                           child: GridView.builder(
-                            padding: const EdgeInsets.all(20),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 0,
-                              childAspectRatio: 1,
+                              crossAxisSpacing: 4,
+                              mainAxisSpacing: 4,
+                              childAspectRatio: 1 / 2,
                             ),
                             itemCount: pumps.length,
                             itemBuilder: (context, index) {

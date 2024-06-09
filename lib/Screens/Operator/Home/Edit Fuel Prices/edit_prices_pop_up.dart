@@ -3,13 +3,13 @@ import 'package:company_pages/Models/fuel_response.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
 import 'package:company_pages/Services/Operator/notification_service.dart';
-import 'package:company_pages/Widgets/Operator/input_field.dart';
 import 'package:company_pages/Widgets/Operator/useful_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 import 'package:company_pages/Models/fuel.dart';
 import 'package:company_pages/Models/notification.dart' as not;
 import 'package:provider/provider.dart';
+import 'package:company_pages/Widgets/Common/dialog_content.dart';
 
 class EditPricesPopUp extends StatefulWidget {
   const EditPricesPopUp({Key? key}) : super(key: key);
@@ -72,6 +72,92 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
     }
   }
 
+  Future<void> _sendPrices() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Get initial prices
+      final fuels = await fuelListFuture;
+      final double? initialFuel95Price = getMostRecentFuelPrice(fuels, '95');
+      final double? initialFuel98Price = getMostRecentFuelPrice(fuels, '98');
+      final double? initialDieselPrice =
+          getMostRecentFuelPrice(fuels, 'Diesel');
+
+      // Get entered fuel prices
+      final fuel98Price = double.parse(fuel98Controller.text);
+      final fuel95Price = double.parse(fuel95Controller.text);
+      final dieselPrice = double.parse(dieselController.text);
+
+      final fuel98PriceResponse =
+          FuelResponse(type: "98", description: "Fuel 98");
+      final fuel95PriceResponse =
+          FuelResponse(type: "95", description: "Fuel 95");
+      final dieselPriceResponse =
+          FuelResponse(type: "Diesel", description: "Diesel");
+
+      final String currentDate = DateTime.now().toIso8601String();
+
+      // List to hold only changed prices
+      final List<FuelPrice> enteredFuelPrices = [];
+      final List<not.NotificationBody> notifications = [];
+
+      // Add changed prices to the list
+      if (fuel98Price != initialFuel98Price) {
+        enteredFuelPrices.add(FuelPrice(
+            price: fuel98Price,
+            createdDate: currentDate,
+            fuelResponse: fuel98PriceResponse));
+        notifications.add(not.NotificationBody(
+            fuel98PriceResponse.type, fuel98Price, currentDate));
+      }
+      if (fuel95Price != initialFuel95Price) {
+        enteredFuelPrices.add(FuelPrice(
+            price: fuel95Price,
+            createdDate: currentDate,
+            fuelResponse: fuel95PriceResponse));
+        notifications.add(not.NotificationBody(
+            fuel95PriceResponse.type, fuel95Price, currentDate));
+      }
+      if (dieselPrice != initialDieselPrice) {
+        enteredFuelPrices.add(FuelPrice(
+            price: dieselPrice,
+            createdDate: currentDate,
+            fuelResponse: dieselPriceResponse));
+        notifications.add(not.NotificationBody(
+            dieselPriceResponse.type, dieselPrice, currentDate));
+      }
+
+      // Send notifications for the changed prices
+      for (var notification in notifications) {
+        await notificationService.addNotification(notification);
+      }
+
+      // Send push notifications with entered prices
+      if (enteredFuelPrices.isNotEmpty) {
+        await fuelPricesService.sendAdminPushNotifications(enteredFuelPrices);
+      }
+
+      // Close the dialog
+      Navigator.pop(context);
+    } catch (e) {
+      // Handle error
+      print('Failed to send push notifications: $e');
+      // Optionally show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 60),
+          content: Text('Failed to send push notifications: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -84,198 +170,21 @@ class _EditPricesPopUpState extends State<EditPricesPopUp> {
         future: fuelListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator()); // Show loading indicator
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError || !snapshot.hasData) {
             return const Center(
-              child: Text('Failed to load fuel data'), // Show error message
+              child: Text('Failed to load fuel data'),
             );
           } else {
-            // final fuels = snapshot.data!;
-            // _initializeInputFields(fuels); // Initialize input fields
-            return _buildDialogContent(context); // Build dialog content
+            return DialogContent(
+              fuel95Controller: fuel95Controller,
+              fuel98Controller: fuel98Controller,
+              dieselController: dieselController,
+              isLoading: _isLoading,
+              onSend: _sendPrices,
+            );
           }
         },
-      ),
-    );
-  }
-
-  Widget _buildDialogContent(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(35),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildSection(
-            title: 'Fuel 98 Price',
-            child: buildInput(
-              "Enter Fuel 98 Price",
-              dollarText(),
-              true,
-              fuel98Controller,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _buildSection(
-            title: 'Fuel 95 Price',
-            child: buildInput(
-              "Enter Fuel 95 Price",
-              dollarText(),
-              true,
-              fuel95Controller,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _buildSection(
-            title: 'Diesel Price',
-            child: buildInput(
-              "Enter Diesel Price",
-              dollarText(),
-              true,
-              dieselController,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 1, 14, 72),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true; // Start loading
-                  });
-
-                  try {
-                    // Get entered fuel prices
-                    final fuel98Price = double.parse(fuel98Controller.text);
-                    final fuel95Price = double.parse(fuel95Controller.text);
-                    final dieselPrice = double.parse(dieselController.text);
-
-                    final fuel98PriceResponse =
-                        FuelResponse(type: "98", description: "Fuel 98");
-                    final fuel95PriceResponse =
-                        FuelResponse(type: "95", description: "Fuel 95");
-                    final dieselPriceResponse =
-                        FuelResponse(type: "Diesel", description: "Diesel");
-
-                    final String currentDate = DateTime.now().toIso8601String();
-
-                    // Create list of entered fuel prices
-                    final List<FuelPrice> enteredFuelPrices = [
-                      FuelPrice(
-                          price: fuel98Price,
-                          createdDate: "2024-04-23",
-                          fuelResponse: fuel98PriceResponse),
-                      FuelPrice(
-                          price: fuel95Price,
-                          createdDate: "2024-04-23",
-                          fuelResponse: fuel95PriceResponse),
-                      FuelPrice(
-                          price: dieselPrice,
-                          createdDate: "2024-04-23",
-                          fuelResponse: dieselPriceResponse),
-                    ];
-
-                    for (var fuelPrice in enteredFuelPrices) {
-                      final not.NotificationBody notification =
-                          not.NotificationBody(
-                        fuelPrice.fuelResponse!.type,
-                        fuelPrice.price,
-                        currentDate,
-                      );
-
-                      // Send the notification
-                      await notificationService.addNotification(notification);
-                    }
-
-                    // Send push notifications with entered prices
-                    await fuelPricesService
-                        .sendPushNotifications(enteredFuelPrices);
-
-                    // Close the dialog
-                    Navigator.pop(context);
-                  } catch (e) {
-                    // Handle error
-                    print('Failed to send push notifications: $e');
-                    // Optionally show an error message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: Duration(seconds: 60),
-                        content: Text('Failed to send push notifications: $e'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                  setState(() {
-                    _isLoading = false;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 1, 14, 72),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                ),
-                child: _isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 3,
-                        ),
-                      )
-                    : const Text(
-                        'Send',
-                        style: TextStyle(color: Colors.white),
-                      ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection({required String title, required Widget child}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Color.fromARGB(255, 1, 14, 72),
-          ),
-        ),
-        const SizedBox(height: 4),
-        child,
-      ],
-    );
-  }
-
-  Widget dollarText() {
-    return const Text(
-      '\$ / liter',
-      style: TextStyle(
-        color: Color.fromRGBO(114, 212, 171, 1),
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
       ),
     );
   }

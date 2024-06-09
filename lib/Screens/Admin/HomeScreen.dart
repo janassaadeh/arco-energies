@@ -8,7 +8,7 @@ import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Screens/Admin/NFC_Car_Wrte.dart';
 import 'package:company_pages/Screens/Admin/Rewards/rewards%20all.dart';
-
+import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/admin_edit_prices_pop_up.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 
 import 'package:flutter/material.dart';
@@ -310,82 +310,93 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 double? recentPrice =
                                     _getMostRecentFuelPrice(fuel.prices);
 
-                                return Card(
-                                  color: Colors.white,
-                                  surfaceTintColor: Colors.white,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 3,
-                                                offset: const Offset(0, 1),
+                                return GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const AdminEditPricesPopUp();
+                                      },
+                                    );
+                                  },
+                                  child: Card(
+                                    color: Colors.white,
+                                    surfaceTintColor: Colors.white,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 3,
+                                                  offset: const Offset(0, 1),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                Icons.water_drop,
+                                                size: 24,
+                                                color: fuel.description
+                                                        .toLowerCase()
+                                                        .contains("fuel")
+                                                    ? const Color.fromARGB(
+                                                        153, 3, 110, 42)
+                                                    : const Color.fromARGB(
+                                                        255, 204, 113, 79),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 18.0),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                fuel.type,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                fuel.description,
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12,
+                                                ),
                                               ),
                                             ],
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.water_drop,
-                                              size: 24,
-                                              color: fuel.description
-                                                      .toLowerCase()
-                                                      .contains("fuel")
-                                                  ? const Color.fromARGB(
-                                                      153, 3, 110, 42)
-                                                  : const Color.fromARGB(
-                                                      255, 204, 113, 79),
-                                            ),
+                                          const Spacer(),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                recentPrice != null
+                                                    ? '${recentPrice.toStringAsFixed(2)} \$/liter'
+                                                    : 'No price available',
+                                                style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 1, 14, 72),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        const SizedBox(width: 18.0),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              fuel.type,
-                                              style: const TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              fuel.description,
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              recentPrice != null
-                                                  ? '${recentPrice.toStringAsFixed(2)} \$/liter'
-                                                  : 'No price available',
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 1, 14, 72),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
