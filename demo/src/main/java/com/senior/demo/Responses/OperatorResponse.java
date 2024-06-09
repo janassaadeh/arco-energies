@@ -4,14 +4,18 @@ import com.senior.demo.Collections.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class OperatorResponse {
     String id;
     String email;
-    String phone; String name;
-    String dob;String address;
+    String phone;
+    String name;
+    String dob;
+    String address;
     String imageId;
-
+    List<String> deviceTokens;
 
 }

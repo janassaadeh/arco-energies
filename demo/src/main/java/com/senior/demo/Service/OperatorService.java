@@ -3,6 +3,7 @@ package com.senior.demo.Service;
 import com.senior.demo.Collections.*;
 import com.senior.demo.Repository.*;
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.DeviceTokensResponse;
 import com.senior.demo.Responses.OperatorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +24,6 @@ public class OperatorService {
     @Autowired
     private  MongoTemplate mongoTemplate;
     @Autowired
-
     private TransactionRepository transactionRepository;
     @Autowired
     private UserRepository userRepository;
@@ -43,7 +44,8 @@ public class OperatorService {
                         operator.getName(),
                         operator.getDob(),
                         operator.getAddress(),
-                        operator.getImageId()
+                        operator.getImageId(),
+                        operator.getDeviceTokens()
                 ))
                 .collect(Collectors.toList());
 
@@ -55,7 +57,7 @@ public class OperatorService {
     // Method to get an admin by ID
     public OperatorResponse getOperatorById(String id) {
         Operator operator=operatorRepository.findById(id).orElse(null);
-        OperatorResponse operatorResponse=new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress(),operator.getImageId());
+        OperatorResponse operatorResponse=new OperatorResponse(operator.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(),operator.getAddress(),operator.getImageId(), operator.getDeviceTokens());
         return operatorResponse;
     }
 
@@ -71,7 +73,7 @@ public class OperatorService {
             existingOperator.setPhone(operator.getPhone());
 
             OperatorResponse exists=new OperatorResponse(existingOperator.getId(),existingOperator.getEmail(),existingOperator.getPhone(),existingOperator.getName(),
-                    existingOperator.getDob(),existingOperator.getAddress(),existingOperator.getImageId());
+                    existingOperator.getDob(),existingOperator.getAddress(),existingOperator.getImageId(), operator.getDeviceTokens());
 
             // Save the updated company
             existingOperator = operatorRepository.save(existingOperator);
@@ -92,7 +94,8 @@ public class OperatorService {
                     existingOperator.getName(),
                     existingOperator.getDob(),
                     existingOperator.getAddress(),
-                    existingOperator.getImageId()
+                    existingOperator.getImageId(),
+                    existingOperator.getDeviceTokens()
             );
         } else {
             return null;
@@ -105,5 +108,52 @@ public class OperatorService {
         operatorRepository.deleteById(id);
         userRepository.deleteById(id);
     }
-}
 
+    public void storeDeviceToken(String opId, String deviceToken) {
+        Operator operator = operatorRepository.findById(opId)
+                .orElseThrow(() -> new RuntimeException("Operator not found"));
+
+        List<String> deviceTokens = operator.getDeviceTokens();
+        if (deviceTokens == null) {
+            deviceTokens = new ArrayList<>();
+        }
+
+        if (!deviceTokens.contains(deviceToken)) {
+            deviceTokens.add(deviceToken);
+
+            operator.setDeviceTokens(deviceTokens);
+            operatorRepository.save(operator);
+        } else {
+            System.out.println("Device token already exists for operator: " + opId);
+        }
+    }
+
+    public List<DeviceTokensResponse> getAllOperatorDeviceTokens() {
+        List<DeviceTokensResponse> allOperatorDeviceTokens = new ArrayList<>();
+
+        List<Operator> operators = operatorRepository.findAll();
+
+        for (Operator operator : operators) {
+            List<String> deviceTokens = operator.getDeviceTokens();
+            DeviceTokensResponse operatorResponse = new DeviceTokensResponse(operator.getId(), deviceTokens);
+            allOperatorDeviceTokens.add(operatorResponse);
+        }
+
+        return allOperatorDeviceTokens;
+    }
+
+    public List<String> getOperatorDeviceTokensById(String operatorId) {
+        Operator operator = operatorRepository.findById(operatorId)
+                .orElseThrow(() -> new RuntimeException("Operator not found"));
+        return operator.getDeviceTokens();
+    }
+
+    // Method to remove all device tokens for an operator
+    public void removeAllDeviceTokens(String operatorId) {
+        Operator operator = operatorRepository.findById(operatorId)
+                .orElseThrow(() -> new RuntimeException("Operator not found"));
+
+        operator.setDeviceTokens(new ArrayList<>());
+        operatorRepository.save(operator);
+    }
+}

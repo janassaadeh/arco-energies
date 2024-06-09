@@ -1,6 +1,7 @@
 package com.senior.demo.Controllers;
 
 import com.senior.demo.Responses.CompanyResponse;
+import com.senior.demo.Responses.DeviceTokensResponse;
 import com.senior.demo.Responses.OperatorResponse;
 import com.senior.demo.Service.CompanyService;
 import com.senior.demo.Service.OperatorService;
@@ -52,4 +53,30 @@ public class OperatorController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> storeDeviceToken(
+            @PathVariable("id") String id,
+            @RequestBody String deviceToken) {
+        operatorService.storeDeviceToken(id, deviceToken);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/device-tokens")
+    public ResponseEntity<List<DeviceTokensResponse>> getAllOperatorDeviceTokens() {
+        List<DeviceTokensResponse> allOperatorDeviceTokens = operatorService.getAllOperatorDeviceTokens();
+        return ResponseEntity.ok(allOperatorDeviceTokens);
+    }
+
+    @GetMapping("/device-tokens/{id}")
+    public ResponseEntity<List<String>> getOperatorDeviceTokensById(@PathVariable("id") String id) {
+        List<String> deviceTokens = operatorService.getOperatorDeviceTokensById(id);
+        return new ResponseEntity<>(deviceTokens, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/device-tokens/{id}")
+    public ResponseEntity<Void> removeAllDeviceTokens(@PathVariable("id") String id) {
+        operatorService.removeAllDeviceTokens(id);
+        return ResponseEntity.ok().build();
+    }
 }

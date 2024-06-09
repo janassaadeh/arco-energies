@@ -20,11 +20,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
 import java.util.Comparator;
->>>>>>> 71645cc148f82301001d6b002cc7734be7466069
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

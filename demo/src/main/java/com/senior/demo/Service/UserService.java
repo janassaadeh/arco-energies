@@ -76,7 +76,7 @@ public class UserService {
                 );
             } else if (user.getAuthorities().contains(Role.OPERATOR)) {
                 Operator operator = operatorRepository.findByEmail(user.getUsername());
-                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName(),operator.getImageId());
+                return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(),operator.getName(),operator.getDob(), operator.getName(),operator.getImageId(), operator.getDeviceTokens());
             }
         }
         return null;
@@ -96,7 +96,7 @@ public class UserService {
         User user = (User) authentication.getPrincipal();
 
         Operator operator = operatorRepository.findByEmail(user.getUsername());
-        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getAddress(),operator.getImageId());
+        return new OperatorResponse(user.getId(), operator.getEmail(), operator.getPhone(), operator.getName(), operator.getDob(),operator.getAddress(),operator.getImageId(), operator.getDeviceTokens());
 
 
 
