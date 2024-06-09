@@ -92,114 +92,108 @@ Future<void> refreshCompanies() async {
   Widget build(BuildContext context) {
     var filteredCompanies = filterCompanies(); // Filtered list of companies
 
-    return     WillPopScope(
-        onWillPop: () async {
-          // Prevent back button press
-          return false;
-        },
-            child: Scaffold(
+    return     Scaffold(
         appBar: AppBar(
           leading: Container(),
           title: Center(
-            child:  Text('All Companies',style: TextStyle(
-                    color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
-                  ),),
+    child:  Text('All Companies',style: TextStyle(
+            color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
+          ),),
           ),
           backgroundColor: const Color(0xff003D5B),
          
           ),
           backgroundColor: Color(0xff003D58),
           body: SingleChildScrollView(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 120,
-                      color:Color(0xff003D58)),
-                    Container(
-                      color: Colors.white,
-                      height: 652,
-                      child: ListView.builder(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Column(
+          children: [
+            Container(
+              height: 120,
+              color:Color(0xff003D58)),
+            Container(
+              color: Colors.white,
+              height: 652,
+              child: ListView.builder(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
 
-                        itemCount: filteredCompanies.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap:  ()  {
-                                  Navigator.pop(context,filteredCompanies[index].id);
-                                },
-                                child: CompanyCard(
-                                  title: filteredCompanies[index].name,
-                                  subtitle1: filteredCompanies[index].email,
-                                  subtitle2: filteredCompanies[index].contactName,
-                                     imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
-                                      activated: filteredCompanies[index].activated,
-                                ),
-                              ),
-                            ],
-                          );
-                        }
+                itemCount: filteredCompanies.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap:  ()  {
+                          Navigator.pop(context,filteredCompanies[index].id);
+                        },
+                        child: CompanyCard(
+                          title: filteredCompanies[index].name,
+                          subtitle1: filteredCompanies[index].email,
+                          subtitle2: filteredCompanies[index].contactName,
+                             imageData:(filteredCompanies[index].imageId=='')?'no image':imageDataList[index],
+                              activated: filteredCompanies[index].activated,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                  Padding(
-                padding: const EdgeInsets.only(top:100.0),
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
-                  ),),
+                    ],
+                  );
+                }
               ),
-               Padding(
-                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[200],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
-                  
-                  child: TextFormField(
-                    // controller: searc,
-                    onChanged: (value) {
-                         setState(() {
+            ),
+          ],
+        ),
+          Padding(
+        padding: const EdgeInsets.only(top:100.0),
+        child: Container(
+          height: 30,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+          ),),
+      ),
+       Padding(
+        padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[200],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+          
+          child: TextFormField(
+            // controller: searc,
+            onChanged: (value) {
+                 setState(() {
       searchQuery = value;
       filteredCompanies = filterCompanies(); // Update filteredOperators when searchQuery changes
     });
     fetchImageForFilteredCompanies();
   
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Search Companies ...",
-                      hintStyle: TextStyle(
-                        color: Colors.grey[500],
-                        fontFamily: 'Mulish',
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(bottom:8.0),
-                        child: Icon(Icons.search, color: Colors.grey[500]),
-                      ),
-                    ),
-                  ),
-                ),
+            },
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Search Companies ...",
+              hintStyle: TextStyle(
+                color: Colors.grey[500],
+                fontFamily: 'Mulish',
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(bottom:8.0),
+                child: Icon(Icons.search, color: Colors.grey[500]),
               ),
             ),
-              ],
-            ),
-          )
+          ),
+        ),
       ),
-    );
+    ),
+      ],
+    ),
+          )
+      );
   }
 }
 

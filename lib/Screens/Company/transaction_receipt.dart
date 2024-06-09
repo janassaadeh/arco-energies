@@ -86,7 +86,7 @@ class TransactionReceipt extends StatelessWidget {
                   height: receiptMaxHeight,
                 ),
                 Positioned(
-                  top: receiptMaxHeight * 0.12,
+                  top: receiptMaxHeight * 0.02,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -95,19 +95,13 @@ class TransactionReceipt extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/logoBlue.png",
-                            width: 30,
-                          ),
-                          Text(
-                            'rco Energies',
-                            style: GoogleFonts.inter(
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                         Container(
+                                          width: 140,
+                                          height: 140,
+                                          child: Image.asset(
+                                                  "assets/images/arco_logo.png",color:Colors.black),
+                                         
+                                      ),
                         ],
                       ),
                     ),

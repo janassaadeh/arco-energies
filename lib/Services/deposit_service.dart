@@ -81,7 +81,7 @@ class DepositService {
 
     try {
       final response = await _dio.get(
-        'https://arcoenergies.onrender.com/deposit/admin/$adminId',
+        'https://arcoenergies.onrender.com/deposit/operator/$adminId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -148,11 +148,11 @@ void printDepositReceipt(Map<String, dynamic> receipt) {
   print('  Contact Name: ${receipt['company']['contactName']}');
   print('  Location: ${receipt['company']['location']}');
   print('Admin:');
-  print('  ID: ${receipt['admin']['id']}');
-  print('  Email: ${receipt['admin']['email']}');
-  print('  Phone: ${receipt['admin']['phone']}');
-  print('  Name: ${receipt['admin']['name']}');
-  print('  DOB: ${receipt['admin']['dob']}');
+  print('  ID: ${receipt['operator']['id']}');
+  print('  Email: ${receipt['operator']['email']}');
+  print('  Phone: ${receipt['operator']['phone']}');
+  print('  Name: ${receipt['operator']['name']}');
+  print('  DOB: ${receipt['operator']['dob']}');
   print('Payment Method: ${receipt['paymentMethod']}');
   print('Cash Amount: ${receipt['cashAmount']}');
   print('Timestamp: ${receipt['timestamp']}');
@@ -205,11 +205,11 @@ class DepositReceipt {
       companyBalance: json['company']['balance'].toDouble(),
       companyContactName: json['company']['contactName'],
       companyLocation: json['company']['location'],
-      adminId: json['admin']['id'],
-      adminEmail: json['admin']['email'],
-      adminPhone: json['admin']['phone'],
-      adminName: json['admin']['name'],
-      adminDob: json['admin']['dob'],
+      adminId: json['operator']['id'],
+      adminEmail: json['operator']['email'],
+      adminPhone: json['operator']['phone'],
+      adminName: json['operator']['name'],
+      adminDob: json['operator']['dob'],
       paymentMethod: json['paymentMethod'],
       cashAmount: json['cashAmount'].toDouble(),
       timestamp: convertToLebanonTime(json['timestamp']),

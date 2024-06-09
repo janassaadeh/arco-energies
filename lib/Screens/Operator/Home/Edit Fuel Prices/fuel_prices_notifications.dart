@@ -189,10 +189,18 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
           'Fuel Prices',
           style: TextStyle(color: Colors.white),
         )),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 28,
-        ),
+        // iconTheme: const IconThemeData(
+        //   color: Colors.white,
+        //   size: 28,
+        // ),
+       leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(Icons.arrow_back_ios,
+              color: Colors.white,
+        size: 28,
+        )),
         actions: [
           IconButton(
             onPressed: () {
@@ -200,6 +208,8 @@ class _FuelPricesScreenState extends State<FuelPricesScreen> {
             },
             icon: const Icon(
               Icons.delete,
+              color: Colors.white,
+              size: 28,
             ),
           )
         ],

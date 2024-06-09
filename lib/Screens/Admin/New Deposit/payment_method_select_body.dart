@@ -21,8 +21,15 @@ class PaymentMethodEntryBody extends StatefulWidget {
 }
 
 class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
+  int selectedMethod = 1;
   TextEditingController _PaymentMethodController = TextEditingController();
-  int selectedMethod = 0;
+ @override
+  void initState() {
+    super.initState();
+    // Initialize the controller with the default value
+    _PaymentMethodController.text = paymentMethods[selectedMethod];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,7 +70,7 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
                   );
                 },
                 child: buildInputF(
-                  "Select Payment Method",
+                  "Cash",
                   Image.asset('assets/images/down.png'),
                   true,
                   _PaymentMethodController,
@@ -75,16 +82,7 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
               const SizedBox(height: 20),
               GestureDetector(
                   onTap: () {
-                    if (_PaymentMethodController.text.isEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ErrorPopUp(
-                              text:
-                                  "Make sure you have selected the payment method!");
-                        },
-                      );
-                    } else {
+                   
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -95,7 +93,7 @@ class _PaymentMethodEntryBodyState extends State<PaymentMethodEntryBody> {
                           ),
                         ),
                       );
-                    }
+                    
                   },
                   child: CustomButton(buttonText: 'Next')),
             ],

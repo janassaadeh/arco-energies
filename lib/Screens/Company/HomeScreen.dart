@@ -9,6 +9,7 @@ import 'package:company_pages/Screens/Company/profile.dart';
 import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
+import 'package:company_pages/Widgets/Home/Cash.dart';
 import 'package:company_pages/Widgets/image_slider.dart';
 import 'package:company_pages/Widgets/images_carousel.dart';
 import 'package:company_pages/Widgets/shimmer.dart';
@@ -76,7 +77,9 @@ class HomeScreen extends StatelessWidget {
                       // You can change this color to match your background
                     ),
                   )
-                : ImageCarouselWidget(),
+                : 
+                Cash(cashBalance: company.balance.toStringAsFixed(2))
+                // ImageCarouselWidget(),
           ),
           const SizedBox(
             height: 30,

@@ -4,6 +4,8 @@ import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Edit%20Company.dart';
+import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
+import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ import 'dart:typed_data';
 class Companies extends StatefulWidget {
   final List<Company> companies;
   final List<Pump> pumps;
-  final List<Vehicle> allcars;
+   List<Vehicle> allcars;
   Companies(
       {Key? key,
       required this.companies,
@@ -40,10 +42,14 @@ class _MyCompaniesState extends State<Companies>
   String searchQuery = '';
   late List<Company> filteredCompanies;
   List<dynamic?> imageDataList = [];
-
+    Map<String, int> carCounts=Map();
   @override
-  void initState() {
+  void initState()  {
+
+
     super.initState();
+    fetchCars();
+
     tickerProviders = List.generate(
       widget.companies.length,
       (index) => _TickerProvider(),
@@ -54,9 +60,11 @@ class _MyCompaniesState extends State<Companies>
     );
     filteredCompanies = filterCompanies(); // Filtered list of companies
     fetchImageForFilteredCompanies();
+
   }
 
   Map<String, int> getCarCountsPerCompany() {
+       
     Map<String, int> carCounts = {};
     for (Company company in widget.companies) {
       int count =
@@ -65,8 +73,18 @@ class _MyCompaniesState extends State<Companies>
     }
     return carCounts;
   }
-
+  Future<void> fetchCars() async {
+        VehicleService vehicleService =
+                              VehicleService();
+                          final cars = await vehicleService.getVehicles();
+                          setState(() {
+                            widget.allcars=cars;
+                            carCounts =
+                                getCarCountsPerCompany();
+                          });}
   Future<void> fetchImageForFilteredCompanies() async {
+
+                          
     ImageService _apiService = ImageService();
 
     // Initialize imageDataList with null values
@@ -107,6 +125,8 @@ class _MyCompaniesState extends State<Companies>
 
   Future<void> refreshCompanies() async {
     CompanyService companyService = CompanyService();
+    fetchCars();
+
     List<Company> updatedCompanies = await companyService.getAllCompanies();
     setState(() {
       filteredCompanies = updatedCompanies;
@@ -122,7 +142,7 @@ class _MyCompaniesState extends State<Companies>
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context,widget.companies);
               },
               child: Icon(
                 Icons.arrow_back_ios,
@@ -190,8 +210,7 @@ class _MyCompaniesState extends State<Companies>
 
                           itemCount: filteredCompanies.length,
                           itemBuilder: (context, index) {
-                            Map<String, int> carCounts =
-                                getCarCountsPerCompany();
+                            
                             return Column(
                               children: [
                                 Slidable(
@@ -270,11 +289,11 @@ class _MyCompaniesState extends State<Companies>
                                       padding: EdgeInsets.only(bottom: 0.0),
                                       child: CompanyCard(
                                         title:
-                                            ' ${filteredCompanies[index].name} (${carCounts[filteredCompanies[index].name]})',
+                                           carCounts.length==0? ' ${filteredCompanies[index].name}': ' ${filteredCompanies[index].name} (${carCounts[filteredCompanies[index].name]})',
                                         subtitle1:
                                             filteredCompanies[index].email,
                                         subtitle2: filteredCompanies[index]
-                                            .contactName,
+                                            .balance.toStringAsFixed(2),
                                         // imageId: filteredCompanies[index].imageId,
                                         imageData:
                                             (filteredCompanies[index].imageId ==

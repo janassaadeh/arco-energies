@@ -33,25 +33,25 @@ class ConfirmationDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/logoWhite.png",
-                color: Color.fromARGB(255, 1, 14, 72),
-                width: 20,
-              ),
-              const Text(
-                'rco Energies',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 1, 14, 72),
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+          // const SizedBox(height: 10),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Image.asset(
+          //       "assets/images/logoWhite.png",
+          //       color: Color.fromARGB(255, 1, 14, 72),
+          //       width: 20,
+          //     ),
+          //     const Text(
+          //       'rco Energies',
+          //       style: TextStyle(
+          //         color: Color.fromARGB(255, 1, 14, 72),
+          //         fontSize: 15,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 20),
           Text(
             content,

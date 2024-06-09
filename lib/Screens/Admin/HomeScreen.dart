@@ -58,6 +58,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
+    
   }
 
   Future<List<Fuel>> _fetchFuels() async {
@@ -191,13 +192,21 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         onTap: () async {
                           var role = await authenticationService.getRole();
                           print(role);
-                          push(
-                              Operators(
+                        
+                                  final companies = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>   Operators(
                                 operators: widget.operators,
                                 cars: widget.cars,
                                 pumps: widget.pumps,
-                              ),
-                              context);
+                              ),),
+                    );
+                    if (companies != null) {
+                      setState(() {
+                        widget.operators=companies;
+                         // Add a new TickerProvider
+                      });
+                    }
                         },
                         child: Container(
                           height: 135,
@@ -217,14 +226,26 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 width: 10,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  push(
-                                      Companies(
-                                        companies: widget.companies,
+                                onTap: ()async {
+                                  // push(
+                                  //     Companies(
+                                  //       companies: widget.companies,
+                                  //       allcars: widget.cars,
+                                  //       pumps: widget.pumps,
+                                  //     ),
+                                  //     context);
+                                      final companies = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Companies(companies: widget.companies,
                                         allcars: widget.cars,
-                                        pumps: widget.pumps,
-                                      ),
-                                      context);
+                                        pumps: widget.pumps,)),
+                    );
+                    if (companies != null) {
+                      setState(() {
+                        widget.companies=companies;
+                         // Add a new TickerProvider
+                      });
+                    }
                                 },
                                 child: Features(
                                   color: const Color.fromRGBO(237, 174, 73, 1),
@@ -249,9 +270,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 width: 10,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  push(AllRewards(rewards: widget.rewards),
-                                      context);
+                                onTap: ()async {
+                                
+                                           final companies = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AllRewards(rewards: widget.rewards)),
+                    );
+                    if (companies != null) {
+                      setState(() {
+                        widget.rewards=companies;
+                         // Add a new TickerProvider
+                      });
+                    }
+                                      
                                 },
                                 child: Features(
                                   color: Color.fromRGBO(209, 73, 91, 1),

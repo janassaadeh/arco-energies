@@ -103,6 +103,7 @@ class _MyOperatorsState extends State<AllRewards>
                     );
                     if (newOperator != null) {
                       setState(() {
+                        widget.rewards.add(newOperator);
                         filteredOperators.add(
                             newOperator); // Add the new company to the list
                         controllers.add(SlidableController(

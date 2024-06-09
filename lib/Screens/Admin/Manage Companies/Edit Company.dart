@@ -10,6 +10,7 @@ import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:your_app_path_here/company_model.dart';
@@ -499,6 +500,7 @@ class _EditCompanyState extends State<EditCompany> {
                     controller: _emailController,
                     imagePath: 'assets/images/Letter.png',
                     hintText: "Email",
+                    enabled: false,
                   ),
                   const SizedBox(height: 20),
                   Padding(
@@ -521,18 +523,34 @@ class _EditCompanyState extends State<EditCompany> {
                   ),
 
                   const SizedBox(height: 40),
-                  GestureDetector(
-                    onTap: () async {
-                      ImageService imageService = ImageService();
-                      // print(base64Image1);
-                      if (base64Image1 != null) {
-                        await imageService.uploadImage(
-                            base64Image1, widget.company.id);
-                      }
-                      _saveChanges(context);
-                    },
-                    child: CustomButton(buttonText: "Save"),
-                  )
+              GestureDetector(
+  onTap: () async {
+    // Check for empty fields
+    if (_nameController.text.isEmpty ||
+        _contactNameController.text.isEmpty ||
+        _locationController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please fill in all fields.");
+        },
+      );
+      return;
+    }
+
+    // All validations passed, proceed with saving changes
+    ImageService imageService = ImageService();
+    if (base64Image1 != null) {
+      await imageService.uploadImage(
+          base64Image1, widget.company.id);
+    }
+    _saveChanges(context);
+  },
+  child: CustomButton(buttonText: "Save"),
+)
+
                 ],
               ),
             ),

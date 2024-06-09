@@ -1,21 +1,17 @@
-import 'package:company_pages/Screens/Admin/New%20Deposit/cash_value_entry.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/companies_deposit.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/payment_method_select.dart';
+import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/text.dart';
 import 'package:company_pages/Widgets/Operator/title.dart';
 import 'package:company_pages/Widgets/Operator/second_text.dart';
-import 'package:flutter/material.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/input_field.dart';
-
-// import '../../../Widgets/Operator/next_button.dart';
-import '../../../Widgets/Common/CustomButton.dart';
-// import '../../../Widgets/Common/j_next_button.dart';
+import 'package:company_pages/Provider/company_provider.dart';
+import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import '../Manage Companies/Company_Model.dart';
-import '../../../Provider/company_provider.dart';
-
-import 'package:provider/provider.dart';
 
 class SelectCompanyBody extends StatefulWidget {
   const SelectCompanyBody({super.key});
@@ -26,15 +22,36 @@ class SelectCompanyBody extends StatefulWidget {
 
 class _SelectCompanyBodyState extends State<SelectCompanyBody> {
   TextEditingController idController = TextEditingController();
+  List<Company> companyList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCompanies();
+  }
+
+  Future<void> _fetchCompanies() async {
+    try {
+      CompanyService companyService = CompanyService();
+      List<Company> companies = await companyService.getAllCompanies();
+
+      setState(() {
+        companyList = companies;
+      });
+
+      CompanyProvider companyProvider =
+          Provider.of<CompanyProvider>(context, listen: false);
+      companyProvider.setCompanyList(companyList);
+    } catch (e) {
+      // Handle error appropriately, e.g., show a snackbar
+      print('Error fetching companies: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Company> companyList =
-        Provider.of<CompanyProvider>(context).companyList;
-
     return Column(
       children: [
-        // const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -50,8 +67,9 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
                   final id = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            SelectCompanies(companies: companyList)),
+                      builder: (context) =>
+                          SelectCompanies(companies: companyList),
+                    ),
                   );
                   if (id != null) {
                     setState(() {
@@ -74,27 +92,28 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
                   "Verify your selected payment method to ensure accuracy."),
               const SizedBox(height: 20),
               GestureDetector(
-                  onTap: () {
-                    if (idController.text.isEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ErrorPopUp(
-                              text: "Make sure you have selected a company!");
-                        },
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentMethodEntry(
-                            selectedCompany: idController.text,
-                          ),
+                onTap: () {
+                  if (idController.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const ErrorPopUp(
+                            text: "Make sure you have selected a company!");
+                      },
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentMethodEntry(
+                          selectedCompany: idController.text,
                         ),
-                      );
-                    }
-                  },
-                  child: CustomButton(buttonText: 'Next')),
+                      ),
+                    );
+                  }
+                },
+                child: CustomButton(buttonText: 'Next'),
+              ),
             ],
           ),
         ),

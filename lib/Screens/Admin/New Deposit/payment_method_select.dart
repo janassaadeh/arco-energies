@@ -8,83 +8,77 @@ class PaymentMethodEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Prevent back button press
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 100,
-          title: const Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'New Deposit',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: const Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'New Deposit',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                 ),
-                Icon(
-                  Icons.abc,
-                  color: Color(0xff003D5B),
-                  size: 40,
-                )
+              ),
+              Icon(
+                Icons.abc,
+                color: Color(0xff003D5B),
+                size: 40,
+              )
+            ],
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        leading: GestureDetector(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 17),
+              child: Image.asset(
+                "assets/images/cancel.png",
+                width: 15,
+              )),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Column(
+        children: [
+          Container(
+            color: const Color(0xff003D5B),
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildPathPoint("  Company  ", true, true),
+                    // _buildPathLine(),
+                    _buildPathPoint("Payment Method", true, false),
+                    // _buildPathLine(),
+                    _buildPathPoint("Cash Amount", false, false),
+                    // _buildPathLine(),
+                  ],
+                ),
+                // Positioned(
+                //   left:85,
+                //   top:10,
+                //   child: _buildPathLine(103,true)),
+                //   Positioned(
+                //   left:210,
+                //   top:10,
+                //   child: _buildPathLine(110,false)),
               ],
             ),
           ),
-          backgroundColor: const Color(0xff003D5B),
-          leading: GestureDetector(
-            child: Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 17),
-                child: Image.asset(
-                  "assets/images/cancel.png",
-                  width: 15,
-                )),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
+          const SizedBox(height: 20),
+          PaymentMethodEntryBody(
+            selectedCompany: selectedCompany,
           ),
-        ),
-        body: Column(
-          children: [
-            Container(
-              color: const Color(0xff003D5B),
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildPathPoint("  Company  ", true, true),
-                      // _buildPathLine(),
-                      _buildPathPoint("Payment Method", true, false),
-                      // _buildPathLine(),
-                      _buildPathPoint("Cash Amount", false, false),
-                      // _buildPathLine(),
-                    ],
-                  ),
-                  // Positioned(
-                  //   left:85,
-                  //   top:10,
-                  //   child: _buildPathLine(103,true)),
-                  //   Positioned(
-                  //   left:210,
-                  //   top:10,
-                  //   child: _buildPathLine(110,false)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            PaymentMethodEntryBody(
-              selectedCompany: selectedCompany,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 import 'package:company_pages/Screens/Admin/Manage%20Fields.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/operator_model.dart';
 import 'package:company_pages/Services/Auth/RegisterService.dart';
+import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/calendar_sheet.dart';
 // import 'package:company_pages/Widgets/calendar_sheet.dart';
 import 'package:flutter/material.dart';
@@ -179,20 +180,38 @@ class _AddOperatorState extends State<AddOperator> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _addOpLoading = true;
-                        });
-                        _addOperator(context);
-                        setState(() {
-                          _addOpLoading = false;
-                        });
-                      },
-                      child: _addOpLoading
-                          ? CircularProgressIndicator()
-                          : CustomButton(buttonText: "Add"),
-                    )
+                  GestureDetector(
+  onTap: () async {
+    // Check for empty fields
+    if (_nameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _passController.text.isEmpty ||
+        _dobController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const ErrorPopUp(text: "Please fill in all fields.");
+        },
+      );
+      return;
+    }
+
+    // All validations passed, proceed with adding operator
+    setState(() {
+      _addOpLoading = true;
+    });
+    _addOperator(context);
+    setState(() {
+      _addOpLoading = false;
+    });
+  },
+  child: _addOpLoading
+      ? CircularProgressIndicator()
+      : CustomButton(buttonText: "Add"),
+)
+
                   ],
                 ),
               ),

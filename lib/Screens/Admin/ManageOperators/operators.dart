@@ -118,7 +118,7 @@ class _MyOperatorsState extends State<Operators>
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+               Navigator.pop(context,widget.operators);
               },
               child: Icon(
                 Icons.arrow_back_ios,
@@ -182,7 +182,7 @@ class _MyOperatorsState extends State<Operators>
                       child: ListView.builder(
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).padding.bottom +
-                                  50), // Adjust the padding as needed
+                                  50), 
 
                           itemCount: filteredOperators.length,
                           itemBuilder: (context, index) {

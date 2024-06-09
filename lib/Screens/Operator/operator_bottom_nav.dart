@@ -78,15 +78,21 @@ class _OperatorState extends State<Operator> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/images/logoWhite.png"),
-              const Text(
-                'rco Energies',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Container(
+                height: 80,
+                width:200,
+                child: Image.asset(fit:BoxFit.fill,"assets/images/arco_logo.png",color: Colors.white,)),
+              // Padding(
+              //   padding: const EdgeInsets.only(top:8.0),
+              //   child: const Text(
+              //     'rco Energies',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontSize: 25,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
               const Icon(
                 Icons.abc,
                 color: Color(0xff003D5B),
@@ -138,7 +144,7 @@ class _OperatorState extends State<Operator> {
           imageData: _imageData,
         );
       case 1:
-        return const NewTransaction();
+        return  NewTransaction(operator:operator);
       case 2:
         return Profile(
           operator: operator,
