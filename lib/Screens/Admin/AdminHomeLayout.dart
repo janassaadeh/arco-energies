@@ -64,7 +64,7 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
     // _fetchRedemptions();
     _fetchUserData().then((_) {
       // Call _getDepositList() only after _fetchUserData() completes
-      _getDepositList();
+      // _getDepositList();
       // if(admin.imageId=='')
       _fetchImage();
       _fetchPumpsndVehicles();
@@ -212,34 +212,34 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
     }
   }
 
-  Future<void> _getDepositList() async {
-    try {
-      if (admin == null) {
-        print('Admin data is not yet fetched.');
-        return; // Exit the method if admin data is not available
-      }
+  // Future<void> _getDepositList() async {
+  //   try {
+  //     if (admin == null) {
+  //       print('Admin data is not yet fetched.');
+  //       return; // Exit the method if admin data is not available
+  //     }
 
-      DepositService depositService = DepositService();
-      List<DepositReceipt> adminDepositList =
-          await depositService.getCashAdditionEventsByAdminId(admin.id);
-      setState(() {
-        depositList = adminDepositList;
-      });
+  //     DepositService depositService = DepositService();
+  //     List<DepositReceipt> adminDepositList =
+  //         await depositService.getCashAdditionEventsByAdminId(admin.id);
+  //     setState(() {
+  //       depositList = adminDepositList;
+  //     });
 
-      if (depositList.isNotEmpty) {
-        print('Deposit list fetched successfully:');
-        depositList.forEach((receipt) {
-          print(
-              'Receipt ID: ${receipt.id}, date: ${receipt.timestamp}, Amount: ${receipt.cashAmount}');
-        });
-      } else {
-        print('Deposit list is empty.');
-      }
-    } catch (e) {
-      // Handle error appropriately, e.g., show a snackbar
-      print('Error fetching deposit list : $e');
-    }
-  }
+  //     if (depositList.isNotEmpty) {
+  //       print('Deposit list fetched successfully:');
+  //       depositList.forEach((receipt) {
+  //         print(
+  //             'Receipt ID: ${receipt.id}, date: ${receipt.timestamp}, Amount: ${receipt.cashAmount}');
+  //       });
+  //     } else {
+  //       print('Deposit list is empty.');
+  //     }
+  //   } catch (e) {
+  //     // Handle error appropriately, e.g., show a snackbar
+  //     print('Error fetching deposit list : $e');
+  //   }
+  // }
 
   Future<void> updateNotificationCount() async {
     // Get the initial notification count when the widget initializes

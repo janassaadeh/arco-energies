@@ -11,6 +11,7 @@ import 'package:company_pages/Screens/Admin/Rewards/redemption.dart';
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/Manage%20Accounts/operator_manage_services.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
@@ -287,16 +288,41 @@ class _EditOperatorState extends State<EditOperator> {
                           setState(() {
                             _viewTransactionsLoading = true;
                           });
-                          TransactionService transactionService =
+                TransactionService transactionService =
                               TransactionService();
                           List<Transaction> allTransactions =
                               await transactionService.getTransactions();
 
                           // Filter transactions for the specific company
-                          List<Transaction> opTransactions = allTransactions
-                              .where((transaction) =>
-                                  transaction.operator.id == widget.operator.id)
-                              .toList();
+                          List<Transaction> companyTransactions =
+                              allTransactions
+                                  .where((transaction) =>
+                                      transaction.operator.id ==
+                                      widget.operator.id)
+                                  .toList();
+// Sort the companyTransactions list from newest to oldest
+                          companyTransactions
+                              .sort((a, b) => b.date.compareTo(a.date));
+
+
+
+  DepositService depositService =
+                              DepositService();
+                          List<DepositReceipt> companydeposits =
+                              await depositService.getCashAdditionEventsByAdminId(widget.operator.id);
+
+                         
+// Sort the companyTransactions list from newest to oldest
+                          companyTransactions
+                              .sort((a, b) => b.date.compareTo(a.date));
+// Now companyTransactions is sorted from newest to oldest
+ List<dynamic> combinedList = [...companyTransactions, ...companydeposits];
+      combinedList.sort((a, b) {
+        DateTime aDate = a is Transaction ? DateTime.parse(a.date) : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction ? DateTime.parse(b.date) : DateTime.parse(b.timestamp);
+        return bDate.compareTo(aDate);
+      });
+
 // Sort the companyTransactions list from newest to oldest
 // opTransactions.sort((a, b) => b.date.compareTo(a.date));
 
@@ -306,7 +332,7 @@ class _EditOperatorState extends State<EditOperator> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CompanyTranscations(
-                                        transactions: opTransactions,
+                                        transactions: combinedList,
                                         cars: widget.cars,
                                         pumps: widget.pumps,
                                         company: widget.operator,
@@ -360,42 +386,7 @@ class _EditOperatorState extends State<EditOperator> {
                           ),
                         ),
                       ),
-                      //            Padding(
-                      //       padding: const EdgeInsets.only(right:40.0),
-                      //       child: Container(
-                      //           width: 190,
-                      //           height: 50,
-                      //  decoration: BoxDecoration(
-                      //   borderRadius: BorderRadius.circular(30),
-                      //   // gradient: const LinearGradient(
-                      //   //   begin: Alignment(1.5, 1),
-                      //   //   end: Alignment(-1.5, 1),
-                      //   //           colors: [Color.fromRGBO(0, 61, 91, 1),Color.fromRGBO(2, 91, 134, 0.8999999761581421)]
-
-                      //   // ),
-                      //   color: Colors.red.shade400
-                      // ),
-                      // //                 decoration: BoxDecoration(
-                      // //   borderRadius: BorderRadius.circular(10),
-                      // //   color: const Color.fromRGBO(196, 196, 196, 0.2),
-                      // // ),
-                      //           child: Padding(
-                      //             padding: const EdgeInsets.only(left:20.0,right: 20,top: 10,bottom: 10),
-                      //             child: Row(
-                      //               mainAxisAlignment: MainAxisAlignment.center,
-                      //               children: [
-                      //                 Center(child: Text('Delete',style: TextStyle(color: Colors.white,fontSize: 18,),)),
-                      //                 // Image.asset('assets/images/WhiteCar.png',color: Colors.white,)
-                      //             Padding(
-                      //               padding: const EdgeInsets.only(left:8.0),
-                      //               child: Icon(Icons.delete,color: Colors.white,),
-                      //             )
-
-                      //               ],
-                      //             ),
-                      //           ),
-                      //           ),
-                      //     )
+                   
                     ],
                   )
                 ],
@@ -557,9 +548,7 @@ class _EditOperatorState extends State<EditOperator> {
       return;
     }
 
-    setState(() {
-      _saveOpChangesLoading = true;
-    });
+    
 
     ImageService imageService = ImageService();
     if (base64Image1 != null) {
@@ -569,13 +558,10 @@ class _EditOperatorState extends State<EditOperator> {
 
     _saveChanges(context);
 
-    setState(() {
-      _saveOpChangesLoading = false;
-    });
+
   },
-  child: _saveOpChangesLoading
-      ? CircularProgressIndicator()
-      : CustomButton(buttonText: "Save"),
+  child:
+      CustomButton(buttonText:  _saveOpChangesLoading?'':"Save"),
 )
 
                 ],
@@ -591,6 +577,9 @@ class _EditOperatorState extends State<EditOperator> {
   }
 
   void _saveChanges(BuildContext context) async {
+    setState(() {
+      _saveOpChangesLoading = true;
+    });
     final editedOperator = Operator(
         id: widget.operator.id,
         name: _nameController.text,
@@ -604,6 +593,9 @@ class _EditOperatorState extends State<EditOperator> {
       await operatorService.updateOperator(editedOperator.id, editedOperator);
       Navigator.pop(context,
           editedOperator); // Pass edited company object back to the previous screen
+              setState(() {
+      _saveOpChangesLoading = false;
+    });
     } catch (e) {
       // Handle error
       print("Error updating operator: $e");

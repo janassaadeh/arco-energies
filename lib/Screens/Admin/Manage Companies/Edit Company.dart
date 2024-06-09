@@ -9,6 +9,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Transactions/transactions.d
 import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,8 @@ class EditCompany extends StatefulWidget {
 }
 
 class _EditCompanyState extends State<EditCompany> {
+  bool _saveOpChangesLoading = false;
+
   late TextEditingController _nameController;
 
   late TextEditingController _contactNameController;
@@ -320,13 +323,30 @@ class _EditCompanyState extends State<EditCompany> {
                           companyTransactions
                               .sort((a, b) => b.date.compareTo(a.date));
 
+
+
+  DepositService depositService =
+                              DepositService();
+                          List<DepositReceipt> companydeposits =
+                              await depositService.getCashAdditionEventsByCompanyId(widget.company.id);
+
+                         
+// Sort the companyTransactions list from newest to oldest
+                          companyTransactions
+                              .sort((a, b) => b.date.compareTo(a.date));
 // Now companyTransactions is sorted from newest to oldest
+ List<dynamic> combinedList = [...companyTransactions, ...companydeposits];
+      combinedList.sort((a, b) {
+        DateTime aDate = a is Transaction ? DateTime.parse(a.date) : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction ? DateTime.parse(b.date) : DateTime.parse(b.timestamp);
+        return bDate.compareTo(aDate);
+      });
 
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CompanyTranscations(
-                                      transactions: companyTransactions,
+                                      transactions: combinedList,
                                       company: widget.company,
                                       cars: widget.allcars,
                                       pumps: widget.pumps)));
@@ -548,7 +568,7 @@ class _EditCompanyState extends State<EditCompany> {
     }
     _saveChanges(context);
   },
-  child: CustomButton(buttonText: "Save"),
+  child: CustomButton(buttonText:  _saveOpChangesLoading?'':"Save"),
 )
 
                 ],
@@ -564,6 +584,9 @@ class _EditCompanyState extends State<EditCompany> {
   }
 
   void _saveChanges(BuildContext context) async {
+                  setState(() {
+      _saveOpChangesLoading = true;
+    });
     final editedCompany = Company(
         id: widget.company.id,
         name: _nameController.text,
@@ -579,6 +602,9 @@ class _EditCompanyState extends State<EditCompany> {
       await _companyService.updateCompany(editedCompany.id, editedCompany);
       Navigator.pop(context,
           editedCompany); // Pass edited company object back to the previous screen
+                        setState(() {
+      _saveOpChangesLoading = false;
+    });
     } catch (e) {
       // Handle error
       print("Error updating company: $e");

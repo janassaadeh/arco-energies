@@ -29,6 +29,7 @@ class ManageFields extends StatelessWidget {
         child: TextFormField(
           controller: controller,
           enabled: enabled,
+          keyboardType:(hintText=="Cash Amount")? TextInputType.number:TextInputType.text,
           obscureText: (hintText=="Password"),
           decoration: InputDecoration(
             border: const OutlineInputBorder(borderSide: BorderSide.none),

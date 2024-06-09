@@ -264,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     try {
                       await authenticationService.authenticate(
-                          _emailController.text, _passwordController.text);
+                          _emailController.text.replaceAll(' ', '').toLowerCase(), _passwordController.text);
                       String? role = await authenticationService.getRole();
                       print(role);
                       if (role == 'COMPANY') {
