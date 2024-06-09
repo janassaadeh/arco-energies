@@ -171,7 +171,7 @@ class _AdminProfileState extends State<AdminProfile> {
                         );
                       },
                       child: Container(
-                        width: 150,
+                        width: 180,
                         height: 45,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -194,7 +194,7 @@ class _AdminProfileState extends State<AdminProfile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Edit Profile',
+                                'Edit Password',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),

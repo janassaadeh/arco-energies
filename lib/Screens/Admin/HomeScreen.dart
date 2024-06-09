@@ -123,15 +123,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               top: 20,
                               left: 20,
                               child: Text(
-                                widget.admin == null
-                                    ? ''
-                                    : 'Hello, ${widget.admin.name}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+  widget.admin == null
+    ? ''
+    : 'Hello, ${widget.admin.name.length > 10 ? widget.admin.name.substring(0, 10) + '...' : widget.admin.name}',
+  style: const TextStyle(
+    color: Colors.white,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
                             ),
                             Positioned(
                               bottom: 20,

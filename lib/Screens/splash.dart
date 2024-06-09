@@ -33,7 +33,7 @@ class SplashScreen extends StatelessWidget {
                               String role = snapshot.data ??
                                   ""; // Use empty string as default
                               if (role == "COMPANY") {
-                                return  LoginScreen();
+                                return  CompanyHomePageLayout();
                               } else if (role == "OPERATOR") {
                                 return const Operator();
                               } else if (role == "ADMIN") {
@@ -60,11 +60,11 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.white, // Set background color
       body: Center(
         child: Container(
-          width: 80,
-          height: 80,
+          width: 200,
+          height: 200,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/logo.png'),
+              image: AssetImage('assets/images/arco.jpg'),
               // fit: BoxFit.fitWidth
             ),
           ),

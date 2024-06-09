@@ -136,21 +136,7 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 18,
                       ),
-                      (company == null ||
-                              depositList == null ||
-                              transactionList == null)
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            )
-                          : Features(
-                              color: Color.fromRGBO(209, 73, 91, 1),
-                              imageAsset: "assets/images/Star.png",
-                              text: "Earn and Redeem Points",
-                            ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                     
                       GestureDetector(
                         onTap: () async {
                           VehicleCompanyService vehicleService =
@@ -180,6 +166,7 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
+                      
                       (company == null ||
                               depositList == null ||
                               transactionList == null)
@@ -203,6 +190,22 @@ class HomeScreen extends StatelessWidget {
                                 text: "Track your transactions",
                               ),
                             ),
+                              const SizedBox(
+                        width: 10,
+                      ),
+                             (company == null ||
+                              depositList == null ||
+                              transactionList == null)
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            )
+                          : Features(
+                              color: Color.fromRGBO(209, 73, 91, 1),
+                              imageAsset: "assets/images/Star.png",
+                              text: "Earn and Redeem Points",
+                            ),
+                    
                       const SizedBox(
                         width: 18,
                       ),
