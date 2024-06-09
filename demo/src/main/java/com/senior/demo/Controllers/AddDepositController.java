@@ -1,6 +1,7 @@
 package com.senior.demo.Controllers;
 
 import com.senior.demo.Collections.CashAdditionEvent;
+import com.senior.demo.Collections.Transaction;
 import com.senior.demo.Repository.CashAdditionEventRepository;
 import com.senior.demo.Responses.CashAdditionResponse;
 import com.senior.demo.Responses.ErrorResponse;
@@ -65,6 +66,15 @@ public class AddDepositController {
         }
     }
 
+    @PutMapping("/deposits/{id}")
+    public CashAdditionEvent updateTransaction(@PathVariable String id, @RequestParam String companyId, @RequestParam double cashAmount, @RequestParam String paymentMethod) {
+        return addDepositService.updateDeposit( id,companyId,cashAmount,paymentMethod);
+    }
+
+    @DeleteMapping("/deposits/{id}")
+    public void deleteTransactionById(@PathVariable String id) {
+        addDepositService.deleteDepositById(id);
+    }
 
 
 
