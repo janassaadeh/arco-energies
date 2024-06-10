@@ -160,7 +160,6 @@ class FuelPricesService {
   Future<void> pushOperatorApprovedNotification(
       not.Notification notification) async {
     try {
-
       final deviceTokens =
           // notification.operator.deviceTokens;
           await getOperatorDeviceTokensById(notification.operator.id);
@@ -201,7 +200,6 @@ class FuelPricesService {
   Future<void> pushOperatorDeclinedNotification(
       not.Notification notification) async {
     try {
-
       // final deviceTokens = notification.operator.deviceTokens;
       final deviceTokens =
           await getOperatorDeviceTokensById(notification.operator.id);
@@ -301,7 +299,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.119:8080/api/operator/device-tokens',
+        'https://arcoenergies.onrender.com/api/operator/device-tokens',
       );
 
       if (response.statusCode == 200) {
@@ -348,7 +346,7 @@ class FuelPricesService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.6.119:8080/api/operator/device-tokens/$operatorId',
+        'https://arcoenergies.onrender.com/api/operator/device-tokens/$operatorId',
       );
 
       if (response.statusCode == 200) {

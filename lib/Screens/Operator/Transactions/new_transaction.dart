@@ -1,4 +1,3 @@
-
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +16,7 @@ import 'package:company_pages/Widgets/Operator/input_field.dart';
 
 class NewTransaction extends StatefulWidget {
   dynamic operator;
-   NewTransaction({Key? key, required this.operator}) : super(key: key);
+  NewTransaction({Key? key, required this.operator}) : super(key: key);
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -53,8 +52,12 @@ class _NewTransactionState extends State<NewTransaction> {
 
       List<dynamic> combinedList = [...transactions, ...deposits];
       combinedList.sort((a, b) {
-        DateTime aDate = a is Transaction ? DateTime.parse(a.date) : DateTime.parse(a.timestamp);
-        DateTime bDate = b is Transaction ? DateTime.parse(b.date) : DateTime.parse(b.timestamp);
+        DateTime aDate = a is Transaction
+            ? DateTime.parse(a.date)
+            : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction
+            ? DateTime.parse(b.date)
+            : DateTime.parse(b.timestamp);
         return bDate.compareTo(aDate);
       });
 
@@ -63,45 +66,51 @@ class _NewTransactionState extends State<NewTransaction> {
       throw Exception('Failed to fetch combined data: $e');
     }
   }
-Future<List<Transaction>> _fetchTransactions() async {
-  try {
-    List<Transaction> cachedTransactions =
+
+  Future<List<Transaction>> _fetchTransactions() async {
+    try {
+      List<Transaction> cachedTransactions =
+          Provider.of<TransactionProvider>(context, listen: false)
+              .cachedTransactions;
+
+      if (cachedTransactions.isNotEmpty) {
+        return cachedTransactions
+            .where(
+                (transaction) => transaction.operator.id == widget.operator.id)
+            .toList();
+      } else {
+        final List<Transaction> transactions =
+            await transactionService.getTransactions();
+
+        // Filter the transactions by operatorId
+        final filteredTransactions = transactions
+            .where(
+                (transaction) => transaction.operator.id == widget.operator.id)
+            .toList();
+
         Provider.of<TransactionProvider>(context, listen: false)
-            .cachedTransactions;
+            .cachedTransactions = filteredTransactions;
 
-    if (cachedTransactions.isNotEmpty) {
-      return cachedTransactions.where((transaction) => transaction.operator.id == widget.operator.id).toList();
-    } else {
-      final List<Transaction> transactions = await transactionService.getTransactions();
-
-      // Filter the transactions by operatorId
-      final filteredTransactions = transactions.where((transaction) => transaction.operator.id == widget.operator.id).toList();
-      
-      Provider.of<TransactionProvider>(context, listen: false)
-          .cachedTransactions = filteredTransactions;
-          
-      return filteredTransactions;
+        return filteredTransactions;
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch transactions: $e');
     }
-  } catch (e) {
-    throw Exception('Failed to fetch transactions: $e');
   }
-}
-
 
   Future<List<DepositReceipt>> _fetchDeposits() async {
     try {
       List<DepositReceipt> cachedDeposits =
-          Provider.of<DepositProvider>(context, listen: false)
-              .cachedDeposits;
+          Provider.of<DepositProvider>(context, listen: false).cachedDeposits;
 
       if (cachedDeposits.isNotEmpty) {
         return cachedDeposits;
       } else {
-        final List<DepositReceipt> deposits =
-            await depositService.getCashAdditionEventsByAdminId(widget.operator.id);
+        final List<DepositReceipt> deposits = await depositService
+            .getCashAdditionEventsByAdminId(widget.operator.id);
 
-        Provider.of<DepositProvider>(context, listen: false)
-            .cachedDeposits = deposits;
+        Provider.of<DepositProvider>(context, listen: false).cachedDeposits =
+            deposits;
         return deposits;
       }
     } catch (e) {
@@ -131,59 +140,67 @@ Future<List<Transaction>> _fetchTransactions() async {
       }).toList();
     });
   }
-Future<void> _refreshCombinedData() async {
-  print('Refreshing combined data...');
-  try {
-    // Fetch new data
-    await _updateCachedDeposits();
-    await _updateCachedTransactions();
 
-  List <Transaction> transactions=  Provider.of<TransactionProvider>(context, listen: false)
-        .cachedTransactions ;
-  List <DepositReceipt> deposits=  Provider.of<DepositProvider>(context, listen: false)
-        .cachedDeposits ;
-    // Update cached transactions and deposits
-  
-        List<dynamic> combinedList = [...transactions, ...deposits];
+  Future<void> _refreshCombinedData() async {
+    print('Refreshing combined data...');
+    try {
+      // Fetch new data
+      await _updateCachedDeposits();
+      await _updateCachedTransactions();
+
+      List<Transaction> transactions =
+          Provider.of<TransactionProvider>(context, listen: false)
+              .cachedTransactions;
+      List<DepositReceipt> deposits =
+          Provider.of<DepositProvider>(context, listen: false).cachedDeposits;
+      // Update cached transactions and deposits
+
+      List<dynamic> combinedList = [...transactions, ...deposits];
       combinedList.sort((a, b) {
-        DateTime aDate = a is Transaction ? DateTime.parse(a.date) : DateTime.parse(a.timestamp);
-        DateTime bDate = b is Transaction ? DateTime.parse(b.date) : DateTime.parse(b.timestamp);
+        DateTime aDate = a is Transaction
+            ? DateTime.parse(a.date)
+            : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction
+            ? DateTime.parse(b.date)
+            : DateTime.parse(b.timestamp);
         return bDate.compareTo(aDate);
       });
-    setState(() {
-      _combinedFuture = Future.value(combinedList);
-    });
-    print('Data refreshed successfully');
-  } catch (e) {
-    print('Error refreshing data: $e');
+      setState(() {
+        _combinedFuture = Future.value(combinedList);
+      });
+      print('Data refreshed successfully');
+    } catch (e) {
+      print('Error refreshing data: $e');
+    }
   }
-}
 
-Future<void> _updateCachedTransactions() async {
-  try {
-      final List<Transaction> transactions = await transactionService.getTransactions();
+  Future<void> _updateCachedTransactions() async {
+    try {
+      final List<Transaction> transactions =
+          await transactionService.getTransactions();
 
       // Filter the transactions by operatorId
-      final filteredTransactions = transactions.where((transaction) => transaction.operator.id == widget.operator.id).toList();
-    Provider.of<TransactionProvider>(context, listen: false)
-        .cachedTransactions = transactions;
-  } catch (e) {
-    print('Error updating cached transactions: $e');
+      final filteredTransactions = transactions
+          .where((transaction) => transaction.operator.id == widget.operator.id)
+          .toList();
+      Provider.of<TransactionProvider>(context, listen: false)
+          .cachedTransactions = transactions;
+    } catch (e) {
+      print('Error updating cached transactions: $e');
+    }
   }
-}
 
-Future<void> _updateCachedDeposits() async {
-  try {
-    // List<DepositReceipt> deposits = newData.whereType<DepositReceipt>().toList();
-  final List<DepositReceipt> deposits =
-            await depositService.getCashAdditionEventsByAdminId(widget.operator.id);
-    Provider.of<DepositProvider>(context, listen: false)
-        .cachedDeposits = deposits;
-  } catch (e) {
-    print('Error updating cached deposits: $e');
+  Future<void> _updateCachedDeposits() async {
+    try {
+      // List<DepositReceipt> deposits = newData.whereType<DepositReceipt>().toList();
+      final List<DepositReceipt> deposits = await depositService
+          .getCashAdditionEventsByAdminId(widget.operator.id);
+      Provider.of<DepositProvider>(context, listen: false).cachedDeposits =
+          deposits;
+    } catch (e) {
+      print('Error updating cached deposits: $e');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +233,8 @@ Future<void> _updateCachedDeposits() async {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<dynamic> combinedList = snapshot.data ?? searchResults;
+                      List<dynamic> combinedList =
+                          snapshot.data ?? searchResults;
 
                       return ListView.builder(
                         itemCount: searchResults.isNotEmpty
@@ -334,7 +352,7 @@ Future<void> _updateCachedDeposits() async {
       padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: Row(
         children: [
-                  Image.asset(
+          Image.asset(
             "assets/images/FullStop.png",
             // color: Colors.red,
             width: 20,

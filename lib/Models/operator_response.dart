@@ -31,4 +31,16 @@ class OperatorResponse {
           : [],
     );
   }
+
+   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'phone': phone,
+      'name': name,
+      'dob': dob,
+      'address': address,
+      'deviceTokens': deviceTokens,
+    };
+  }
 }

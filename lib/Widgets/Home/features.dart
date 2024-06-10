@@ -37,7 +37,10 @@ class Features extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(imageAsset,width: 70,),
+                Image.asset(
+                  imageAsset,
+                  width: 55,
+                ),
               ],
             )
           ],

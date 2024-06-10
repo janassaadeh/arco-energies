@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
 class DepositService {
   final Dio _dio = Dio();
   final AuthenticationService authenticationService = AuthenticationService();
@@ -74,6 +75,32 @@ class DepositService {
       throw Exception('Error occurred: $e');
     }
   }
+
+  Future<DepositReceipt> getDepositReceiptById(String receiptId) async {
+  final token = await authenticationService.getToken();
+  try {
+    final response = await _dio.get(
+      'https://arcoenergies.onrender.com/deposit/receipt/$receiptId',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      print(response.data);
+      DepositReceipt receipt = DepositReceipt.fromJson(response.data);
+      return receipt;
+    } else {
+      throw Exception(
+          'Failed to load deposit receipt. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Error occurred: $e');
+  }
+}
 
   Future<List<DepositReceipt>> getCashAdditionEventsByAdminId(
       String adminId) async {
@@ -215,6 +242,31 @@ class DepositReceipt {
       timestamp: convertToLebanonTime(json['timestamp']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'company': {
+        'id': companyId,
+        'email': companyEmail,
+        'phone': companyPhone,
+        'name': companyName,
+        'balance': companyBalance,
+        'contactName': companyContactName,
+        'location': companyLocation,
+      },
+      'operator': {
+        'id': adminId,
+        'email': adminEmail,
+        'phone': adminPhone,
+        'name': adminName,
+        'dob': adminDob,
+      },
+      'paymentMethod': paymentMethod,
+      'cashAmount': cashAmount,
+      'timestamp': timestamp,
+    };
+  }
 }
 
 String convertToLebanonTime(String timestampStr) {
@@ -233,8 +285,9 @@ String convertToLebanonTime(String timestampStr) {
   DateTime utcTime = inputTime.add(offset);
 
   // Format the Lebanon time
-  String formattedLebanonTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(utcTime);
-  print('hi'+formattedLebanonTime);
+  String formattedLebanonTime =
+      DateFormat('yyyy-MM-dd HH:mm:ss').format(utcTime);
+  print('hi' + formattedLebanonTime);
 
   return formattedLebanonTime;
 }

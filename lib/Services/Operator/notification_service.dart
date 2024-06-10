@@ -164,7 +164,7 @@ class NotificationService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://192.168.6.119:8080/api/operator/device-tokens/$id',
+        'https://arcoenergies.onrender.com/api/operator/device-tokens/$id',
         data: deviceToken,
       );
 

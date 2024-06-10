@@ -19,4 +19,13 @@ class FuelResponse {
       fuelPrice: json['fuelPrice'],
     );
   }
+
+    Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'description': description,
+      'fuelPrice': fuelPrice,
+    };
+  }
 }

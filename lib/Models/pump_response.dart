@@ -24,4 +24,14 @@ class PumpResponse {
       fuel: FuelResponse.fromJson(json['fuel']),
     );
   }
+
+    Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'currency': currency,
+      'status': status,
+      'fuel': fuel.toJson(),
+    };
+  }
 }

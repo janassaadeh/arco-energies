@@ -28,5 +28,17 @@ class CompanyResponse {
       location: json['location'],
     );
   }
+
+    Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'phone': phone,
+      'name': name,
+      'balance': balance,
+      'contactName': contactName,
+      'location': location,
+    };
+  }
   
 }

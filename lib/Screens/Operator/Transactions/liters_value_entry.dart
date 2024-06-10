@@ -1,4 +1,5 @@
 import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Provider/shift_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
@@ -211,6 +212,16 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                 if (remainingTime > Duration(seconds: 1)) {
                                   await Future.delayed(
                                       Duration(milliseconds: elapsedTime));
+                                }
+
+                                if (Provider.of<ShiftProvider>(context,
+                                        listen: false)
+                                    .isDuringShift) {
+                                  Provider.of<ShiftProvider>(context,
+                                          listen: false)
+                                      .addTransaction(transaction);
+                                }else{
+                                  print("you are not during ur shift");
                                 }
 
                                 _navigateToReceipt(transaction);
