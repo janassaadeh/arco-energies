@@ -25,7 +25,11 @@ class CustomButton extends StatelessWidget {
         ),
       ),
       child: Center(
-        child: Text(
+        child:
+        (buttonText=='')?
+        CircularProgressIndicator(
+                                          color: Colors.white):
+         Text(
           buttonText,
           textAlign: TextAlign.center,
           style: const TextStyle(

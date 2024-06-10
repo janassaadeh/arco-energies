@@ -27,7 +27,7 @@ class _AddCompanyState extends State<AddCompany> {
 
   final TextEditingController _passController = TextEditingController();
  final RegExp _emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final RegExp _phoneRegExp = RegExp(r'^\d{10}$');
+  final RegExp _phoneRegExp = RegExp(r'^\d{8}$');
   bool _addCoLoading = false;
 
   @override
@@ -179,18 +179,13 @@ class _AddCompanyState extends State<AddCompany> {
     }
 
     // All validations passed, proceed with adding the company
-    setState(() {
-      _addCoLoading = true;
-    });
+ 
     _addCompany(context);
-    setState(() {
-      _addCoLoading = false;
-    });
+
   },
 
-                      child: _addCoLoading
-                          ? CircularProgressIndicator()
-                          : CustomButton(buttonText: "Add"),
+                      child: 
+                          CustomButton(buttonText: _addCoLoading?'':"Add"),
                     )
                   ],
                 ),
@@ -214,6 +209,9 @@ class _AddCompanyState extends State<AddCompany> {
 
   void _addCompany(BuildContext context) async {
     try {
+         setState(() {
+      _addCoLoading = true;
+    });
       RegistrationService registrationService = RegistrationService();
 
       // Register the new company
@@ -245,7 +243,13 @@ class _AddCompanyState extends State<AddCompany> {
 
       // If registration is successful, navigate back with the new company object
       Navigator.pop(context, newCompany);
+          setState(() {
+      _addCoLoading = false;
+    });
     } catch (e) {
+             setState(() {
+      _addCoLoading = false;
+    });
       // Handle registration failure
       print("Failed to register company: $e");
       // Show error message to the user

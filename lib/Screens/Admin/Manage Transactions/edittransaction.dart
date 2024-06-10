@@ -49,6 +49,7 @@ class _EditTransactionState extends State<EditTransaction> {
   late TextEditingController _odometerController;
 
   late TextEditingController _vehicleController;
+  bool _saveOpChangesLoading = false;
 
   // late TextEditingController _phoneController;
 
@@ -351,6 +352,9 @@ class _EditTransactionState extends State<EditTransaction> {
                     onTap: () async{
                       
   void _saveChanges(BuildContext context) async {
+                        setState(() {
+      _saveOpChangesLoading = true;
+    });
     Pump selectedpump=widget.pumpsObjects[selectedPump];
     PumpResponse pumpResponse=PumpResponse(id: selectedpump.id, name: selectedpump.name, currency: selectedpump.currency, status: selectedpump.status, fuel: selectedpump.fuel);
     final editedTransaction = Transaction(
@@ -367,6 +371,10 @@ class _EditTransactionState extends State<EditTransaction> {
     try {
       await manageTransactionService.updateTransaction(editedTransaction.id,editedTransaction.pump.id,editedTransaction.vehicle.id,editedTransaction.quantity,editedTransaction.odometer);
       Navigator.pop(context, editedTransaction); // Pass edited company object back to the previous screen
+  
+                      setState(() {
+      _saveOpChangesLoading = false;
+    });
     } catch (e) {
       // Handle error
       print("Error updating transaction: $e");
@@ -378,7 +386,7 @@ class _EditTransactionState extends State<EditTransaction> {
   }
                       _saveChanges(context);
                     },
-                    child: CustomButton(buttonText: "Save"),
+                    child:  CustomButton(buttonText:  _saveOpChangesLoading?'':"Save"),
                   )
                 ],
               ),

@@ -48,7 +48,7 @@ class _EditRewardState extends State<EditReward> {
     late TextEditingController _descriptionController;
 
     late TextEditingController _categoryController;
-
+ bool _saveOpChangesLoading = false;
   // late TextEditingController _phoneController;
 
   // late TextEditingController _balanceController;
@@ -276,7 +276,9 @@ GestureDetector(
                     onTap: () async{
                       
   void _saveChanges(BuildContext context) async {
-   
+               setState(() {
+      _saveOpChangesLoading = true;
+    });
     final editedReward = Reward(
       id: widget.reward.id,
       name:_nameController.text,
@@ -290,6 +292,10 @@ GestureDetector(
     try {
       await rewardService.updateReward(editedReward.id,editedReward);
       Navigator.pop(context, editedReward); // Pass edited company object back to the previous screen
+   
+               setState(() {
+      _saveOpChangesLoading = false;
+    });
     } catch (e) {
       // Handle error
       print("Error updating Reward: $e");
@@ -298,10 +304,11 @@ GestureDetector(
         content: Text("Failed to update Reward"),
       ));
     }
+
   }
                       _saveChanges(context);
                     },
-                    child: CustomButton(buttonText: "Save"),
+                    child: CustomButton(buttonText:  _saveOpChangesLoading?'':"Save"),
                   )
                 ],
               ),

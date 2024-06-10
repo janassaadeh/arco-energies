@@ -171,6 +171,7 @@ class _MyCompaniesState extends State<Companies>
                       setState(() {
                         widget.companies.add(newCompany);
                         imageDataList.add('no image');
+                    carCounts[newCompany.name]=0;
                         filteredCompanies
                             .add(newCompany); // Add the new company to the list
                         controllers.add(SlidableController(
@@ -289,7 +290,7 @@ class _MyCompaniesState extends State<Companies>
                                       padding: EdgeInsets.only(bottom: 0.0),
                                       child: CompanyCard(
                                         title:
-                                           carCounts.length==0? ' ${filteredCompanies[index].name}': ' ${filteredCompanies[index].name} (${carCounts[filteredCompanies[index].name]})',
+                                           carCounts.length==0 ||carCounts.length==null? ' ${filteredCompanies[index].name}': ' ${filteredCompanies[index].name} (${carCounts[filteredCompanies[index].name]})',
                                         subtitle1:
                                             filteredCompanies[index].email,
                                         subtitle2: filteredCompanies[index]

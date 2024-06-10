@@ -199,17 +199,12 @@ class _AddOperatorState extends State<AddOperator> {
     }
 
     // All validations passed, proceed with adding operator
-    setState(() {
-      _addOpLoading = true;
-    });
+
     _addOperator(context);
-    setState(() {
-      _addOpLoading = false;
-    });
+  
   },
-  child: _addOpLoading
-      ? CircularProgressIndicator()
-      : CustomButton(buttonText: "Add"),
+  child:
+      CustomButton(buttonText: _addOpLoading?'': "Add"),
 )
 
                   ],
@@ -234,6 +229,9 @@ class _AddOperatorState extends State<AddOperator> {
 
   void _addOperator(BuildContext context) async {
     try {
+          setState(() {
+      _addOpLoading = true;
+    });
       RegistrationService registrationService = RegistrationService();
 
       // Register the new company
@@ -263,7 +261,13 @@ class _AddOperatorState extends State<AddOperator> {
 
       // If registration is successful, navigate back with the new company object
       Navigator.pop(context, newOperator);
+          setState(() {
+      _addOpLoading = false;
+    });
     } catch (e) {
+          setState(() {
+      _addOpLoading = false;
+    });
       // Handle registration failure
       print("Failed to register operator: $e");
       // Show error message to the user

@@ -7,12 +7,14 @@ import 'package:company_pages/Screens/Admin/Manage%20Cars/AddCar.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/CarDetails.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Cars/EditCar.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Transactions/editdeposit.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Transactions/edittransaction.dart';
 import 'package:company_pages/Screens/Admin/dis.dart';
 import 'package:company_pages/Services/Manage%20Accounts/manage%20transactions.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
+import 'package:company_pages/Services/manage%20deposit.dart';
 import 'package:company_pages/Widgets/Home/recentTransaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ import '../../../../Models/vehicle.dart';
 import 'package:local_auth/local_auth.dart';
 
 class CompanyTranscations extends StatefulWidget {
-  final List<Transaction> transactions;
+  final List<dynamic> transactions;
   final dynamic company;
   List<Pump> pumps;
   List<Vehicle> cars;
@@ -46,9 +48,17 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
   double ratio = 0.3;
   String searchQuery = '';
   late List<TickerProvider> tickerProviders;
-  late List<Transaction> filteredTransactions;
+  late List<dynamic> filteredTransactions;
   //  List<dynamic> imageDataList=[];
-
+String getType(String input) {
+  if (input.startsWith("TRANSACTION")) {
+    return "Transaction";
+  } else if (input.startsWith("CASH")) {
+    return "Cash";
+  } else {
+    return "Unknown";
+  }
+}
   @override
   void initState() {
     super.initState();
@@ -60,9 +70,37 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
       widget.transactions.length,
       (index) => SlidableController(tickerProviders[index]),
     );
-    filteredTransactions = filterTransaction();
+    filteredTransactions = widget.transactions;
     // fetchImageForFilteredCars();
   }
+  List<dynamic> filterTransaction(String query, List<dynamic> list) {
+  List<dynamic> searchResults = [];
+
+  // Convert query to lowercase for case-insensitive search
+  var queryLowerCase = query.toLowerCase();
+
+  // Search in DepositReceipts
+  for (var receipt in list) {
+    if (getType(receipt.id) == 'Cash') {
+      // Convert fields to lowercase for case-insensitive search
+      var idLowerCase = receipt.id.toLowerCase();
+      var paymentMethodLowerCase = receipt.paymentMethod.toLowerCase();
+      
+      if (idLowerCase.contains(queryLowerCase) ||
+          paymentMethodLowerCase.contains(queryLowerCase) ||
+          receipt.cashAmount.toString().contains(queryLowerCase)) {
+        searchResults.add(receipt);
+      }
+    } else {
+      var idLowerCase = receipt.id.toLowerCase();
+      if (idLowerCase.contains(queryLowerCase)) {
+        searchResults.add(receipt);
+      }
+    }
+  }
+
+  return searchResults;
+}
 
   // Future<void> fetchImageForFilteredCars() async {
   //   ImageService _apiService = ImageService();
@@ -93,28 +131,28 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
   //   }
   // }
   // Method to filter companies based on search query
-  List<Transaction> filterTransaction() {
-    return widget.transactions.where((t) {
-      final id = t.id.toLowerCase();
-      //       final String id;
-      // final double quantity;
-      // final double odometer;
-      // final String date;
-      // final PumpResponse pump;
-      // final VehicleResponse vehicle;
-      // final OperatorResponse operator;
+  // List<Transaction> filterTransaction() {
+  //   return widget.transactions.where((t) {
+  //     final id = t.id.toLowerCase();
+  //     //       final String id;
+  //     // final double quantity;
+  //     // final double odometer;
+  //     // final String date;
+  //     // final PumpResponse pump;
+  //     // final VehicleResponse vehicle;
+  //     // final OperatorResponse operator;
 
-      final quantity = t.quantity;
-      final date = t.date.toLowerCase();
-      final pump = t.pump.name.toLowerCase();
+  //     final quantity = t.quantity;
+  //     final date = t.date.toLowerCase();
+  //     final pump = t.pump.name.toLowerCase();
 
-      final query = searchQuery.toLowerCase();
-      return id.contains(query) ||
-          quantity == query ||
-          date.contains(query) ||
-          pump.contains(query);
-    }).toList();
-  }
+  //     final query = searchQuery.toLowerCase();
+  //     return id.contains(query) ||
+  //         quantity == query ||
+  //         date.contains(query) ||
+  //         pump.contains(query);
+  //   }).toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -164,20 +202,24 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                       padding:
                           const EdgeInsets.only(left: 18.0, right: 18, top: 18),
                       child: ListView.builder(
-                          padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).padding.bottom +
-                                  50), // Adjust the padding as needed
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
 
-                          itemCount: filteredTransactions.length,
-                          itemBuilder: (context, index) {
-                            double quantity =
-                                filteredTransactions[index].quantity;
-                            double fuelPrice = filteredTransactions[index]
-                                    .pump
-                                    .fuel
-                                    .fuelPrice ??
-                                0.0; // Default value is 0.0 if fuelPrice is null
-                            double price = quantity * fuelPrice;
+                // physics: NeverScrollableScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
+                itemCount: filteredTransactions!.length,
+                itemBuilder: (context, index) {
+                  final item = filteredTransactions![index];
+
+                          // itemCount: filteredTransactions.length,
+                          // itemBuilder: (context, index) {
+                            // double quantity =
+                            //     filteredTransactions[index].quantity;
+                            // double fuelPrice = filteredTransactions[index]
+                            //         .pump
+                            //         .fuel
+                            //         .fuelPrice ??
+                            //     0.0; // Default value is 0.0 if fuelPrice is null
+                            // double price = quantity * fuelPrice;
 
                             return Column(
                               children: [
@@ -217,7 +259,6 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                                           if (authenticated) {
                                             _showCupertinoLikeDialog(context,
                                                 index, filteredTransactions);
-                                            // _showCupertinoLikeDialog()
                                           }
                                           //  _showCupertinoLikeDialog(context,index,filteredTransactions);
                                         },
@@ -272,6 +313,13 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
+                                            (getType(item.id) == 'Cash')?
+                                            EditDeposit(
+                                                  deposit:
+                                                      filteredTransactions[
+                                                          index],
+                                               
+                                                ):
                                                 EditTransaction(
                                                   transaction:
                                                       filteredTransactions[
@@ -292,12 +340,11 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                                     child: Padding(
                                       padding: EdgeInsets.only(bottom: 0.0),
                                       child: Transactions(
-                                        id: filteredTransactions[index].id,
-                                        price: price,
-                                        type: "-",
-                                        day: formatTransactionDate(
-                                            filteredTransactions[index].date),
-                                      ),
+                        id: item.id,
+                        price: (getType(item.id) == 'Cash')?item.cashAmount:item.quantity * item.pump.fuel.fuelPrice,
+                        type: (getType(item.id) == 'Cash')?"+":"-",
+                        day: (getType(item.id) == 'Cash')?_calculateDaysAgo(item.timestamp):_calculateDaysAgo(item.date),
+                      ),
                                     ),
                                   ),
                                 ),
@@ -334,7 +381,7 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                         setState(() {
                           searchQuery = value;
                           filteredTransactions =
-                              filterTransaction(); // Update filteredOperators when searchQuery changes
+                              filterTransaction(value,widget.transactions); // Update filteredOperators when searchQuery changes
                         });
                         // fetchImageForFilteredCars();
                       },
@@ -362,7 +409,7 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
   }
 
   Future<void> _showCupertinoLikeDialog(BuildContext context, int index,
-      List<Transaction> filteredTransactions) async {
+      List<dynamic> filteredTransactions) async {
     await showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
@@ -387,11 +434,14 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
               ),
               onPressed: () async {
                 try {
-                  ManageTransactionService transactionService =
-                      ManageTransactionService();
+                  if(getType(filteredTransactions[index].id)=='Cash'){
+
+    ManageDepositService depositService =
+                      ManageDepositService();
                   // Call deleteTransaction function to delete the transaction
-                  await transactionService
-                      .deleteTransaction(filteredTransactions[index].id);
+                  await depositService
+                      .deleteDeposit(filteredTransactions[index].id);
+                      
 
                   // Remove the transaction from the original list
                   final transactionId = filteredTransactions[index].id;
@@ -417,6 +467,42 @@ class _CompanyTranscationsState extends State<CompanyTranscations>
                       duration: Duration(seconds: 2),
                     ),
                   );
+                  }
+                  else{
+  ManageTransactionService transactionService =
+                      ManageTransactionService();
+                  // Call deleteTransaction function to delete the transaction
+                  await transactionService
+                      .deleteTransaction(filteredTransactions[index].id);
+
+
+                  // Remove the transaction from the original list
+                  final transactionId = filteredTransactions[index].id;
+                  final transactionIndex = widget.transactions.indexWhere(
+                      (transaction) => transaction.id == transactionId);
+                  if (transactionIndex != -1) {
+                    setState(() {
+                      widget.transactions.removeAt(transactionIndex);
+                    });
+                  }
+
+                  // Remove the transaction from the filtered list
+                  setState(() {
+                    filteredTransactions.removeAt(index);
+                  });
+
+                  Navigator.pop(context);
+
+                  // Show a success Snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Transaction deleted successfully'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  }
+                
+
                 } catch (error) {
                   // Show an error Snackbar
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -459,3 +545,18 @@ String formatTransactionDate(String transactionDateString) {
     return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
   }
 }
+
+  String _calculateDaysAgo(String transactionDateString) {
+    final transactionDate = DateTime.parse(transactionDateString);
+    final currentDate = DateTime.now();
+    final difference = currentDate.difference(transactionDate);
+      if (difference == 0) {
+    return "Today";
+  } else if (difference == 1) {
+    return "Yesterday";
+  } else if (difference == 2) {
+    return "The day before yesterday";
+  } else {
+    return "${transactionDate.day.toString().padLeft(2, '0')}-${transactionDate.month.toString().padLeft(2, '0')}-${transactionDate.year}";
+  }
+  }

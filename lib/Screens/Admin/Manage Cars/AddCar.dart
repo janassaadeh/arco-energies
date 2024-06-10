@@ -32,10 +32,10 @@ class _AddCarState extends State<AddCar> {
   final TextEditingController _carIdController = TextEditingController();
   List<String> list = ['A', 'B', 'O', 'T'];
   int selectedIndex = 0;
-
+  bool loading=false;
   // Regular expression patterns
   final RegExp _plateNumberRegExp = RegExp(r'^[A-Z0-9]+$');
-  final RegExp _yearRegExp = RegExp(r'^\d{7}$');
+  final RegExp _yearRegExp = RegExp(r'^\d{4}$');
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +239,7 @@ class _AddCarState extends State<AddCar> {
                         }
 
                         if (!_yearRegExp.hasMatch(_yearController.text)) {
+                          print(_yearController.text);
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -250,6 +251,9 @@ class _AddCarState extends State<AddCar> {
                         }
 
                         try {
+                            setState(() {
+                            loading=true;
+                          });
                           VehicleCompanyService vehicleCompanyService =
                               VehicleCompanyService();
                           final car = await vehicleCompanyService.addVehicleForCompany(
@@ -271,6 +275,9 @@ class _AddCarState extends State<AddCar> {
                           );
 
                           Navigator.pop(context, newCar);
+                          setState(() {
+                            loading=false;
+                          });
                         } catch (e) {
                           showDialog(
                             context: context,
@@ -281,7 +288,7 @@ class _AddCarState extends State<AddCar> {
                           );
                         }
                       },
-                      child: CustomButton(buttonText: "Add")
+                      child: CustomButton(buttonText: loading?'':"Add")
                     )
                   ],
                 ),

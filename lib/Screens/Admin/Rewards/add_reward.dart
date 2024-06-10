@@ -39,7 +39,7 @@ class AddReward extends StatefulWidget {
 
 class _AddRewardState extends State<AddReward> {
      TextEditingController _nameController=TextEditingController();
-
+bool loading=false;
      TextEditingController _ptsController=TextEditingController();
 
      TextEditingController _descriptionController=TextEditingController();
@@ -261,8 +261,11 @@ class _AddRewardState extends State<AddReward> {
                     onTap: () async{
    
  void _addOperator(BuildContext context) async {
-  
+ 
   try {
+     setState(() {
+    loading=true;
+  });
     RewardService rewardService=RewardService();
   
     
@@ -287,7 +290,13 @@ class _AddRewardState extends State<AddReward> {
 
     // If registration is successful, navigate back with the new company object
     Navigator.pop(context, newOperator);
+     setState(() {
+    loading=true;
+  });
   } catch (e) {
+     setState(() {
+    loading=false;
+  });
     // Handle registration failure
     print("Failed to register operator: $e");
     // Show error message to the user
