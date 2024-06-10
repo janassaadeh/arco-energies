@@ -3,7 +3,7 @@ package com.senior.demo.Service;
 import com.senior.demo.Collections.CashAdditionEvent;
 import com.senior.demo.Collections.Shift;
 import com.senior.demo.Collections.Transaction;
-import com.senior.demo.Repository.ShiftRepository;
+import com.senior.demo.Repository.*;
 import com.senior.demo.Responses.OperatorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class ShiftService {
@@ -25,18 +27,47 @@ public class ShiftService {
     private OperatorService operatorService;
 
     @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private AddDepositService depositService;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private CashAdditionEventRepository cashAdditionEventRepository ;
 
     private static final String SHIFT_ID_PREFIX = "SHIFT";
 
-    public Shift createShiftWithCustomId(LocalDateTime startTime, LocalDateTime endTime, List<Transaction> transactions, List<CashAdditionEvent> deposits, Authentication authentication) {
+    public Shift createShiftWithCustomId(LocalDateTime startTime, LocalDateTime endTime, List<String> transactionIds, List<String> depositIds, Authentication authentication) {
+        List<Transaction> transactions = transactionRepository.findAllById(transactionIds);
+        List<CashAdditionEvent> deposits = cashAdditionEventRepository.findAllById(depositIds);
+
+        // Check if all transactions were found
+        if (transactions.size() != transactionIds.size()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more transactions not found");
+        }
+
+        // Check if all deposits were found
+        if (deposits.size() != depositIds.size()) {
+            List<String> foundDepositIds = deposits.stream().map(CashAdditionEvent::getId).collect(Collectors.toList());
+            List<String> notFoundDepositIds = depositIds.stream().filter(id -> !foundDepositIds.contains(id)).collect(Collectors.toList());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more deposits not found: " + notFoundDepositIds);
+        }
+
+        // Calculate total transaction and deposit amounts
         double totalTransactionsAmount = transactions.stream()
                 .mapToDouble(transaction -> transaction.getQuantity() * transaction.getPump().getFuel().getFuelPrice())
                 .sum();
         double totalDepositsAmount = deposits.stream().mapToDouble(CashAdditionEvent::getCashAmount).sum();
 
+        // Generate custom ID
         String customId = generateCustomId();
 
+        // Create and save the shift
         Shift shift = new Shift(
                 customId,
                 startTime,
@@ -48,7 +79,6 @@ public class ShiftService {
         );
 
         OperatorResponse operator = userService.getOperator(authentication);
-        System.out.println(operator.getEmail());
         if (operator == null) {
             throw new RuntimeException("Operator not found");
         }
@@ -56,6 +86,7 @@ public class ShiftService {
 
         return shiftRepository.save(shift);
     }
+
 
 
     public Shift getShiftById(String id) {

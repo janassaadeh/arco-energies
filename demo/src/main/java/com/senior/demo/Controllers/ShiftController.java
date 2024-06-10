@@ -20,12 +20,12 @@ public class ShiftController {
     private ShiftService shiftService;
 
     @PostMapping("/shifts")
-    public Shift createShift(@RequestBody Shift newShift, Authentication authentication) {
+    public Shift createShift(@RequestBody ShiftRequest shiftRequest, Authentication authentication) {
         return shiftService.createShiftWithCustomId(
-                newShift.getStartTime(),
-                newShift.getEndTime(),
-                newShift.getTransactions(),
-                newShift.getDeposits(),
+                shiftRequest.getStartTime(),
+                shiftRequest.getEndTime(),
+                shiftRequest.getTransactionIds(),
+                shiftRequest.getDepositIds(),
                 authentication
         );
     }
@@ -54,4 +54,45 @@ public class ShiftController {
     public void deleteAllShifts() {
         shiftService.deleteAllShifts();
     }
+
+    public static class ShiftRequest {
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+        private List<String> transactionIds;
+        private List<String> depositIds;
+
+        // Getters and setters
+        public LocalDateTime getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
+        }
+
+        public LocalDateTime getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(LocalDateTime endTime) {
+            this.endTime = endTime;
+        }
+
+        public List<String> getTransactionIds() {
+            return transactionIds;
+        }
+
+        public void setTransactionIds(List<String> transactionIds) {
+            this.transactionIds = transactionIds;
+        }
+
+        public List<String> getDepositIds() {
+            return depositIds;
+        }
+
+        public void setDepositIds(List<String> depositIds) {
+            this.depositIds = depositIds;
+        }
+    }
 }
+
