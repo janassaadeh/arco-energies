@@ -6,14 +6,14 @@ class ShiftProvider extends ChangeNotifier {
   String _startShiftTime = '';
   String _endShiftTime = '';
   bool _isDuringShift = false;
-  List<Transaction> _transactions = [];
-  List<DepositReceipt> _deposits = [];
+  List<String> _transactionsIds = [];
+  List<String> _depositsIds = [];
 
   String get startShiftTime => _startShiftTime;
   String get endShiftTime => _endShiftTime;
   bool get isDuringShift => _isDuringShift;
-  List<Transaction> get transactions => _transactions;
-  List<DepositReceipt> get deposits => _deposits;
+  List<String> get transactionsIds => _transactionsIds;
+  List<String> get depositsIds => _depositsIds;
 
   void setStartShiftTime(String time) {
     _startShiftTime = time;
@@ -29,15 +29,15 @@ class ShiftProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addTransaction(Transaction transaction) {
-      _transactions.add(transaction);
-      print('Transaction added: ${transaction.id}');
+  void addTransaction(String transactionId) {
+      _transactionsIds.add(transactionId);
+      print('Transaction added: ${transactionId}');
       notifyListeners();
   }
 
-  void addDeposit(DepositReceipt deposit) {
-      _deposits.add(deposit);
-      print('Deposit added: ${deposit.id}');
+  void addDeposit(String depositId) {
+      _depositsIds.add(depositId);
+      print('Deposit added: $depositId}');
       notifyListeners();
   
   }
@@ -46,8 +46,8 @@ class ShiftProvider extends ChangeNotifier {
     _startShiftTime = '';
     _endShiftTime = '';
     _isDuringShift = false;
-    _transactions.clear();
-    _deposits.clear();
+    _transactionsIds.clear();
+    _depositsIds.clear();
     notifyListeners();
   }
 

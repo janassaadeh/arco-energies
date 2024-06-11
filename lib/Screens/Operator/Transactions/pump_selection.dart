@@ -119,7 +119,7 @@ class _PumpSelectionState extends State<PumpSelection> {
                 buildTitleWidget("Select Pump", "2"),
                 const SizedBox(height: 2),
                 buildText("Select the pump you need to use for filling."),
-                // const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 SizedBox(
                   height: screenSize.height * .55,
                   child: FutureBuilder<List<Pump>>(
@@ -140,9 +140,9 @@ class _PumpSelectionState extends State<PumpSelection> {
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 4,
-                              mainAxisSpacing: 4,
-                              childAspectRatio: 1 / 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 0.85,
                             ),
                             itemCount: pumps.length,
                             itemBuilder: (context, index) {

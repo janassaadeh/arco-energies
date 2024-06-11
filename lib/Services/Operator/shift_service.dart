@@ -9,11 +9,11 @@ class ShiftService {
   final Dio dio = Dio();
   final AuthenticationService authService = AuthenticationService();
 
-  Future<Shift> createShiftWithCustomId(
+  Future<Shift> createShift(
     DateTime startTime,
     DateTime endTime,
-    List<Transaction> transactions,
-    List<DepositReceipt> deposits,
+    List<String> transactionIds,
+    List<String> depositIds,
   ) async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
@@ -25,19 +25,19 @@ class ShiftService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'https://arcoenergies.onrender.com/api/shifts',
+        'http://192.168.6.118:8080/api/shifts',
         data: {
           'startTime': startTime.toIso8601String(),
           'endTime': endTime.toIso8601String(),
-          'transactions': transactions.map((t) => t.toJson()).toList(),
-          'deposits': deposits.map((d) => d.toJson()).toList(),
+          'transactionIds': transactionIds,
+          'depositIds': depositIds,
         },
       );
 
       if (response.statusCode == 200) {
-        final createdShift = Shift.fromJson(response.data);
-        print("shift created");
-        return createdShift;
+        final shiftData = response.data;
+        final shift = Shift.fromJson(shiftData);
+        return shift;
       } else {
         throw Exception('Failed to create shift');
       }

@@ -25,7 +25,6 @@ class PumpOption extends StatelessWidget {
             elevation: isSelected ? 6 : 0,
             borderRadius: BorderRadius.circular(12),
             child: Container(
-      
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: isSelected
@@ -44,40 +43,44 @@ class PumpOption extends StatelessWidget {
                   ],
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/pump.png",
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    '${pump.name}',
-                    style: TextStyle(
-                      color: isSelected
-                          ? const Color.fromRGBO(0, 61, 91, 1)
-                          : Color.fromARGB(255, 0, 0, 0),
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/pump.png",
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.contain,
                     ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    '${pump.fuel.type} (${pump.currency})',
-                    style: TextStyle(
-                      color: isSelected
-                          ? const Color.fromRGBO(0, 61, 91, 1)
-                          : Color.fromARGB(255, 0, 0, 0),
-                      fontFamily: 'Inter',
-                      fontSize: 14, // Adjust font size as needed
-                      fontWeight: FontWeight.w500,
+                    SizedBox(height: 5),
+                    Text(
+                      '${pump.name}',
+                      style: TextStyle(
+                        color: isSelected
+                            ? const Color.fromRGBO(0, 61, 91, 1)
+                            : Color.fromARGB(255, 0, 0, 0),
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 2),
+                    Text(
+                      '${pump.fuel.type} (${pump.currency})',
+                      style: TextStyle(
+                        color: isSelected
+                            ? const Color.fromRGBO(0, 61, 91, 1)
+                            : Color.fromARGB(255, 0, 0, 0),
+                        fontFamily: 'Inter',
+                        fontSize: 14, // Adjust font size as needed
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

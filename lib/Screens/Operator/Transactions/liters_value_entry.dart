@@ -219,7 +219,7 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                     .isDuringShift) {
                                   Provider.of<ShiftProvider>(context,
                                           listen: false)
-                                      .addTransaction(transaction);
+                                      .addTransaction(transaction.id);
                                 }else{
                                   print("you are not during ur shift");
                                 }

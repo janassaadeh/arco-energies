@@ -110,13 +110,13 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
                         widget.selectedPaymentMethod,
                       );
 
-                      var deposit =
-                          await depositService.getDepositReceiptById(id);
+                      // var deposit =
+                      //     await depositService.getDepositReceiptById(id);
 
                       if (Provider.of<ShiftProvider>(context, listen: false)
                           .isDuringShift) {
                         Provider.of<ShiftProvider>(context, listen: false)
-                            .addDeposit(deposit);
+                            .addDeposit(id);
                       } else {
                         print("you are not during ur shift");
                       }
