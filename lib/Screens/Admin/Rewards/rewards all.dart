@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:company_pages/Models/reward_model.dart';
+import 'package:company_pages/Provider/reward_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/AddOperator.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Services/Manage Accounts/Company_Services.dart';
 import '../../../Widgets/CompanyCard.dart';
@@ -24,7 +26,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 // import 'operator_model.dart';
 
 class AllRewards extends StatefulWidget {
-  final List<Reward> rewards;
+  final List<dynamic> rewards;
   const AllRewards({Key? key, required this.rewards}) : super(key: key);
 
   @override
@@ -56,7 +58,7 @@ class _MyOperatorsState extends State<AllRewards>
   }
 
   // Method to filter companies based on search query
-  List<Reward> filterRewards() {
+  List<dynamic> filterRewards() {
     return widget.rewards.where((op) {
       final name = op.name.toLowerCase();
       final description = op.description.toLowerCase();
@@ -72,10 +74,14 @@ class _MyOperatorsState extends State<AllRewards>
 
   @override
   Widget build(BuildContext context) {
+         RewardProvider rewardProvider =
+          Provider.of<RewardProvider>(context, listen: false);
+      // rewardProvider.setRewardList(rewards);
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
+                rewardProvider.setRewardList(filteredOperators);
                 Navigator.pop(context);
               },
               child: Icon(

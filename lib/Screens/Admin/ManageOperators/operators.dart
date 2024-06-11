@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:company_pages/Models/pump.dart';
 import 'package:company_pages/Models/vehicle.dart';
+import 'package:company_pages/Provider/operator_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/AddCompany.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Company%20Details.dart';
 import 'package:company_pages/Screens/Admin/ManageOperators/AddOperator.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Services/Manage Accounts/Company_Services.dart';
 import '../../../Widgets/CompanyCard.dart';
@@ -109,15 +111,22 @@ class _MyOperatorsState extends State<Operators>
     setState(() {
       filteredOperators = updatedOperators;
     });
+        OperatorProvider operatorProvider =
+          Provider.of<OperatorProvider>(context, listen: false);
+      operatorProvider.setOperatorList(filteredOperators);
     fetchImageForFilteredOperators();
   }
 
   @override
   Widget build(BuildContext context) {
+   OperatorProvider operatorProvider =
+          Provider.of<OperatorProvider>(context, listen: false); 
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
+      operatorProvider.setOperatorList(filteredOperators);
+
                Navigator.pop(context,widget.operators);
               },
               child: Icon(

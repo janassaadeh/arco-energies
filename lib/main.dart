@@ -1,4 +1,7 @@
+import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Provider/deposit_provider.dart';
+import 'package:company_pages/Provider/operator_provider.dart';
+import 'package:company_pages/Provider/reward_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Admin/AdminHomeLayout.dart';
 import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
@@ -39,6 +42,11 @@ void main() async {
         ),
         ChangeNotifierProvider<DepositProvider>(
           create: (_) => DepositProvider(),
+        ),
+                ChangeNotifierProvider<OperatorProvider>(
+          create: (_) => OperatorProvider(),
+        ),        ChangeNotifierProvider<RewardProvider>(
+          create: (_) => RewardProvider(),
         ),
         ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
       ],

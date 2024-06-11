@@ -5,6 +5,8 @@ import 'package:company_pages/Models/redemption_model.dart';
 import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
+import 'package:company_pages/Provider/operator_provider.dart';
+import 'package:company_pages/Provider/reward_provider.dart';
 import 'package:company_pages/Screens/Admin/Manage%20Companies/Companies.dart';
 import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Admin/admin_profile.dart';
@@ -136,6 +138,9 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       setState(() {
         operators = _operators;
       });
+        OperatorProvider operatorProvider =
+          Provider.of<OperatorProvider>(context, listen: false);
+      operatorProvider.setOperatorList(operators);
       for (int i = 0; i < operators.length; i++) {
         print(operators[i]);
       }
@@ -154,6 +159,9 @@ class _AdminHomePageLayoutState extends State<AdminHomePageLayout> {
       setState(() {
         rewards = _rewards;
       });
+           RewardProvider rewardProvider =
+          Provider.of<RewardProvider>(context, listen: false);
+      rewardProvider.setRewardList(rewards);
       for (int i = 0; i < operators.length; i++) {
         print(operators[i]);
       }

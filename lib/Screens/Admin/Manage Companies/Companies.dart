@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Services/Auth/AuthenticationService.dart';
 import '../../../Services/Manage Accounts/Company_Services.dart';
@@ -132,16 +133,21 @@ class _MyCompaniesState extends State<Companies>
       filteredCompanies = updatedCompanies;
     });
     fetchImageForFilteredCompanies();
+    CompanyProvider companyProvider=Provider.of<CompanyProvider>(context,listen:false);
+    companyProvider.setCompanyList(filteredCompanies);
   }
 
 // Now imageDataList contains the image data for each filtered company
 
   @override
   Widget build(BuildContext context) {
+      CompanyProvider companyProvider=Provider.of<CompanyProvider>(context,listen:false);
+ 
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
+                     companyProvider.setCompanyList(filteredCompanies);
                 Navigator.pop(context,widget.companies);
               },
               child: Icon(
@@ -280,9 +286,10 @@ class _MyCompaniesState extends State<Companies>
                                                 )),
                                       );
                                       if (newCompany !=
-                                          filteredCompanies[index]) {
+                                           filteredCompanies[index]) {
                                         setState(() {
                                           filteredCompanies[index] = newCompany;
+                                          // companyProvider.setCompanyList(com)
                                         });
                                       }
                                     },
