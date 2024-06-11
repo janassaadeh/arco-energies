@@ -6,6 +6,7 @@ import 'package:company_pages/Screens/Company/deposit_receipt.dart';
 import 'package:company_pages/Screens/Company/my_transactions.dart';
 // import 'package:company_pages/Screens/Company/MyCars.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
+import 'package:company_pages/Screens/Company/transaction_receipt.dart';
 import 'package:company_pages/Services/Operator/notification_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:company_pages/Services/deposit_service.dart';
@@ -41,13 +42,17 @@ class HomeScreen extends StatelessWidget {
   List<DepositReceipt>? depositList;
   List<Transaction>? transactionList;
   List<dynamic>? mergedAndSorted;
-
+final VoidCallback onRewardButtonPressed;
   HomeScreen(
       {super.key,
       this.company,
       this.depositList,
       this.transactionList,
-      this.mergedAndSorted});
+      this.mergedAndSorted,
+      required this.onRewardButtonPressed
+    
+      
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +67,19 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.only(left: 18, right: 18.0, top: 20),
             child: (company == null ||
                     depositList == null ||
-                    transactionList == null)
+                    transactionList == null
+                       ||mergedAndSorted!.isEmpty
+                    )
                 ? Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: Container(
                       width: 403.64825439453125,
-                      height: 180,
+                      height: 130,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(
-                            12.0), // Adjust the radius as needed
+                            20.0), // Adjust the radius as needed
                       ),
                       // You can change this color to match your background
                     ),
@@ -92,7 +99,9 @@ class HomeScreen extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: (company == null ||
                       depositList == null ||
-                      transactionList == null)
+                      transactionList == null
+                         ||mergedAndSorted!.isEmpty
+                      )
                   ? Shimmer.fromColors(
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
@@ -152,7 +161,9 @@ class HomeScreen extends StatelessWidget {
                         },
                         child: (company == null ||
                                 depositList == null ||
-                                transactionList == null)
+                                transactionList == null
+                                   ||mergedAndSorted!.isEmpty
+                                )
                             ? RoundedContainerWithShimmer(
                                 width: 152,
                                 height: 135,
@@ -169,7 +180,9 @@ class HomeScreen extends StatelessWidget {
                       
                       (company == null ||
                               depositList == null ||
-                              transactionList == null)
+                              transactionList == null
+                                 ||mergedAndSorted!.isEmpty
+                              )
                           ? RoundedContainerWithShimmer(
                               width: 152,
                               height: 135,
@@ -195,16 +208,21 @@ class HomeScreen extends StatelessWidget {
                       ),
                              (company == null ||
                               depositList == null ||
-                              transactionList == null)
+                              transactionList == null
+                                 ||mergedAndSorted!.isEmpty
+                              )
                           ? RoundedContainerWithShimmer(
                               width: 152,
                               height: 135,
                             )
-                          : Features(
-                              color: Color.fromRGBO(209, 73, 91, 1),
-                              imageAsset: "assets/images/Star.png",
-                              text: "Earn and Redeem Points",
-                            ),
+                          : GestureDetector(
+                            onTap: onRewardButtonPressed,
+                            child: Features(
+                                color: Color.fromRGBO(209, 73, 91, 1),
+                                imageAsset: "assets/images/Star.png",
+                                text: "Earn and Redeem Points",
+                              ),
+                          ),
                     
                       const SizedBox(
                         width: 18,
@@ -226,8 +244,10 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 (company == null ||
+                
                         depositList == null ||
-                        transactionList == null)
+                        transactionList == null
+                           ||mergedAndSorted!.isEmpty)
                     ? RoundedContainerWithShimmer(
                         width: 100,
                         height: 20,
@@ -251,11 +271,10 @@ class HomeScreen extends StatelessWidget {
                     },
                     child: (company == null ||
                             depositList == null ||
-                            transactionList == null)
-                        ? RoundedContainerWithShimmer(
-                            width: 50,
-                            height: 10,
-                          )
+                            transactionList == null
+                               ||mergedAndSorted!.isEmpty
+                            )
+                        ? Container()
                         : Text(
                             "View all",
                             style: TextStyle(
@@ -273,32 +292,71 @@ class HomeScreen extends StatelessWidget {
           Padding(
               padding: EdgeInsets.only(left: 18, right: 18.0),
               child: (company == null ||
-                      depositList == null ||
-                      transactionList == null ||
-                      mergedAndSorted == [])
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            RoundedContainerWithShimmer(
-                              width: 150,
-                              height: 10,
-                            ),
-                            RoundedContainerWithShimmer(
-                              width: 150,
-                              height: 10,
-                            ),
-                          ],
+                            depositList == null ||
+                            transactionList == null
+                            ||mergedAndSorted!.isEmpty
+                            )
+                                                      // widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+        ? Column(
+          children: [
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 403.64825439453125,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
                         ),
-                        RoundedContainerWithShimmer(
-                          width: 150,
-                          height: 10,
+                        // You can change this color to match your background
+                      ),
+                    ),
+            )
+            ,SizedBox(height: 10,),
+             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 403.64825439453125,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
                         ),
-                      ],
-                    )
-                  : Container(
+                        // You can change this color to match your background
+                      ),
+              )),
+              SizedBox(height: 10,),
+               Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 403.64825439453125,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    ),)
+
+          ],
+        )
+                
+        
+                        : Container(
                       height: 300.0, // Adjust the height as needed
                       child: ListView.builder(
                         padding: EdgeInsets.only(
@@ -317,12 +375,21 @@ class HomeScreen extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Transactions(
-                                  id: item.id,
-                                  price: item.cashAmount,
-                                  type: "+",
-                                  day: _calculateDaysAgo(
-                                      convertToLebanonTime(item.timestamp)),
+                                GestureDetector(
+                                  onTap: (){
+                                      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
+        );
+      
+                                  },
+                                  child: Transactions(
+                                    id: item.id,
+                                    price: item.cashAmount,
+                                    type: "+",
+                                    day: _calculateDaysAgo(
+                                        convertToLebanonTime(item.timestamp)),
+                                  ),
                                 ),
                               ],
                             );
@@ -330,11 +397,20 @@ class HomeScreen extends StatelessWidget {
                             // Render transaction UI
                             final total =
                                 item.quantity * item.pump.fuel.fuelPrice;
-                            return Transactions(
-                              id: item.id,
-                              price: double.parse(total.toStringAsFixed(2)),
-                              type: "-",
-                              day: _calculateDaysAgo(item.date),
+                            return GestureDetector(
+                              onTap: (){
+                                  Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
+        );
+      
+                              },
+                              child: Transactions(
+                                id: item.id,
+                                price: double.parse(total.toStringAsFixed(2)),
+                                type: "-",
+                                day: _calculateDaysAgo(item.date),
+                              ),
                             );
                           }
                           return Container(); // Default case

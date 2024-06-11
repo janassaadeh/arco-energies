@@ -411,7 +411,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child:
-                                                    widget.admin == null 
+                                                      widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
         ? Column(
           children: [
             SizedBox(height: 10,),

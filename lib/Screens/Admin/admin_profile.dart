@@ -16,7 +16,7 @@ import '../../Widgets/profile/link.dart';
 class AdminProfile extends StatefulWidget {
   dynamic admin;
   dynamic imageData;
-  
+
   // dynamic cars;
   // List<dynamic>? mergeAndSorted;
 
@@ -28,7 +28,7 @@ class AdminProfile extends StatefulWidget {
 
 class _AdminProfileState extends State<AdminProfile> {
   AuthenticationService authenticationService = AuthenticationService();
-   dynamic base64Image1;
+  dynamic base64Image1;
 
   @override
   Widget build(BuildContext context) {
@@ -40,93 +40,95 @@ class _AdminProfileState extends State<AdminProfile> {
                 SizedBox(
                   height: 40,
                 ),
-                   Stack(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Color(0xffC1BEBE),
-                        radius: 62,
-                        child: (widget.imageData == null)
-                            ? Image.asset("assets/images/buisness_profile.png")
-                            : ClipOval(
-                                child: Image.memory(
-                                  widget.imageData!,
-                                  fit: BoxFit.cover, // Adjust the fit as needed
-                                  width:
-                                      134, // Set the width and height to ensure the image is circular
-                                  height: 134,
-                                ),
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Color(0xffC1BEBE),
+                      radius: 62,
+                      child: (widget.imageData == null)
+                          ? Image.asset("assets/images/buisness_profile.png")
+                          : ClipOval(
+                              child: Image.memory(
+                                widget.imageData!,
+                                fit: BoxFit.cover, // Adjust the fit as needed
+                                width:
+                                    134, // Set the width and height to ensure the image is circular
+                                height: 134,
                               ),
-                      ),
-                      Positioned(
-                        top: 5,
-                        right: 0,
-                        child: Container(
-                          width:
-                              30, // Adjust the width of the container as needed
-                          height:
-                              30, // Adjust the height of the container as needed
-                          decoration: BoxDecoration(
-                            color: Color(
-                                0xffC1BEBE), // You can set your desired background color
-                            shape: BoxShape.circle, // This makes it a circle
-                            //           boxShadow: [
-                            // BoxShadow(
-                            //   color: Colors.black.withOpacity(0.3), // Shadow color
-                            //   spreadRadius: 2, // Spread radius
-                            //   blurRadius: 4, // Blur radius
-                            //   offset: const Offset(0, 2), // Offset
-                            // ),
-                            // ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: GestureDetector(
-                              onTap: () {
-                                final picker = ImagePicker();
-
-                                Future<void> _openImagePicker() async {
-                                  final pickedFile = await picker.pickImage(
-                                      source: ImageSource.gallery);
-
-                                  if (pickedFile != null) {
-                                    final file = File(pickedFile.path);
-                                    final bytes = await file.readAsBytes();
-                                    final base64Image = base64Encode(bytes);
-                                    final image =
-                                        "data:image/png;base64,$base64Image";
-
-                                    // Now you have the base64-encoded image
-                                    // print("Base64 Image: $base64Image");
-                                    // print(base64Image);
-
-                                    setState(() {
-                                      widget.imageData =
-                                          bytes; // Set the picked image file
-                                      // Update the profileAvatar URL
-                                      base64Image1 = base64Image;
-                                    });
-                                                                                               ImageService imageService =ImageService();
-              if (base64Image1 != null && base64Image1!=widget.imageData) {
-      ImageService imageService = ImageService();
-      await imageService.uploadImage(base64Image1, widget.admin.id);
-    } 
-                                    // print(base64Image1);
-
-                                    // print(imgUrl);
-                                  } else {
-                                    // Handle no image picked error
-                                  }
-                                }
-
-                                _openImagePicker();
-                              },
-                              child: Center(child: Icon(Icons.add)),
                             ),
+                    ),
+                    Positioned(
+                      top: 5,
+                      right: 0,
+                      child: Container(
+                        width:
+                            30, // Adjust the width of the container as needed
+                        height:
+                            30, // Adjust the height of the container as needed
+                        decoration: BoxDecoration(
+                          color: Color(
+                              0xffC1BEBE), // You can set your desired background color
+                          shape: BoxShape.circle, // This makes it a circle
+                          //           boxShadow: [
+                          // BoxShadow(
+                          //   color: Colors.black.withOpacity(0.3), // Shadow color
+                          //   spreadRadius: 2, // Spread radius
+                          //   blurRadius: 4, // Blur radius
+                          //   offset: const Offset(0, 2), // Offset
+                          // ),
+                          // ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: GestureDetector(
+                            onTap: () {
+                              final picker = ImagePicker();
+
+                              Future<void> _openImagePicker() async {
+                                final pickedFile = await picker.pickImage(
+                                    source: ImageSource.gallery);
+
+                                if (pickedFile != null) {
+                                  final file = File(pickedFile.path);
+                                  final bytes = await file.readAsBytes();
+                                  final base64Image = base64Encode(bytes);
+                                  final image =
+                                      "data:image/png;base64,$base64Image";
+
+                                  // Now you have the base64-encoded image
+                                  // print("Base64 Image: $base64Image");
+                                  // print(base64Image);
+
+                                  setState(() {
+                                    widget.imageData =
+                                        bytes; // Set the picked image file
+                                    // Update the profileAvatar URL
+                                    base64Image1 = base64Image;
+                                  });
+                                  ImageService imageService = ImageService();
+                                  if (base64Image1 != null &&
+                                      base64Image1 != widget.imageData) {
+                                    ImageService imageService = ImageService();
+                                    await imageService.uploadImage(
+                                        base64Image1, widget.admin.id);
+                                  }
+                                  // print(base64Image1);
+
+                                  // print(imgUrl);
+                                } else {
+                                  // Handle no image picked error
+                                }
+                              }
+
+                              _openImagePicker();
+                            },
+                            child: Center(child: Icon(Icons.add)),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -161,55 +163,7 @@ class _AdminProfileState extends State<AdminProfile> {
                     SizedBox(
                       height: 20,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ForgotPassword(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: 180,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                              begin: Alignment(1.5, 1),
-                              end: Alignment(-1.5, 1),
-                              colors: [
-                                Color.fromRGBO(0, 61, 91, 1),
-                                Color.fromRGBO(2, 91, 134, 0.8999999761581421)
-                              ]),
-                        ),
-                        //                 decoration: BoxDecoration(
-                        //   borderRadius: BorderRadius.circular(10),
-                        //   color: const Color.fromRGBO(196, 196, 196, 0.2),
-                        // ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20.0, right: 20, top: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Edit Password',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                    size: 21,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+
                     const SizedBox(
                       height: 40,
                     ),
@@ -433,17 +387,16 @@ class _AdminProfileState extends State<AdminProfile> {
                     SizedBox(height: 15),
 
                     GestureDetector(
-                        // onTap: (){
-                        onTap: () async {
-                          await authenticationService.logout();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
-                        },
+                      // onTap: (){
+                      onTap: () async {
+                        await authenticationService.logout();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
                       child: Container(
-                          color: Colors.transparent, 
-
+                        color: Colors.transparent,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 22, right: 22),
                           child: Row(

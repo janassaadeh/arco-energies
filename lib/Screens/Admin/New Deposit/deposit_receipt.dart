@@ -41,7 +41,7 @@ class _DepositReceiptPageState extends State<DepositReceiptPage> {
 
   String formatDateTime(String inputDateTimeString) {
     DateTime dateTime = DateTime.parse(inputDateTimeString);
-print(inputDateTimeString);
+    print(inputDateTimeString);
     String formattedDateTimeString =
         DateFormat('EEE, MMM d, yyyy • h:mm:ss a').format(dateTime);
 
@@ -151,28 +151,28 @@ print(inputDateTimeString);
                             width: receiptMaxWidth,
                             height: receiptMaxHeight,
                           ),
-                           Positioned(
-                  top: receiptMaxHeight * 0.02,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                         Container(
-                                          width: 140,
-                                          height: 140,
-                                          child: Image.asset(
-                                                  "assets/images/arco_logo.png",color:Colors.black),
-                                         
-                                      ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                          Positioned(
+                            top: receiptMaxHeight * 0.04,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 140,
+                                      height: 140,
+                                      child: Image.asset(
+                                          "assets/images/arco_logo.png",
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                           Positioned(
                             top: receiptMaxHeight * 0.18,
                             left: 0,

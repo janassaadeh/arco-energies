@@ -216,7 +216,13 @@ class _CompanyHomePageLayoutState extends State<CompanyHomePageLayout> {
               company: company,
               depositList: depositList,
               transactionList: transactionList,
-              mergedAndSorted: mergedAndSorted);
+              mergedAndSorted: mergedAndSorted,
+               onRewardButtonPressed: () {
+            setState(() {
+              _currentIndex = 1; // Index for RewardScreen
+            });
+          }
+              );
         case 1:
           return RewardScreen(company: company, rewards: rewards);
         case 2:
@@ -274,7 +280,7 @@ class _CompanyHomePageLayoutState extends State<CompanyHomePageLayout> {
                   ? const Color(0xff003D5B)
                   : Colors.grey.shade600,
             ),
-            label: 'Offers',
+            label: 'Rewards',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.person),

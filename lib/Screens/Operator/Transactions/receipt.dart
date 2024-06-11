@@ -105,7 +105,7 @@ class ReceiptPage extends StatelessWidget {
                   height: receiptMaxHeight,
                 ),
                 Positioned(
-                  top: receiptMaxHeight * 0.02,
+                  top: receiptMaxHeight * 0.03,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -114,13 +114,12 @@ class ReceiptPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         Container(
-                                          width: 140,
-                                          height: 140,
-                                          child: Image.asset(
-                                                  "assets/images/arco_logo.png",color:Colors.black),
-                                         
-                                      ),
+                          Container(
+                            width: 140,
+                            height: 140,
+                            child: Image.asset("assets/images/arco_logo.png",
+                                color: Colors.black),
+                          ),
                         ],
                       ),
                     ),

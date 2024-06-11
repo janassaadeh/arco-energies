@@ -1,13 +1,21 @@
 // import 'dart:html';
 import 'dart:typed_data';
 
+import 'package:company_pages/Provider/company_provider.dart';
 import 'package:company_pages/Screens/Operator/Home/DashBoard/dashboard.dart';
 import 'package:company_pages/Screens/Operator/Profile/operator_profile.dart';
-import 'package:company_pages/Services/Auth/user_service.dart';
+// import 'package:company_pages/Services/Auth/AuthenticationService.dart';
+// import 'package:company_pages/Services/Auth/user_service.dart';
+import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
 import 'package:company_pages/Services/image_service.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'Transactions/new_transaction.dart';
+// import '../../../Screens/Admin/Manage Companies/Company_Model.dart';
+import 'package:company_pages/Services/Auth/user_service.dart' as User;
+
+import '../../../Screens/Admin/Manage Companies/Company_Model.dart' as company;
+import '../../../Screens/Admin/ManageOperators/operator_model.dart' as op;
 
 class Operator extends StatefulWidget {
   const Operator({super.key});
@@ -19,12 +27,13 @@ class Operator extends StatefulWidget {
 class _OperatorState extends State<Operator> {
   dynamic operator;
   dynamic _imageData;
-
+ List<company.Company> _companies =
+      []; 
   int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
-
+_fetchCompanies();
     _fetchUserData().then((_) {
       // Call _getDepositList() only after _fetchUserData() completes
       _fetchImage();
@@ -33,7 +42,7 @@ class _OperatorState extends State<Operator> {
 
   Future<void> _fetchUserData() async {
     try {
-      UserService userService = UserService();
+      User.UserService userService = User.UserService();
       dynamic userData = await userService.fetchUserData();
       setState(() {
         operator = userData;
@@ -41,6 +50,27 @@ class _OperatorState extends State<Operator> {
     } catch (e) {
       // Handle error appropriately, e.g., show a snackbar
       print('Error fetching operator: $e');
+    }
+  }
+
+  Future<void> _fetchCompanies() async {
+    try {
+      // AuthenticationService authenticationService = AuthenticationService();
+      CompanyService companyService = CompanyService();
+      List<company.Company> companies = await companyService.getAllCompanies();
+
+      setState(() {
+        _companies = companies;
+      });
+      for (int i = 0; i < _companies.length; i++) {
+        print(_companies[i]);
+      }
+      CompanyProvider companyProvider =
+          Provider.of<CompanyProvider>(context, listen: false);
+      companyProvider.setCompanyList(_companies);
+    } catch (e) {
+      // Handle error appropriately, e.g., show a snackbar
+      print('Error fetching companies: $e');
     }
   }
 

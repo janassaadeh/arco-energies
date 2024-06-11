@@ -47,7 +47,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 width: 403.64825439453125,
                 height: 152,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
                       color: Color.fromRGBO(132, 177, 203, 0.30000001192092896),

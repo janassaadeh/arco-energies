@@ -33,4 +33,17 @@ class VehicleResponse {
       company: CompanyResponse.fromJson(json['company']),
     );
   }
+
+    Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'year': year,
+      'model': model,
+      'plateNumber': plateNumber,
+      'driverName': driverName,
+      'type': type,
+      'color': color,
+      'company': company.toJson(),
+    };
+  }
 }

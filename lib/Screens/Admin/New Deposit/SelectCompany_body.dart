@@ -22,34 +22,20 @@ class SelectCompanyBody extends StatefulWidget {
 
 class _SelectCompanyBodyState extends State<SelectCompanyBody> {
   TextEditingController idController = TextEditingController();
-  List<Company> companyList = [];
+  // List<Company> companyList = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchCompanies();
+    // _fetchCompanies();
   }
 
-  Future<void> _fetchCompanies() async {
-    try {
-      CompanyService companyService = CompanyService();
-      List<Company> companies = await companyService.getAllCompanies();
 
-      setState(() {
-        companyList = companies;
-      });
-
-      CompanyProvider companyProvider =
-          Provider.of<CompanyProvider>(context, listen: false);
-      companyProvider.setCompanyList(companyList);
-    } catch (e) {
-      // Handle error appropriately, e.g., show a snackbar
-      print('Error fetching companies: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+     CompanyProvider companyProvider =
+          Provider.of<CompanyProvider>(context, listen: false);
     return Column(
       children: [
         Padding(
@@ -68,7 +54,7 @@ class _SelectCompanyBodyState extends State<SelectCompanyBody> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          SelectCompanies(companies: companyList),
+                          SelectCompanies(companies: companyProvider.companyList),
                     ),
                   );
                   if (id != null) {

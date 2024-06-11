@@ -2,6 +2,8 @@ import 'package:company_pages/Models/operator_response.dart';
 import 'package:company_pages/Models/pump_response.dart';
 import 'package:company_pages/Models/vehicle_response.dart';
 
+import 'dart:convert';
+
 class Transaction {
   final String id;
   final double quantity;
@@ -31,5 +33,17 @@ class Transaction {
       vehicle: VehicleResponse.fromJson(json['vehicle']),
       operator: OperatorResponse.fromJson(json['operator']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'quantity': quantity,
+      'odometer': odometer,
+      'date': date,
+      'pump': pump.toJson(),
+      'vehicle': vehicle.toJson(),
+      'operator': operator.toJson(),
+    };
   }
 }

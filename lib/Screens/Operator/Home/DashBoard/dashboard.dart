@@ -1,5 +1,9 @@
 import 'package:company_pages/Models/fuel.dart';
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Provider/deposit_provider.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
+import 'package:company_pages/Provider/shift_provider.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Admin/qr_code.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/edit_prices_pop_up.dart';
@@ -8,9 +12,13 @@ import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
 // import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
 import 'package:company_pages/Services/Operator/notification_service.dart';
+import 'package:company_pages/Services/Operator/shift_service.dart';
+import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Services/deposit_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:company_pages/Widgets/Home/features.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
+import 'package:company_pages/Widgets/shimmer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,18 +46,30 @@ class _DashBoardState extends State<DashBoard> {
   final FuelService fuelService = FuelService();
   final FuelPricesService fuelPricesService = FuelPricesService();
   final NotificationService notificationService = NotificationService();
+  final ShiftService shiftService = ShiftService();
   dynamic operator;
+
+  late Future<List<Transaction>> transactions;
+  late Future<List<DepositReceipt>> deposits;
+  final TransactionService transactionService = TransactionService();
+  final DepositService depositService = DepositService();
+  List<dynamic> searchResults = [];
+
+  bool isLoadingStartShift = false;
+  bool isLoadingEndShift = false;
 
   @override
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
+    _fetchUserData().then((_) => transactions = _fetchTransactions());
+    _fetchUserData().then((_) => deposits = _fetchDeposits());
     _fetchUserData().then((_) => setupPushNotifications());
   }
 
   Future<void> _fetchUserData() async {
     try {
-      User.UserService  userService = User.UserService();
+      User.UserService userService = User.UserService();
       dynamic userData = await userService.fetchUserData();
       setState(() {
         operator = userData;
@@ -85,6 +105,57 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  Future<List<Transaction>> _fetchTransactions() async {
+    try {
+      List<Transaction> cachedTransactions =
+          Provider.of<TransactionProvider>(context, listen: false)
+              .cachedTransactions;
+
+      if (cachedTransactions.isNotEmpty) {
+        return cachedTransactions
+            .where(
+                (transaction) => transaction.operator.id == widget.operator.id)
+            .toList();
+      } else {
+        final List<Transaction> transactions =
+            await transactionService.getTransactions();
+
+        // Filter the transactions by operatorId
+        final filteredTransactions = transactions
+            .where(
+                (transaction) => transaction.operator.id == widget.operator.id)
+            .toList();
+
+        Provider.of<TransactionProvider>(context, listen: false)
+            .cachedTransactions = filteredTransactions;
+
+        return filteredTransactions;
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch transactions: $e');
+    }
+  }
+
+  Future<List<DepositReceipt>> _fetchDeposits() async {
+    try {
+      List<DepositReceipt> cachedDeposits =
+          Provider.of<DepositProvider>(context, listen: false).cachedDeposits;
+
+      if (cachedDeposits.isNotEmpty) {
+        return cachedDeposits;
+      } else {
+        final List<DepositReceipt> deposits = await depositService
+            .getCashAdditionEventsByAdminId(widget.operator.id);
+
+        Provider.of<DepositProvider>(context, listen: false).cachedDeposits =
+            deposits;
+        return deposits;
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch deposits: $e');
+    }
+  }
+
   Future<List<Fuel>> _fetchFuels() async {
     try {
       List<Fuel> cachedNotifications =
@@ -114,14 +185,77 @@ class _DashBoardState extends State<DashBoard> {
         updatedFuels;
   }
 
+  void _startShift() async {
+    setState(() {
+      isLoadingStartShift = true;
+    });
+    try {
+      // Get the current time and set it as the start shift time
+      String startTime = DateTime.now().toIso8601String();
+      Provider.of<ShiftProvider>(context, listen: false)
+          .setStartShiftTime(startTime);
+    } finally {
+      setState(() {
+        isLoadingStartShift = false;
+      });
+    }
+  }
+
+  void _endShift() async {
+    setState(() {
+      isLoadingEndShift = true;
+    });
+    try {
+      // Get the current time as the end time directly as a DateTime object
+      DateTime endTime = DateTime.now();
+      print('End time DateTime: $endTime');
+
+      // Convert end time to string and print for debugging
+      String endTimeString = endTime.toIso8601String();
+      print('End time string: $endTimeString');
+
+      // Store the end time in the provider as a string
+      Provider.of<ShiftProvider>(context, listen: false)
+          .setEndShiftTime(endTimeString);
+
+      // Get filtered transactions and deposits
+      List<String> transactionsIds =
+          Provider.of<ShiftProvider>(context, listen: false).transactionsIds;
+      List<String> depositsIds =
+          Provider.of<ShiftProvider>(context, listen: false).depositsIds;
+
+      // Parse the start time from the provider
+      DateTime startTime = DateTime.parse(
+          Provider.of<ShiftProvider>(context, listen: false).startShiftTime);
+
+      // Create Shift
+      await shiftService.createShift(
+          startTime, endTime, transactionsIds, depositsIds);
+
+      // Reset shift times in the provider
+      Provider.of<ShiftProvider>(context, listen: false).resetShiftTimes();
+    } catch (e) {
+      // Catch and print any format exceptions
+      print('Error parsing date: $e');
+    } finally {
+      setState(() {
+        isLoadingEndShift = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    FuelPricesProvider fuelPricesProvider= Provider.of<FuelPricesProvider>(context, listen: false);
+
     // AuthenticationService authenticationService = AuthenticationService();
+    ShiftProvider shiftProvider =
+        Provider.of<ShiftProvider>(context, listen: false);
+
+    print(Provider.of<ShiftProvider>(context, listen: false).isDuringShift);
 
     return Scaffold(
-      body: (widget.operator == null)
-          ? Container()
-          : RefreshIndicator(
+      body: RefreshIndicator(
               onRefresh: _refreshfuelPrices,
               child: SingleChildScrollView(
                 child: Column(
@@ -132,12 +266,31 @@ class _DashBoardState extends State<DashBoard> {
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 18, right: 18.0, top: 18),
-                      child: Container(
+                      child: 
+                      
+                             widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+        ? Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 403.64825439453125,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                            20.0), // Adjust the radius as needed
+                      ),
+                      // You can change this color to match your background
+                    ),
+                  )
+                
+        : 
+                      Container(
                         height: 130,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
@@ -146,57 +299,119 @@ class _DashBoardState extends State<DashBoard> {
                             ], // Gradient colors
                           ),
                         ),
-                        child: Stack(
+                        child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Positioned(
-                              top: 20,
-                              left: 20,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
                               child: Text(
                                 widget.operator == null
                                     ? ''
-                                    : 'Hello, ${widget.operator.name}',
+                                    : '${widget.operator.name.split(' ')[0]}\'s Shift',
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            Positioned(
-                              bottom: 20,
-                              right: 20,
-                              child: widget.operator.imageId == ''
-                                  ? Image.asset("assets/images/User Shield.png")
-                                  : widget.imageData != null
-                                      ? ClipOval(
-                                          child: Image.memory(
-                                            widget.imageData!,
-                                            fit: BoxFit.cover,
-                                            width: 90,
-                                            height: 90,
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: isLoadingStartShift
+                                      ? null
+                                      : () {
+                                          _startShift();
+                                        },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(72, 177, 126, 1),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: isLoadingStartShift
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
                                           ),
                                         )
-                                      : ClipOval(
-                                          child: Shimmer.fromColors(
-                                            baseColor: Colors.grey[300]!,
-                                            highlightColor: Colors.grey[100]!,
-                                            child: Container(
-                                              width: 90,
-                                              height: 90,
-                                              color: Colors
-                                                  .white, // You can change this color to match your background
-                                            ),
+                                      : Text(
+                                          Provider.of<ShiftProvider>(context,
+                                                      listen: false)
+                                                  .isDuringShift
+                                              ? 'During Shift..'
+                                              : 'Start Shift',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
                                           ),
                                         ),
+                                ),
+                                SizedBox(width: 15),
+                                ElevatedButton(
+                                  onPressed: isLoadingEndShift
+                                      ? null
+                                      : () {
+                                          _endShift();
+                                        },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(255, 73, 73, 1),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: isLoadingEndShift
+                                      ? CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
+                                          ),
+                                        )
+                                      : Text(
+                                          'End Shift',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(left: 18, right: 18.0),
-                      child: subTitle('Features'),
+                      child: 
+                        widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+
+                  ? Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 100.64825439453125,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    )
+                  : 
+                      subTitle('Features'),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -208,6 +423,11 @@ class _DashBoardState extends State<DashBoard> {
                           SizedBox(
                             width: 18,
                           ),
+                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            ):
                           GestureDetector(
                             onTap: () {
                               showDialog(
@@ -231,6 +451,11 @@ class _DashBoardState extends State<DashBoard> {
                             // ),
                           ),
                           const SizedBox(width: 10),
+                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            ):
                           GestureDetector(
                             onTap: () async {
                               push(CarAccess(), context);
@@ -253,6 +478,11 @@ class _DashBoardState extends State<DashBoard> {
                           ),
 
 // GestureDetector part of the code
+        widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            ):
                           GestureDetector(
                             onTap: () async {
                               // Navigate to QRViewExample and wait for the result
@@ -310,11 +540,92 @@ class _DashBoardState extends State<DashBoard> {
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(left: 18, right: 18.0),
-                      child: subTitle('Fuel Prices'),
+                      child:
+                      
+                                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+
+                  ? Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 100.64825439453125,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    )
+                  : 
+                       subTitle('Fuel Prices'),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
+                      child:
+                                                       widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+        ? Column(
+          children: [
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
                       child: Container(
+                        width: 403.64825439453125,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    ),
+            )
+            ,SizedBox(height: 10,),
+             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 403.64825439453125,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+              )),
+              SizedBox(height: 10,),
+               Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 403.64825439453125,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    ),)
+
+          ],
+        )
+                
+        :
+                      
+                       Container(
                         height: 350,
                         child: FutureBuilder<List<Fuel>>(
                           future: fuelListFuture,
@@ -414,10 +725,11 @@ class _DashBoardState extends State<DashBoard> {
                                                       ? '\$/ltr  ${recentPrice.toStringAsFixed(2)} '
                                                       : 'No price available',
                                                   style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 1, 14, 72),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                      color: Color.fromARGB(
+                                                          255, 1, 14, 72),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
                                                 ),
                                               ],
                                             ),

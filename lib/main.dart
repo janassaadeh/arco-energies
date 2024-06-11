@@ -1,7 +1,11 @@
 import 'package:company_pages/Models/reward_model.dart';
 import 'package:company_pages/Provider/deposit_provider.dart';
+
 import 'package:company_pages/Provider/operator_provider.dart';
 import 'package:company_pages/Provider/reward_provider.dart';
+
+import 'package:company_pages/Provider/shift_provider.dart';
+
 import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Admin/AdminHomeLayout.dart';
 import 'package:company_pages/Screens/Company/CompanyHomeLayout.dart';
@@ -21,14 +25,14 @@ import 'Services/Auth/AuthenticationService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Ensure the timezone database is initialized
   await initializeTimezones();
-  
+
   final AuthenticationService authService = AuthenticationService();
 
   runApp(
@@ -49,6 +53,9 @@ void main() async {
           create: (_) => RewardProvider(),
         ),
         ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
+        ChangeNotifierProvider<ShiftProvider>(
+          create: (_) => ShiftProvider(),
+        ),
       ],
       child: MyApp(
         authService: authService,
