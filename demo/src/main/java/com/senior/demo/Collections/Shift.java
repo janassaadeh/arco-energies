@@ -1,19 +1,18 @@
 package com.senior.demo.Collections;
 
+import com.senior.demo.Collections.CashAdditionEvent;
+import com.senior.demo.Collections.Transaction;
 import com.senior.demo.Responses.OperatorResponse;
-import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Document(collection = "shifts")
 public class Shift {
     @Id
     private String id;
-
     private OperatorResponse operator;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -21,8 +20,13 @@ public class Shift {
     private List<Transaction> transactions;
     private double totalDepositsAmount;
     private List<CashAdditionEvent> deposits;
+    private String status; // Make sure this field is present
 
-    public Shift(String id, LocalDateTime startTime, LocalDateTime endTime, double totalTransactionsAmount, List<Transaction> transactions, double totalDepositsAmount, List<CashAdditionEvent> deposits) {
+    // Constructor, getters, and setters
+
+    public Shift() {}
+
+    public Shift(String id, LocalDateTime startTime, LocalDateTime endTime, double totalTransactionsAmount, List<Transaction> transactions, double totalDepositsAmount, List<CashAdditionEvent> deposits, String status) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -30,10 +34,11 @@ public class Shift {
         this.transactions = transactions;
         this.totalDepositsAmount = totalDepositsAmount;
         this.deposits = deposits;
+        this.status = status; // Ensure status is included
     }
 
-    public String getId() {
 
+    public String getId() {
         return id;
     }
 
@@ -95,5 +100,13 @@ public class Shift {
 
     public void setDeposits(List<CashAdditionEvent> deposits) {
         this.deposits = deposits;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

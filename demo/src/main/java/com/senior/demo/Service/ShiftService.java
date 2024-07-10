@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -75,7 +77,8 @@ public class ShiftService {
                 totalTransactionsAmount,
                 transactions,
                 totalDepositsAmount,
-                deposits
+                deposits,
+                "ended"
         );
 
         OperatorResponse operator = userService.getOperator(authentication);
@@ -87,6 +90,139 @@ public class ShiftService {
         return shiftRepository.save(shift);
     }
 
+    public Shift startShift(LocalDateTime startTime, Authentication authentication) {
+        OperatorResponse operator = userService.getOperator(authentication);
+        if (operator == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
+        }
+
+        List<Shift> operatorShifts = shiftRepository.findByOperatorId(operator.getId());
+        boolean hasActiveShift = operatorShifts.stream()
+                .anyMatch(shift -> "active".equals(shift.getStatus()));
+
+        if (hasActiveShift) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Shift is already in progress");
+        }
+
+        // Generate custom ID
+        String customId = generateCustomId();
+
+        Shift shift = new Shift();
+        shift.setId(customId);
+        shift.setStartTime(startTime);
+        shift.setOperator(operator);
+        shift.setTransactions(new ArrayList<>());
+        shift.setDeposits(new ArrayList<>());
+        shift.setStatus("active");
+        return shiftRepository.save(shift);
+    }
+
+    public Shift addTransactionToActiveShift(String transactionId, Authentication authentication) {
+        OperatorResponse operator = userService.getOperator(authentication);
+        if (operator == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
+        }
+
+        String operatorId = operator.getId();
+        List<Shift> operatorShifts = shiftRepository.findByOperatorId(operatorId);
+        Shift activeShift = operatorShifts.stream()
+                .filter(shift -> "active".equals(shift.getStatus()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active shift found"));
+
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+
+        activeShift.getTransactions().add(transaction);
+
+        double totalTransactionsAmount = Optional.ofNullable(activeShift.getTransactions())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .mapToDouble(t -> t.getQuantity() * t.getPump().getFuel().getFuelPrice())
+                .sum();
+        activeShift.setTotalTransactionsAmount(totalTransactionsAmount);
+
+        return shiftRepository.save(activeShift);
+    }
+
+    public Shift addDepositToActiveShift(String depositId, Authentication authentication) {
+        OperatorResponse operator = userService.getOperator(authentication);
+        if (operator == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
+        }
+
+        String operatorId = operator.getId();
+        List<Shift> operatorShifts = shiftRepository.findByOperatorId(operatorId);
+        Shift activeShift = operatorShifts.stream()
+                .filter(shift -> "active".equals(shift.getStatus()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active shift found"));
+
+        CashAdditionEvent deposit = cashAdditionEventRepository.findById(depositId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deposit not found"));
+
+        activeShift.getDeposits().add(deposit);
+
+        double totalDepositsAmount = Optional.ofNullable(activeShift.getDeposits())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .mapToDouble(CashAdditionEvent::getCashAmount)
+                .sum();
+        activeShift.setTotalDepositsAmount(totalDepositsAmount);
+
+        return shiftRepository.save(activeShift);
+    }
+
+    public Shift endShift(LocalDateTime endTime, Authentication authentication) {
+        OperatorResponse operator = userService.getOperator(authentication);
+        if (operator == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
+        }
+
+        String operatorId = operator.getId();
+        System.out.println("Looking for shifts with operatorId: " + operatorId); // Debugging log
+
+        List<Shift> operatorShifts = shiftRepository.findByOperatorId(operatorId);
+        Shift currentShift = operatorShifts.stream()
+                .filter(shift -> "active".equals(shift.getStatus()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active shift found"));
+
+        System.out.println("Shift found: " + currentShift);
+
+        // Calculate total transaction amount
+        double totalTransactionsAmount = Optional.ofNullable(currentShift.getTransactions())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .mapToDouble(transaction -> transaction.getQuantity() * transaction.getPump().getFuel().getFuelPrice())
+                .sum();
+
+        // Calculate total deposit amount
+        double totalDepositsAmount = Optional.ofNullable(currentShift.getDeposits())
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .mapToDouble(CashAdditionEvent::getCashAmount)
+                .sum();
+
+        // Update the shift
+        currentShift.setEndTime(endTime);
+        currentShift.setTotalTransactionsAmount(totalTransactionsAmount);
+        currentShift.setTotalDepositsAmount(totalDepositsAmount);
+        currentShift.setStatus("ended");
+
+        return shiftRepository.save(currentShift);
+    }
+
+
+    public Shift getCurrentShift(Authentication authentication) {
+        OperatorResponse operator = userService.getOperator(authentication);
+        if (operator == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
+        }
+
+        return shiftRepository.findByOperatorAndStatus(operator.getId(), "active")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active shift found"));
+    }
 
 
     public Shift getShiftById(String id) {

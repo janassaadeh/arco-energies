@@ -19,15 +19,46 @@ public class ShiftController {
     @Autowired
     private ShiftService shiftService;
 
-    @PostMapping("/shifts")
-    public Shift createShift(@RequestBody ShiftRequest shiftRequest, Authentication authentication) {
-        return shiftService.createShiftWithCustomId(
-                shiftRequest.getStartTime(),
+//    @PostMapping("/shifts")
+//    public Shift createShift(@RequestBody ShiftRequest shiftRequest, Authentication authentication) {
+//        return shiftService.createShiftWithCustomId(
+//                shiftRequest.getStartTime(),
+//                shiftRequest.getEndTime(),
+//                shiftRequest.getTransactionIds(),
+//                shiftRequest.getDepositIds(),
+//                authentication
+//        );
+//    }
+
+    @PostMapping("/shifts/start")
+    public Shift startShift(@RequestBody ShiftRequest shiftRequest, Authentication authentication) {
+        return shiftService.startShift(shiftRequest.getStartTime(), authentication);
+    }
+
+    @PostMapping("/shifts/add-transaction")
+    public Shift addTransactionToActiveShift(@RequestBody AddTransactionRequest request, Authentication authentication) {
+        return shiftService.addTransactionToActiveShift(request.getTransactionId(), authentication);
+    }
+
+    @PostMapping("/shifts/add-deposit")
+    public Shift addDepositToActiveShift(@RequestBody AddDepositRequest request, Authentication authentication) {
+        return shiftService.addDepositToActiveShift(request.getDepositId(), authentication);
+    }
+
+    @PostMapping("/shifts/end")
+    public Shift endShift(
+            @RequestBody ShiftRequest shiftRequest,
+            Authentication authentication
+    ) {
+        return shiftService.endShift(
                 shiftRequest.getEndTime(),
-                shiftRequest.getTransactionIds(),
-                shiftRequest.getDepositIds(),
                 authentication
         );
+    }
+
+    @GetMapping("/shifts/current")
+    public Shift getCurrentShift(Authentication authentication) {
+        return shiftService.getCurrentShift(authentication);
     }
 
     @GetMapping("/shifts/{id}")
@@ -58,8 +89,6 @@ public class ShiftController {
     public static class ShiftRequest {
         private LocalDateTime startTime;
         private LocalDateTime endTime;
-        private List<String> transactionIds;
-        private List<String> depositIds;
 
         // Getters and setters
         public LocalDateTime getStartTime() {
@@ -77,21 +106,29 @@ public class ShiftController {
         public void setEndTime(LocalDateTime endTime) {
             this.endTime = endTime;
         }
+    }
 
-        public List<String> getTransactionIds() {
-            return transactionIds;
+    public static class AddTransactionRequest {
+        private String transactionId;
+
+        public String getTransactionId() {
+            return transactionId;
         }
 
-        public void setTransactionIds(List<String> transactionIds) {
-            this.transactionIds = transactionIds;
+        public void setTransactionId(String transactionId) {
+            this.transactionId = transactionId;
+        }
+    }
+
+    public static class AddDepositRequest {
+        private String depositId;
+
+        public String getDepositId() {
+            return depositId;
         }
 
-        public List<String> getDepositIds() {
-            return depositIds;
-        }
-
-        public void setDepositIds(List<String> depositIds) {
-            this.depositIds = depositIds;
+        public void setDepositId(String depositId) {
+            this.depositId = depositId;
         }
     }
 }
