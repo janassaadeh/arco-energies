@@ -25,7 +25,7 @@ class ShiftService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
-        'http://192.168.6.118:8080/api/shifts',
+        'https://arcoenergies.onrender.com/api/shifts',
         data: {
           'startTime': startTime.toIso8601String(),
           'endTime': endTime.toIso8601String(),
@@ -43,6 +43,150 @@ class ShiftService {
       }
     } catch (e) {
       throw Exception('Failed to create shift: $e');
+    }
+  }
+
+  Future<Shift> startShift(DateTime startTime) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'https://arcoenergies.onrender.com/api/shifts/start',
+        data: {
+          'startTime': startTime.toIso8601String(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final shiftData = response.data;
+        final shift = Shift.fromJson(shiftData);
+        return shift;
+      } else {
+        throw Exception('Failed to start shift');
+      }
+    } catch (e) {
+      throw Exception('Failed to start shift: $e');
+    }
+  }
+
+  Future<bool> addTransactionToActiveShift(String transactionId) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'https://arcoenergies.onrender.com/api/shifts/add-transaction',
+        data: {
+          'transactionId': transactionId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+        // final shiftData = response.data;
+        // final shift = Shift.fromJson(shiftData);
+        // return shift;
+      } else {
+        throw Exception('Failed to add transaction to active shift');
+      }
+    } catch (e) {
+      throw Exception('Failed to add transaction to active shift: $e');
+    }
+  }
+
+  Future<bool> addDepositToActiveShift(String depositId) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'https://arcoenergies.onrender.com/api/shifts/add-deposit',
+        data: {
+          'depositId': depositId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+        // final shiftData = response.data;
+        // final shift = Shift.fromJson(shiftData);
+        // return shift;
+      } else {
+        throw Exception('Failed to add deposit to active shift');
+      }
+    } catch (e) {
+      throw Exception('Failed to add deposit to active shift: $e');
+    }
+  }
+
+  Future<Shift> endShift(String endTime) async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.post(
+        'https://arcoenergies.onrender.com/api/shifts/end',
+        data: {
+          'endTime': endTime,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final shiftData = response.data;
+        final shift = Shift.fromJson(shiftData);
+        return shift;
+      } else {
+        throw Exception('Failed to end shift');
+      }
+    } catch (e) {
+      throw Exception('Failed to end shift: $e');
+    }
+  }
+
+  Future<Shift> getCurrentShift() async {
+    try {
+      final bool isLoggedIn = await authService.isLoggedIn();
+      if (!isLoggedIn) {
+        throw Exception('User is not logged in');
+      }
+
+      final String? token = await authService.getToken();
+      dio.options.headers['Authorization'] = 'Bearer $token';
+
+      final response = await dio.get(
+        'https://arcoenergies.onrender.com/api/shifts/current',
+      );
+
+      if (response.statusCode == 200) {
+        final shiftData = response.data;
+        final shift = Shift.fromJson(shiftData);
+        return shift;
+      } else {
+        throw Exception('Failed to fetch current shift');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch current shift: $e');
     }
   }
 

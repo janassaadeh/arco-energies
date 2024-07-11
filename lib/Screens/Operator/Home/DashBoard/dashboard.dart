@@ -190,10 +190,14 @@ class _DashBoardState extends State<DashBoard> {
       isLoadingStartShift = true;
     });
     try {
-      // Get the current time and set it as the start shift time
-      String startTime = DateTime.now().toIso8601String();
-      Provider.of<ShiftProvider>(context, listen: false)
-          .setStartShiftTime(startTime);
+      DateTime startTime = DateTime.now();
+
+      await shiftService.startShift(startTime);
+
+      // Provider.of<ShiftProvider>(context, listen: false)
+      //     .setStartShiftTime(DateTime.now().toIso8601String());
+    } catch (e) {
+      print('Error starting shift: $e');
     } finally {
       setState(() {
         isLoadingStartShift = false;
@@ -206,36 +210,32 @@ class _DashBoardState extends State<DashBoard> {
       isLoadingEndShift = true;
     });
     try {
-      // Get the current time as the end time directly as a DateTime object
       DateTime endTime = DateTime.now();
       print('End time DateTime: $endTime');
 
-      // Convert end time to string and print for debugging
       String endTimeString = endTime.toIso8601String();
       print('End time string: $endTimeString');
 
-      // Store the end time in the provider as a string
-      Provider.of<ShiftProvider>(context, listen: false)
-          .setEndShiftTime(endTimeString);
+      // Provider.of<ShiftProvider>(context, listen: false)
+      //     .setEndShiftTime(endTimeString);
 
-      // Get filtered transactions and deposits
-      List<String> transactionsIds =
-          Provider.of<ShiftProvider>(context, listen: false).transactionsIds;
-      List<String> depositsIds =
-          Provider.of<ShiftProvider>(context, listen: false).depositsIds;
+      // List<String> transactionsIds =
+      //     Provider.of<ShiftProvider>(context, listen: false).transactionsIds;
+      // List<String> depositsIds =
+      //     Provider.of<ShiftProvider>(context, listen: false).depositsIds;
 
-      // Parse the start time from the provider
-      DateTime startTime = DateTime.parse(
-          Provider.of<ShiftProvider>(context, listen: false).startShiftTime);
+      // // Parse the start time from the provider
+      // DateTime startTime = DateTime.parse(
+      //     Provider.of<ShiftProvider>(context, listen: false).startShiftTime);
 
-      // Create Shift
-      await shiftService.createShift(
-          startTime, endTime, transactionsIds, depositsIds);
+      // // Create Shift
+      // await shiftService.createShift(
+      //     startTime, endTime, transactionsIds, depositsIds);
 
-      // Reset shift times in the provider
-      Provider.of<ShiftProvider>(context, listen: false).resetShiftTimes();
+      await shiftService.endShift(endTimeString);
+
+      // Provider.of<ShiftProvider>(context, listen: false).resetShiftTimes();
     } catch (e) {
-      // Catch and print any format exceptions
       print('Error parsing date: $e');
     } finally {
       setState(() {
@@ -246,46 +246,39 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    FuelPricesProvider fuelPricesProvider= Provider.of<FuelPricesProvider>(context, listen: false);
+    FuelPricesProvider fuelPricesProvider =
+        Provider.of<FuelPricesProvider>(context, listen: false);
 
-    // AuthenticationService authenticationService = AuthenticationService();
-    ShiftProvider shiftProvider =
-        Provider.of<ShiftProvider>(context, listen: false);
-
-    print(Provider.of<ShiftProvider>(context, listen: false).isDuringShift);
+    // print(Provider.of<ShiftProvider>(context, listen: false).isDuringShift);
 
     return Scaffold(
       body: RefreshIndicator(
-              onRefresh: _refreshfuelPrices,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
-                    //     "assets/images/gas-pump.png"),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 18, right: 18.0, top: 18),
-                      child: 
-                      
-                             widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-        ? Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      width: 403.64825439453125,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            20.0), // Adjust the radius as needed
-                      ),
-                      // You can change this color to match your background
-                    ),
-                  )
-                
-        : 
-                      Container(
+        onRefresh: _refreshfuelPrices,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
+              //     "assets/images/gas-pump.png"),
+              Padding(
+                padding: const EdgeInsets.only(left: 18, right: 18.0, top: 18),
+                child: widget.operator == null &&
+                        fuelPricesProvider.cachedFuelPrices.isEmpty
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 403.64825439453125,
+                          height: 130,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                20.0), // Adjust the radius as needed
+                          ),
+                          // You can change this color to match your background
+                        ),
+                      )
+                    : Container(
                         height: 130,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
@@ -343,11 +336,12 @@ class _DashBoardState extends State<DashBoard> {
                                           ),
                                         )
                                       : Text(
-                                          Provider.of<ShiftProvider>(context,
-                                                      listen: false)
-                                                  .isDuringShift
-                                              ? 'During Shift..'
-                                              : 'Start Shift',
+                                          // Provider.of<ShiftProvider>(context,
+                                          //             listen: false)
+                                          //         .isDuringShift
+                                          //     ? 'During Shift..'
+                                              // :
+                                               'Start Shift',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -388,47 +382,46 @@ class _DashBoardState extends State<DashBoard> {
                           ],
                         ),
                       ),
-                    ),
+              ),
 
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18, right: 18.0),
-                      child: 
-                        widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 100.64825439453125,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    )
-                  : 
-                      subTitle('Features'),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 135,
-                      width: double.infinity,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          SizedBox(
-                            width: 18,
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 18, right: 18.0),
+                child: widget.operator == null &&
+                        fuelPricesProvider.cachedFuelPrices.isEmpty
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 100.64825439453125,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Adjust the radius as needed
                           ),
-                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                          GestureDetector(
+                          // You can change this color to match your background
+                        ),
+                      )
+                    : subTitle('Features'),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 135,
+                width: double.infinity,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    SizedBox(
+                      width: 18,
+                    ),
+                    widget.operator == null &&
+                            fuelPricesProvider.cachedFuelPrices.isEmpty
+                        ? RoundedContainerWithShimmer(
+                            width: 152,
+                            height: 135,
+                          )
+                        : GestureDetector(
                             onTap: () {
                               showDialog(
                                 context: context,
@@ -450,13 +443,14 @@ class _DashBoardState extends State<DashBoard> {
                             //   context,
                             // ),
                           ),
-                          const SizedBox(width: 10),
-                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                          GestureDetector(
+                    const SizedBox(width: 10),
+                    widget.operator == null &&
+                            fuelPricesProvider.cachedFuelPrices.isEmpty
+                        ? RoundedContainerWithShimmer(
+                            width: 152,
+                            height: 135,
+                          )
+                        : GestureDetector(
                             onTap: () async {
                               push(CarAccess(), context);
                             },
@@ -473,17 +467,18 @@ class _DashBoardState extends State<DashBoard> {
                             //   context,
                             // ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
+                    SizedBox(
+                      width: 10,
+                    ),
 
 // GestureDetector part of the code
-        widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                          GestureDetector(
+                    widget.operator == null &&
+                            fuelPricesProvider.cachedFuelPrices.isEmpty
+                        ? RoundedContainerWithShimmer(
+                            width: 152,
+                            height: 135,
+                          )
+                        : GestureDetector(
                             onTap: () async {
                               // Navigate to QRViewExample and wait for the result
                               final qrText = await Navigator.push(
@@ -531,101 +526,101 @@ class _DashBoardState extends State<DashBoard> {
                               text: "Scan QR for company rewards",
                             ),
                           ),
-                          SizedBox(
-                            width: 18,
+                    SizedBox(
+                      width: 18,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 18, right: 18.0),
+                child: widget.operator == null &&
+                        fuelPricesProvider.cachedFuelPrices.isEmpty
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 100.64825439453125,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Adjust the radius as needed
                           ),
+                          // You can change this color to match your background
+                        ),
+                      )
+                    : subTitle('Fuel Prices'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: widget.operator == null &&
+                        fuelPricesProvider.cachedFuelPrices.isEmpty
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 403.64825439453125,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      12.0), // Adjust the radius as needed
+                                ),
+                                // You can change this color to match your background
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 403.64825439453125,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                        12.0), // Adjust the radius as needed
+                                  ),
+                                  // You can change this color to match your background
+                                ),
+                              )),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 403.64825439453125,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      12.0), // Adjust the radius as needed
+                                ),
+                                // You can change this color to match your background
+                              ),
+                            ),
+                          )
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18, right: 18.0),
-                      child:
-                      
-                                                  widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 100.64825439453125,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    )
-                  : 
-                       subTitle('Fuel Prices'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                                                       widget.operator == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-        ? Column(
-          children: [
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 403.64825439453125,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    ),
-            )
-            ,SizedBox(height: 10,),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 403.64825439453125,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-              )),
-              SizedBox(height: 10,),
-               Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 403.64825439453125,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    ),)
-
-          ],
-        )
-                
-        :
-                      
-                       Container(
+                      )
+                    : Container(
                         height: 350,
                         child: FutureBuilder<List<Fuel>>(
                           future: fuelListFuture,
@@ -744,11 +739,11 @@ class _DashBoardState extends State<DashBoard> {
                           },
                         ),
                       ),
-                    ),
-                  ],
-                ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

@@ -206,9 +206,9 @@ class _DepositReceiptPageState extends State<DepositReceiptPage> {
                               .466, "Operator Contact", receipt.adminPhone),
                           receiptDivider(.5),
                           receiptDetailPositioned(0.539, "Deposit Amount",
-                              receipt.cashAmount.toString()),
+                              receipt.cashAmount.toStringAsFixed(3)),
                           receiptDetailPositioned(0.575, "Company Balance",
-                              receipt.companyBalance.toString()),
+                              receipt.companyBalance.toStringAsFixed(3)),
                           receiptDetailPositioned(
                               .615, "Payment Method", receipt.paymentMethod),
                           receiptDivider(.65),

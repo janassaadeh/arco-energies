@@ -1,6 +1,8 @@
+import 'package:company_pages/Models/shift.dart';
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Models/vehicle.dart';
 import 'package:company_pages/Services/Operator/pump_service.dart';
+import 'package:company_pages/Services/Operator/shift_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/Operator/vehicle_service.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class TransactionProvider extends ChangeNotifier {
   List<Pump> cachedPumps = [];
   List<Vehicle> cachedVehicles = [];
   List<Transaction> cachedTransactions = [];
+  List<Shift> cachedShifts = [];
   Transaction? _generatedTransaction;
   int isIdTriggeredByNFC = 0;
 
@@ -26,6 +29,7 @@ class TransactionProvider extends ChangeNotifier {
   PumpService pumpService = PumpService();
   VehicleService vehicleService = VehicleService();
   TransactionService transactionService = TransactionService();
+  final ShiftService shiftService = ShiftService();
 
   void setSelectedVehicleId(String id) {
     _selectedVehicleId = id;
@@ -115,6 +119,20 @@ class TransactionProvider extends ChangeNotifier {
         return transactions;
       } catch (e) {
         throw Exception('Failed to fetch transactions: $e');
+      }
+    }
+  }
+
+  Future<List<Shift>> getShifts() async {
+    if (cachedShifts.isNotEmpty) {
+      return cachedShifts;
+    } else {
+      try {
+        final List<Shift> shifts = await shiftService.getAllShifts();
+        cachedShifts = shifts;
+        return shifts;
+      } catch (e) {
+        throw Exception('Failed to fetch vehicles: $e');
       }
     }
   }

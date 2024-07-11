@@ -1,8 +1,10 @@
 import 'package:company_pages/Models/transaction.dart';
 import 'package:company_pages/Provider/shift_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Services/Operator/shift_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
+import 'package:company_pages/Widgets/Operator/pay_now_pop_up.dart';
 import '../../../Widgets/Operator/next_button.dart';
 import '../../../Widgets/Operator/second_text.dart';
 import 'package:company_pages/Screens/Operator/Transactions/receipt.dart';
@@ -24,6 +26,7 @@ class LitersValueEntry extends StatefulWidget {
 class _LitersValueEntryState extends State<LitersValueEntry> {
   TextEditingController litersController = TextEditingController();
   bool _isLoading = false;
+  final ShiftService shiftService = ShiftService();
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +149,10 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                               _isLoading ? "Loading..." : "Next",
                               fn: () async {
                                 if (_isLoading) return;
+                                if (litersController.text.isEmpty) {
+                                  _showErrorDialog("Please enter a value!");
+                                  return;
+                                }
 
                                 setState(() {
                                   _isLoading = true;
@@ -153,13 +160,8 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
 
                                 final startTime = DateTime.now();
 
-                                await Future.delayed(
-                                    const Duration(seconds: 3));
-
-                                if (litersController.text.isEmpty) {
-                                  _showErrorDialog("Please enter a value!");
-                                  return;
-                                }
+                                // await Future.delayed(
+                                //     const Duration(seconds: 3));
 
                                 final numericValue =
                                     double.tryParse(litersController.text);
@@ -199,30 +201,39 @@ class _LitersValueEntryState extends State<LitersValueEntry> {
                                 Transaction transaction =
                                     await generatedTransaction;
 
-                                final endTime = DateTime.now();
-                                final elapsedTime = endTime
-                                    .difference(startTime)
-                                    .inMilliseconds;
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      PayNowPopUp(transaction: transaction),
+                                );
 
-                                // Calculate the remaining time to display the loading widget
-                                final remainingTime = Duration(seconds: 3) -
-                                    Duration(milliseconds: elapsedTime);
+                                // final endTime = DateTime.now();
+                                // final elapsedTime = endTime
+                                //     .difference(startTime)
+                                //     .inMilliseconds;
 
-                                // Ensure the loading widget is displayed for at least 1 second
-                                if (remainingTime > Duration(seconds: 1)) {
-                                  await Future.delayed(
-                                      Duration(milliseconds: elapsedTime));
-                                }
+                                // // Calculate the remaining time to display the loading widget
+                                // final remainingTime = Duration(seconds: 3) -
+                                //     Duration(milliseconds: elapsedTime);
 
-                                if (Provider.of<ShiftProvider>(context,
-                                        listen: false)
-                                    .isDuringShift) {
-                                  Provider.of<ShiftProvider>(context,
-                                          listen: false)
-                                      .addTransaction(transaction.id);
-                                }else{
-                                  print("you are not during ur shift");
-                                }
+                                // // Ensure the loading widget is displayed for at least 1 second
+                                // if (remainingTime > Duration(seconds: 1)) {
+                                //   await Future.delayed(
+                                //       Duration(milliseconds: elapsedTime));
+                                // }
+
+                                // if (Provider.of<ShiftProvider>(context,
+                                //         listen: false)
+                                //     .isDuringShift) {
+                                //   Provider.of<ShiftProvider>(context,
+                                //           listen: false)
+                                //       .addTransaction(transaction.id);
+                                // }else{
+                                //   print("you are not during ur shift");
+                                // }
+
+                                await shiftService.addTransactionToActiveShift(
+                                    transaction.id);
 
                                 _navigateToReceipt(transaction);
                               },

@@ -1,5 +1,6 @@
 import 'package:company_pages/Provider/shift_provider.dart';
 import 'package:company_pages/Screens/Admin/New%20Deposit/deposit_receipt.dart';
+import 'package:company_pages/Services/Operator/shift_service.dart';
 import 'package:company_pages/Widgets/Common/CustomButton.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/Operator/image_container.dart';
@@ -29,8 +30,8 @@ class CashAmountValueEntryBody extends StatefulWidget {
 
 class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
   TextEditingController cashController = TextEditingController();
-  final DepositService depositService =
-      DepositService(); // Instantiate DepositService
+  final DepositService depositService = DepositService();
+  final ShiftService shiftService = ShiftService();
   bool isLoading = false;
 
   @override
@@ -113,15 +114,16 @@ class _CashAmountValueEntryBodyState extends State<CashAmountValueEntryBody> {
                       // var deposit =
                       //     await depositService.getDepositReceiptById(id);
 
-                      if (Provider.of<ShiftProvider>(context, listen: false)
-                          .isDuringShift) {
-                        Provider.of<ShiftProvider>(context, listen: false)
-                            .addDeposit(id);
-                      } else {
-                        print("you are not during ur shift");
-                      }
+                      // if (Provider.of<ShiftProvider>(context, listen: false)
+                      //     .isDuringShift) {
+                      //   Provider.of<ShiftProvider>(context, listen: false)
+                      //       .addDeposit(id);
+                      // } else {
+                      //   print("you are not during ur shift");
+                      // }
 
-                      print(id);
+                      await shiftService.addDepositToActiveShift(id);
+                      
                       if (id != null) {
                         Navigator.push(
                           context,

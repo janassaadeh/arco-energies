@@ -6,11 +6,12 @@ class Shift {
   final String id;
   final OperatorResponse operator;
   final DateTime startTime;
-  final DateTime endTime;
+  final DateTime? endTime; // Allow endTime to be nullable
   final double totalTransactionsAmount;
   final List<Transaction> transactions;
   final double totalDepositsAmount;
   final List<DepositReceipt> deposits;
+  final String status;
 
   Shift({
     required this.id,
@@ -21,23 +22,38 @@ class Shift {
     required this.transactions,
     required this.totalDepositsAmount,
     required this.deposits,
+    required this.status,
   });
 
   factory Shift.fromJson(Map<String, dynamic> json) {
     return Shift(
-      id: json['id'],
-      operator: OperatorResponse.fromJson(json['operator']),
+      id: json['id'] ?? '',
+      operator: OperatorResponse.fromJson(json['operator'] ?? {}),
       startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      totalTransactionsAmount: json['totalTransactionsAmount'],
-      transactions: (json['transactions'] as List<dynamic>)
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
+      totalTransactionsAmount: (json['totalTransactionsAmount'] ?? 0).toDouble(),
+      transactions: (json['transactions'] as List<dynamic>? ?? [])
           .map((data) => Transaction.fromJson(data))
           .toList(),
-      totalDepositsAmount: json['totalDepositsAmount'],
-      deposits: (json['deposits'] as List<dynamic>)
+      totalDepositsAmount: (json['totalDepositsAmount'] ?? 0).toDouble(),
+      deposits: (json['deposits'] as List<dynamic>? ?? [])
           .map((data) => DepositReceipt.fromJson(data))
           .toList(),
+      status: json['status'] ?? '',
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'operator': operator.toJson(),
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'totalTransactionsAmount': totalTransactionsAmount,
+      'transactions': transactions.map((transaction) => transaction.toJson()).toList(),
+      'totalDepositsAmount': totalDepositsAmount,
+      'deposits': deposits.map((deposit) => deposit.toJson()).toList(),
+      'status': status,
+    };
+  }
 }

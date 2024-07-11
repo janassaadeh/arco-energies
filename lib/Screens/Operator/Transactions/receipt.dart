@@ -44,6 +44,8 @@ class ReceiptPage extends StatelessWidget {
 
     final formattedDate = DateFormat.yMMMd().add_jms().format(dateTime);
 
+    final total = transaction.quantity * transaction.pump.fuel.fuelPrice!;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: screenSize.height * .1,
@@ -159,13 +161,13 @@ class ReceiptPage extends StatelessWidget {
                 receiptDetailPositioned(
                     .47, "Odometer Number", transaction.odometer.toString()),
                 receiptDivider(.495),
-                receiptDetailPositioned(.52, "Amount",
-                    "${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
+                receiptDetailPositioned(
+                    .52, "Amount", "${total.toStringAsFixed(2)}"),
                 // receiptDetailPositioned(.545, "Tax", "\$ 13.88"),
                 receiptDetailPositioned(
                     .545, "Pump Currency", "${transaction.pump.currency}"),
-                receiptDetailPositioned(.57, "Total",
-                    "\$ ${transaction.quantity * transaction.pump.fuel.fuelPrice!}"),
+                receiptDetailPositioned(
+                    .57, "Total", "\$ ${total.toStringAsFixed(2)}"),
                 receiptDivider(.595),
                 receiptDetailPositioned(
                     .62, "Operator", transaction.operator.name),

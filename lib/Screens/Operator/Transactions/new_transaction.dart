@@ -248,23 +248,27 @@ class _NewTransactionState extends State<NewTransaction> {
                               : combinedList[index];
                           if (item is Transaction) {
                             return GestureDetector(
-                              onTap:(){
-  Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>TransactionReceipt(transaction:item)),
-        );
-      },
-                              
-                              child: _buildTransactionItem(item));
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TransactionReceipt(
+                                                transaction: item)),
+                                  );
+                                },
+                                child: _buildTransactionItem(item));
                           } else if (item is DepositReceipt) {
                             return GestureDetector(
-                              onTap:(){
-  Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>DepositDetails(receipt:item)),
-        );
-      },
-                              child: _buildDepositItem(item));
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DepositDetails(receipt: item)),
+                                  );
+                                },
+                                child: _buildDepositItem(item));
                           } else {
                             return SizedBox.shrink();
                           }

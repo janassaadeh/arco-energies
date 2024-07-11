@@ -33,7 +33,7 @@ class SplashScreen extends StatelessWidget {
                               String role = snapshot.data ??
                                   ""; // Use empty string as default
                               if (role == "COMPANY") {
-                                return  CompanyHomePageLayout();
+                                return CompanyHomePageLayout();
                               } else if (role == "OPERATOR") {
                                 return const Operator();
                               } else if (role == "ADMIN") {
