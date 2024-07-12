@@ -32,14 +32,17 @@ class Features extends StatelessWidget {
             Text(
               text,
               style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w500),
+                  color: Colors.white, fontWeight: FontWeight.w500,fontSize: 16),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(
-                  imageAsset,
-                  width: 55,
+                Container(
+                  height: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:72,
+                  width: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:72,
+                  child: Image.asset(
+                    imageAsset,fit: BoxFit.fitHeight,
+                  ),
                 ),
               ],
             )
