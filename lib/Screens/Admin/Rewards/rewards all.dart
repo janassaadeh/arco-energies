@@ -26,7 +26,7 @@ import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dar
 // import 'operator_model.dart';
 
 class AllRewards extends StatefulWidget {
-  final List<dynamic> rewards;
+  final List<Reward> rewards;
   const AllRewards({Key? key, required this.rewards}) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class _MyOperatorsState extends State<AllRewards>
   double ratio = 0.3;
   late List<TickerProvider> tickerProviders;
   String searchQuery = '';
-  late List<dynamic> filteredOperators;
+  late List<Reward> filteredOperators;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _MyOperatorsState extends State<AllRewards>
   }
 
   // Method to filter companies based on search query
-  List<dynamic> filterRewards() {
+  List<Reward> filterRewards() {
     return widget.rewards.where((op) {
       final name = op.name.toLowerCase();
       final description = op.description.toLowerCase();

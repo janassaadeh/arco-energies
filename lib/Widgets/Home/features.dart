@@ -38,8 +38,8 @@ class Features extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  height: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:72,
-                  width: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:72,
+                  height: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:imageAsset=='assets/images/Traffic Jam.png'?90:72,
+                  width: imageAsset=='assets/images/Gift.png'?63:imageAsset=='assets/images/Budget.png'?65:imageAsset=='assets/images/Traffic Jam.png'?90: 72,
                   child: Image.asset(
                     imageAsset,fit: BoxFit.fitHeight,
                   ),

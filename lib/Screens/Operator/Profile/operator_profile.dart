@@ -17,7 +17,39 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (operator == null)
+    return
+     Scaffold(
+         backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white)),
+        title: const Center(
+          child: Text(
+            'Profile',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(
+              Icons.notifications,
+              size: 37,
+              color:Color(0xff003D5B),
+            ),
+          ),
+        ],
+      ),
+      body:
+     (operator == null)
         ? Container()
         : SingleChildScrollView(
             child: Column(
@@ -306,6 +338,6 @@ class Profile extends StatelessWidget {
                 ),
               ],
             ),
-          );
+          ));
   }
 }

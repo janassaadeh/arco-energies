@@ -4,10 +4,12 @@ import 'package:company_pages/Provider/deposit_provider.dart';
 import 'package:company_pages/Provider/fuel_prices_provider.dart';
 import 'package:company_pages/Provider/shift_provider.dart';
 import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:company_pages/Screens/Admin/New%20Deposit/SelectCompany.dart';
 import 'package:company_pages/Screens/Admin/qr_code.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
 import 'package:company_pages/Screens/Operator/Home/Edit%20Fuel%20Prices/edit_prices_pop_up.dart';
 import 'package:company_pages/Screens/Operator/Transactions/car_access.dart';
+import 'package:company_pages/Screens/Operator/Transactions/new_transaction.dart';
 import 'package:company_pages/Services/Operator/fuel_prices_service.dart';
 // import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 import 'package:company_pages/Services/Operator/fuel_service.dart';
@@ -269,7 +271,7 @@ class _DashBoardState extends State<DashBoard> {
                         highlightColor: Colors.grey[100]!,
                         child: Container(
                           width: 403.64825439453125,
-                          height: 130,
+                          height: 80,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
@@ -279,7 +281,7 @@ class _DashBoardState extends State<DashBoard> {
                         ),
                       )
                     : Container(
-                        height: 130,
+                        height: 80,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -296,19 +298,19 @@ class _DashBoardState extends State<DashBoard> {
                           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Text(
-                                widget.operator == null
-                                    ? ''
-                                    : '${widget.operator.name.split(' ')[0]}\'s Shift',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 12.0),
+                            //   child: Text(
+                            //     widget.operator == null
+                            //         ? ''
+                            //         : '${widget.operator.name.split(' ')[0]}\'s Shift',
+                            //     style: const TextStyle(
+                            //       color: Colors.white,
+                            //       fontSize: 20,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 15,
                             ),
@@ -385,156 +387,188 @@ class _DashBoardState extends State<DashBoard> {
               ),
 
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 18, right: 18.0),
-                child: widget.operator == null &&
-                        fuelPricesProvider.cachedFuelPrices.isEmpty
-                    ? Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          width: 100.64825439453125,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Adjust the radius as needed
-                          ),
-                          // You can change this color to match your background
-                        ),
-                      )
-                    : subTitle('Features'),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 18, right: 18.0),
+              //   child: widget.operator == null &&
+              //           fuelPricesProvider.cachedFuelPrices.isEmpty
+              //       ? Shimmer.fromColors(
+              //           baseColor: Colors.grey[300]!,
+              //           highlightColor: Colors.grey[100]!,
+              //           child: Container(
+              //             width: 100.64825439453125,
+              //             height: 20,
+              //             decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               borderRadius: BorderRadius.circular(
+              //                   12.0), // Adjust the radius as needed
+              //             ),
+              //             // You can change this color to match your background
+              //           ),
+              //         )
+              //       : subTitle('Features'),
+              // ),
               const SizedBox(height: 10),
-              SizedBox(
-                height: 135,
-                width: double.infinity,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    SizedBox(
-                      width: 18,
-                    ),
-                    widget.operator == null &&
-                            fuelPricesProvider.cachedFuelPrices.isEmpty
-                        ? RoundedContainerWithShimmer(
-                            width: 152,
-                            height: 135,
-                          )
-                        : GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const EditPricesPopUp();
-                                },
-                              );
-                            },
-                            child: Features(
-                              color: Color.fromRGBO(72, 177, 126, 1),
-                              imageAsset: "assets/images/edit-price.png",
-                              text: "Daily Fuel Prices Editing",
-                            ),
-                            //  gradientBox(
-                            //   'Daily Fuel Prices Editing',
-                            //   'assets/images/edit-price.png',
-                            //   const Color.fromRGBO(72, 177, 126, 1),
-                            //   const Color.fromRGBO(73, 209, 111, 0.6),
-                            //   context,
-                            // ),
-                          ),
-                    const SizedBox(width: 10),
-                    widget.operator == null &&
-                            fuelPricesProvider.cachedFuelPrices.isEmpty
-                        ? RoundedContainerWithShimmer(
-                            width: 152,
-                            height: 135,
-                          )
-                        : GestureDetector(
-                            onTap: () async {
-                              push(CarAccess(), context);
-                            },
-                            child: Features(
-                              color: Color.fromRGBO(232, 169, 69, 1),
-                              imageAsset: "assets/images/cars.png",
-                              text: "Start A New Transaction",
-                            ),
-                            // gradientBox(
-                            //   'Start A New Transaction',
-                            //   'assets/images/cars.png',
-                            //   const Color.fromRGBO(232, 169, 69, 1),
-                            //   const Color.fromRGBO(237, 165, 49, .6),
-                            //   context,
-                            // ),
-                          ),
-                    SizedBox(
-                      width: 10,
-                    ),
-
-// GestureDetector part of the code
-                    widget.operator == null &&
-                            fuelPricesProvider.cachedFuelPrices.isEmpty
-                        ? RoundedContainerWithShimmer(
-                            width: 152,
-                            height: 135,
-                          )
-                        : GestureDetector(
-                            onTap: () async {
-                              // Navigate to QRViewExample and wait for the result
-                              final qrText = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => QRViewExample()),
-                              );
-
-                              void _showErrorDialog(String errorMessage) {
+              Padding(
+                padding: const EdgeInsets.only(left:20.0,right: 20),
+                child: Container(
+                                height: MediaQuery.sizeOf(context).height*0.45,
+                                width: MediaQuery.sizeOf(context).width*0.9,
+                                child: GridView(
+                                  physics: NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // Number of columns in the grid
+                                crossAxisSpacing: 35.0, // Spacing between columns
+                                mainAxisSpacing: 35.0, // Spacing between rows
+                              ),  
+                    children: [
+                      // SizedBox(
+                      //   width: 18,
+                      // ),
+                      widget.operator == null &&
+                              fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            )
+                          : GestureDetector(
+                              onTap: () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return ErrorPopUp(
-                                      text: errorMessage,
-                                    );
+                                    return const SelectCompany();
                                   },
                                 );
-                              }
-
-                              if (qrText != null) {
-                                print("qrText $qrText");
-                                List<String> parts = qrText.split(" ");
-                                RewardService rewardService = RewardService();
-
-                                try {
-                                  // Attempt to redeem reward
-                                  await rewardService.redeemReward(
-                                      parts[1], parts[0]);
-                                  if (mounted) {
-                                    _showErrorDialog(
-                                        'Reward has been redeemed successfully !');
-                                  }
-                                } catch (e) {
-                                  // Show error dialog on failure
-                                  if (mounted) {
-                                    _showErrorDialog(
-                                        'Insufficient points balance to redeem the reward');
+                              },
+                              child: Features(
+                                color: Color.fromRGBO(72, 177, 126, 1),
+                                imageAsset: "assets/images/edit-price.png",
+                                text: "Start New Cash In",
+                              ),
+                              
+                              //  gradientBox(
+                              //   'Daily Fuel Prices Editing',
+                              //   'assets/images/edit-price.png',
+                              //   const Color.fromRGBO(72, 177, 126, 1),
+                              //   const Color.fromRGBO(73, 209, 111, 0.6),
+                              //   context,
+                              // ),
+                            ),
+                      // const SizedBox(width: 10),
+                          widget.operator == null &&
+                              fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            )
+                          : GestureDetector(
+                              onTap: () async {
+                                push(NewTransaction(operator: operator,), context);
+                              },
+                              child: Features(
+                                color: Color.fromRGBO(209, 73, 91, 1),
+                                imageAsset: "assets/images/cars.png",
+                                text: "View All Transactions",
+                              ),
+                              // gradientBox(
+                              //   'Start A New Transaction',
+                              //   'assets/images/cars.png',
+                              //   const Color.fromRGBO(232, 169, 69, 1),
+                              //   const Color.fromRGBO(237, 165, 49, .6),
+                              //   context,
+                              // ),
+                            ),
+                      widget.operator == null &&
+                              fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            )
+                          : GestureDetector(
+                              onTap: () async {
+                                push(CarAccess(), context);
+                              },
+                              child: Features(
+                                color: Color.fromRGBO(232, 169, 69, 1),
+                                imageAsset: "assets/images/cars.png",
+                                text: "Start A New Transaction",
+                              ),
+                              // gradientBox(
+                              //   'Start A New Transaction',
+                              //   'assets/images/cars.png',
+                              //   const Color.fromRGBO(232, 169, 69, 1),
+                              //   const Color.fromRGBO(237, 165, 49, .6),
+                              //   context,
+                              // ),
+                            ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+              
+              // GestureDetector part of the code
+                      widget.operator == null &&
+                              fuelPricesProvider.cachedFuelPrices.isEmpty
+                          ? RoundedContainerWithShimmer(
+                              width: 152,
+                              height: 135,
+                            )
+                          : GestureDetector(
+                              onTap: () async {
+                                // Navigate to QRViewExample and wait for the result
+                                final qrText = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => QRViewExample()),
+                                );
+              
+                                void _showErrorDialog(String errorMessage) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ErrorPopUp(
+                                        text: errorMessage,
+                                      );
+                                    },
+                                  );
+                                }
+              
+                                if (qrText != null) {
+                                  print("qrText $qrText");
+                                  List<String> parts = qrText.split(" ");
+                                  RewardService rewardService = RewardService();
+              
+                                  try {
+                                    // Attempt to redeem reward
+                                    await rewardService.redeemReward(
+                                        parts[1], parts[0]);
+                                    if (mounted) {
+                                      _showErrorDialog(
+                                          'Reward has been redeemed successfully !');
+                                    }
+                                  } catch (e) {
+                                    // Show error dialog on failure
+                                    if (mounted) {
+                                      _showErrorDialog(
+                                          'Insufficient points balance to redeem the reward');
+                                    }
                                   }
                                 }
-                              }
-                            },
-                            child: Features(
-                              color: const Color.fromRGBO(0, 121, 140, 1),
-                              imageAsset: "assets/images/Qr Code.png",
-                              text: "Scan QR for company rewards",
+                              },
+                              child: Features(
+                                color: const Color.fromRGBO(0, 121, 140, 1),
+                                imageAsset: "assets/images/Qr Code.png",
+                                text: "Scan QR for company rewards",
+                              ),
                             ),
-                          ),
-                    SizedBox(
-                      width: 18,
-                    ),
-                  ],
+                      // SizedBox(
+                      //   width: 18,
+                      // ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only(left: 18, right: 18.0),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: widget.operator == null &&
                         fuelPricesProvider.cachedFuelPrices.isEmpty
                     ? Shimmer.fromColors(
@@ -554,7 +588,7 @@ class _DashBoardState extends State<DashBoard> {
                     : subTitle('Fuel Prices'),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left:20.0,right: 20),
                 child: widget.operator == null &&
                         fuelPricesProvider.cachedFuelPrices.isEmpty
                     ? Column(

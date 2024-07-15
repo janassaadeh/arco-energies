@@ -1,4 +1,5 @@
 import 'package:company_pages/Models/reward_model.dart';
+import 'package:company_pages/Provider/car_provider.dart';
 import 'package:company_pages/Provider/deposit_provider.dart';
 
 import 'package:company_pages/Provider/operator_provider.dart';
@@ -38,6 +39,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+                ChangeNotifierProvider<CarProvider>(
+          create: (_) => CarProvider(),
+        ),
         ChangeNotifierProvider<TransactionProvider>(
           create: (_) => TransactionProvider(),
         ),

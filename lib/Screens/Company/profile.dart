@@ -16,17 +16,49 @@ class Profile extends StatelessWidget {
   dynamic company;
   dynamic imageData;
   dynamic cars;
-  List<dynamic>? mergeAndSorted;
+  List<dynamic> mergeAndSorted;
 
   Profile(
       {required this.company,
       required this.imageData,
       required this.cars,
-      this.mergeAndSorted});
+      required this.mergeAndSorted});
 
   @override
   Widget build(BuildContext context) {
-    return (company == null)
+    return 
+    Scaffold(
+         backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white)),
+        title: const Center(
+          child: Text(
+            'Profile',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(
+              Icons.notifications,
+              size: 37,
+              color:Color(0xff003D5B),
+            ),
+          ),
+        ],
+      ),
+      body:
+    (company == null)
         ? Container()
         : SingleChildScrollView(
             child: Column(
@@ -282,16 +314,14 @@ class Profile extends StatelessWidget {
                     SizedBox(height: 5),
                   GestureDetector(
   onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AllTransactions(
-          company: company,
-          mergedAndSorted: mergeAndSorted,
-        ),
-      ),
-    );
-  },
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AllTransactions(
+                                    mergedAndSorted: mergeAndSorted,
+                                    company: company,
+                                  )));
+                    },
   child: Padding(
     padding: const EdgeInsets.only(left: 22, right: 22),
     child: Container(
@@ -398,6 +428,6 @@ GestureDetector(
                 ),
               ],
             ),
-          );
+          ));
   }
 }

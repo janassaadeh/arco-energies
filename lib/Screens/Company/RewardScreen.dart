@@ -1,7 +1,10 @@
 import 'package:company_pages/Models/reward_model.dart';
+import 'package:company_pages/Provider/company_provider.dart';
+import 'package:company_pages/Provider/reward_provider.dart';
 import 'package:company_pages/Services/Auth/user_service.dart';
 import 'package:company_pages/Services/reward_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../Widgets/Rewards/reward.dart';
 
@@ -25,18 +28,60 @@ class _RewardScreenState extends State<RewardScreen> {
   Future<void> _fetchCompanyData() async {
     UserService userService = UserService();
     final fetchedCompany = await userService.fetchUserData();
-    setState(() {
-      widget.company = fetchedCompany;
-    });
+    // setState(() {
+    //   widget.company = fetchedCompany;
+    // });
+  final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+  companyProvider.setCompany(fetchedCompany);
+    
   }
 
   Future<void> _refreshData(BuildContext context) async {
     await _fetchCompanyData();
+      RewardService rewardService = RewardService();
+  List<Reward> rewardsList = await rewardService.getAllRewards();
+  final rewardProvider = Provider.of<RewardProvider>(context, listen: false);
+
+  rewardProvider.setRewardList(rewardsList);
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+     CompanyProvider companyProvider =
+          Provider.of<CompanyProvider>(context);
+       RewardProvider rewardProvider =
+          Provider.of<RewardProvider>(context);
+    return   Scaffold(
+         backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white)),
+        title: const Center(
+          child: Text(
+            'Rewards',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(
+              Icons.notifications,
+              size: 37,
+              color:Color(0xff003D5B),
+            ),
+          ),
+        ],
+      ),
+    body:RefreshIndicator(
       onRefresh: () => _refreshData(context),
       child: SingleChildScrollView(
         child: Padding(
@@ -76,7 +121,7 @@ class _RewardScreenState extends State<RewardScreen> {
                             children: [
                               Text(
                                 widget.company != null
-                                    ? widget.company.pts.toString()
+                                    ? companyProvider.company.pts.toString()
                                     : '0',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
@@ -135,18 +180,18 @@ class _RewardScreenState extends State<RewardScreen> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                height: widget.rewards.length * 110.0,
+                height: rewardProvider.rewardList.length * 110.0,
                 child: ListView.builder(
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).padding.bottom + 50),
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.rewards.length,
+                  itemCount: rewardProvider.rewardList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () async {
                         RewardService rewardService = RewardService();
                         var imageData = await rewardService.getQrCode(
-                            widget.company.id, widget.rewards[index].id);
+                            widget.company.id,rewardProvider.rewardList[index].id);
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -193,7 +238,7 @@ class _RewardScreenState extends State<RewardScreen> {
                                           ),
                                         ),
                                         Text(
-                                          widget.rewards[index].name,
+                                         rewardProvider.rewardList [index].name,
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.w700),
@@ -234,9 +279,9 @@ class _RewardScreenState extends State<RewardScreen> {
                       child: Container(
                         color: Colors.transparent,
                         child: RewardCard(
-                          title: widget.rewards[index].name,
-                          description: widget.rewards[index].description,
-                          pointsText: widget.rewards[index].pts,
+                          title:rewardProvider.rewardList[index].name,
+                          description:rewardProvider.rewardList[index].description,
+                          pointsText: rewardProvider.rewardList[index].pts,
                         ),
                       ),
                     );
@@ -252,6 +297,6 @@ class _RewardScreenState extends State<RewardScreen> {
           ),
         ),
       ),
-    );
+     ) );
   }
 }

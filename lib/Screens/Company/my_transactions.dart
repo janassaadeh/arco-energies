@@ -5,8 +5,16 @@ import 'package:company_pages/Screens/Company/transaction_receipt.dart';
 import 'package:company_pages/Widgets/Home/Cash.dart';
 import 'package:company_pages/Widgets/Home/recentTransaction.dart';
 import 'package:flutter/material.dart';
-
+import 'package:company_pages/Services/deposit_service.dart';
+import 'package:company_pages/Provider/company_provider.dart';
+import 'package:company_pages/Provider/deposit_provider.dart';
 import '../../Services/deposit_service.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:company_pages/Services/Operator/transaction_service.dart';
+import 'package:company_pages/Services/Manage%20Accounts/Company_Services.dart';
+import 'package:company_pages/Screens/Admin/Manage%20Companies/Company_Model.dart';
+
 String getType(String input) {
   if (input.startsWith("TRANSACTION")) {
     return "Transaction";
@@ -30,12 +38,14 @@ class AllTransactions extends StatefulWidget {
 class _AllTransactionsState extends State<AllTransactions> {
   TextEditingController searchController = TextEditingController();
   List<dynamic>? filteredTransactions;
+  final TransactionService transactionService = TransactionService();
 
+  final DepositService depositService = DepositService();
   @override
   void initState() {
     super.initState();
     filteredTransactions = widget.mergedAndSorted;
-    print(widget.mergedAndSorted!.length);
+    // print(widget.mergedAndSorted!.length);
   }
 List<dynamic> searchItems(String query, List<dynamic> list) {
   List<dynamic> searchResults = [];
@@ -64,6 +74,77 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
   }
 
   return searchResults;
+}
+  Future<void> _refreshCombinedData() async {
+    print('Refreshing combined data...');
+    try {
+      // Fetch new data
+      await _updateCachedDeposits();
+      await _updateCachedTransactions();
+
+      List<Transaction> transactions =
+          Provider.of<TransactionProvider>(context, listen: false)
+              .cachedTransactions;
+      List<DepositReceipt> deposits =
+          Provider.of<DepositProvider>(context, listen: false).cachedDeposits;
+      // Update cached transactions and deposits
+
+      List<dynamic> combinedList = [...transactions, ...deposits];
+      combinedList.sort((a, b) {
+        DateTime aDate = a is Transaction
+            ? DateTime.parse(a.date)
+            : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction
+            ? DateTime.parse(b.date)
+            : DateTime.parse(b.timestamp);
+        return bDate.compareTo(aDate);
+      });
+      setState(() {
+        widget.mergedAndSorted = combinedList;
+      });
+      print('Data refreshed successfully');
+    } catch (e) {
+      print('Error refreshing data: $e');
+    }
+  }
+
+  Future<void> _updateCachedTransactions() async {
+    try {
+      final List<Transaction> transactions =
+          await transactionService.getTransactions();
+
+      // Filter the transactions by operatorId
+      final filteredTransactions = transactions
+        .where((transaction) => transaction.vehicle.company.id == widget.company.id)
+          .toList();
+      Provider.of<TransactionProvider>(context, listen: false)
+          .cachedTransactions = transactions;
+    } catch (e) {
+      print('Error updating cached transactions: $e');
+    }
+  }
+
+  Future<void> _updateCachedDeposits() async {
+    try {
+      // List<DepositReceipt> deposits = newData.whereType<DepositReceipt>().toList();
+      final List<DepositReceipt> deposits = await depositService
+              .getCashAdditionEventsByCompanyId(widget.company.id);
+
+      Provider.of<DepositProvider>(context, listen: false).cachedDeposits =
+          deposits;
+    } catch (e) {
+      print('Error updating cached deposits: $e');
+    }
+  }
+
+Future<void> _refreshData(BuildContext context) async {
+  final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+
+  CompanyService companyService = CompanyService();
+  Company newCompany = await companyService.getCompanyById(widget.company.id);
+  companyProvider.setCompany(newCompany);
+
+  _refreshCombinedData();
 }
 
   @override
@@ -98,125 +179,130 @@ List<dynamic> searchItems(String query, List<dynamic> list) {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 314,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-child: Cash(cashBalance: widget.company.balance.toStringAsFixed(2)),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Recent Transactions",
-                      style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+      body:  RefreshIndicator(
+                          onRefresh: () async {
+                            await _refreshData(context);
+                          },
+        child: Column(
+          children: [
+            Container(
+              height: 314,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
+        child: Cash(cashBalance: widget.company.balance),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Recent Transactions",
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(7),
-                        border: Border.all(
-                            color: Colors.grey.withOpacity(0.5), width: 2)),
-                    height: 50,
-                    // padding: EdgeInsets.only(left: 16),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search ....',
-                        hintStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500),
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search,
-                            size: 27, color: Colors.black),
-
-                        // suffixIcon: Icon(Icons.pr)
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 20),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(7),
+                          border: Border.all(
+                              color: Colors.grey.withOpacity(0.5), width: 2)),
+                      height: 50,
+                      // padding: EdgeInsets.only(left: 16),
+                      child: TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search ....',
+                          hintStyle: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500),
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.search,
+                              size: 27, color: Colors.black),
+        
+                          // suffixIcon: Icon(Icons.pr)
+                        ),
+                        onChanged: (value) {
+            
+                          setState(() {
+                          // filteredTransactions = filterItems(value!);
+                              filteredTransactions=searchItems(value,widget.mergedAndSorted??[]);
+                          });
+                        },
                       ),
-                      onChanged: (value) {
-          
-                        setState(() {
-                        // filteredTransactions = filterItems(value!);
-                            filteredTransactions=searchItems(value,widget.mergedAndSorted??[]);
-                        });
-                      },
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            // height: filteredTransactions!.length * 122.0,
-            child: Padding(
-              padding: const EdgeInsets.only(left:30,right: 30),
-              child: ListView.builder(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
-
-                // physics: NeverScrollableScrollPhysics(),
-                physics: AlwaysScrollableScrollPhysics(),
-                itemCount: filteredTransactions!.length,
-                itemBuilder: (context, index) {
-                  final item = filteredTransactions![index];
-                  // if (getType(item.id) == 'Cash') {
-      
-                    return GestureDetector(
-
-                                           onTap: () {
-                      print("hi");
-  Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
-        );
-      },
-                      child: Transactions(
-                        id: item.id,
-                        price: (getType(item.id) == 'Cash')?item.cashAmount:item.quantity * item.pump.fuel.fuelPrice,
-                        type: (getType(item.id) == 'Cash')?"+":"-",
-                        day: (getType(item.id) == 'Cash')?_calculateDaysAgo(item.timestamp):_calculateDaysAgo(item.date),
-                      ),
-                    );
-                  // } else if (getType(item.id) == 'Transaction') {
-                  //   final total = item.quantity * item.pump.fuel.fuelPrice;
-                  //   return GestureDetector(
-                  //     onDoubleTap: (){
-                  //     },
-                  //     child: Transactions(
-                  //       id: item.id,
-                  //       price: double.parse(total.toStringAsFixed(2)),
-                  //       type: "-",
-                  //       day: _calculateDaysAgo2(item.date),
-                  //     ),
-                  //   );
-                  // }
-                  // return Container();
-                },
+                  SizedBox(
+                    height: 30,
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              // height: filteredTransactions!.length * 122.0,
+              child: Padding(
+                padding: const EdgeInsets.only(left:30,right: 30),
+                child: ListView.builder(
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
+        
+                  // physics: NeverScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: filteredTransactions!.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredTransactions![index];
+                    // if (getType(item.id) == 'Cash') {
+        
+                      return GestureDetector(
+        
+                                             onTap: () {
+                        print("hi");
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
+          );
+        },
+                        child: Transactions(
+                          id: item.id,
+                          price: (getType(item.id) == 'Cash')?item.cashAmount:item.quantity * item.pump.fuel.fuelPrice,
+                          type: (getType(item.id) == 'Cash')?"+":"-",
+                          day: (getType(item.id) == 'Cash')?_calculateDaysAgo(item.timestamp):_calculateDaysAgo(item.date),
+                        ),
+                      );
+                    // } else if (getType(item.id) == 'Transaction') {
+                    //   final total = item.quantity * item.pump.fuel.fuelPrice;
+                    //   return GestureDetector(
+                    //     onDoubleTap: (){
+                    //     },
+                    //     child: Transactions(
+                    //       id: item.id,
+                    //       price: double.parse(total.toStringAsFixed(2)),
+                    //       type: "-",
+                    //       day: _calculateDaysAgo2(item.date),
+                    //     ),
+                    //   );
+                    // }
+                    // return Container();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

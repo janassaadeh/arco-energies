@@ -206,8 +206,37 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return     Scaffold(
+         backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white)),
+        title: const Center(
+          child: Text(
+            'Transactions',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xff003D5B),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(
+              Icons.notifications,
+              size: 37,
+              color:Color(0xff003D5B),
+            ),
+          ),
+        ],
+      ),
+      body:Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,25 +308,25 @@ class _NewTransactionState extends State<NewTransaction> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: nextButton(
-                "New Deposit",
-                fn: () {
-                  push(SelectCompany(), context);
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: nextButton(
-                "New Transaction",
-                fn: () {
-                  push(const CarAccess(), context);
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
+            // const SizedBox(height: 20),
+            // Center(
+            //   child: nextButton(
+            //     "New Deposit",
+            //     fn: () {
+            //       push(SelectCompany(), context);
+            //     },
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
+            // Center(
+            //   child: nextButton(
+            //     "New Transaction",
+            //     fn: () {
+            //       push(const CarAccess(), context);
+            //     },
+            //   ),
+            // ),
+            // const SizedBox(height: 30),
           ],
         ),
       ),
