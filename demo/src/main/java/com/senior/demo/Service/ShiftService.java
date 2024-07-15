@@ -220,8 +220,15 @@ public class ShiftService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Operator not found");
         }
 
-        return shiftRepository.findByOperatorAndStatus(operator.getId(), "active")
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active shift found"));
+        String operatorId = operator.getId();
+
+        List<Shift> operatorShifts = shiftRepository.findByOperatorId(operatorId);
+        Shift currentShift = operatorShifts.stream()
+                .filter(shift -> "active".equals(shift.getStatus()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active/current shift found"));
+
+        return currentShift;
     }
 
 
