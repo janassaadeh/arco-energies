@@ -21,6 +21,7 @@ import 'package:company_pages/Services/reward_services.dart';
 import 'package:company_pages/Widgets/Home/features.dart';
 import 'package:company_pages/Widgets/Operator/error_pop_up.dart';
 import 'package:company_pages/Widgets/shimmer.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,7 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   late Future<List<Fuel>> fuelListFuture;
+  late Future<bool> isDuringShiftFuture;
   late Future<List<not.Notification>> notificationListFuture;
 
   final FuelService fuelService = FuelService();
@@ -56,7 +58,6 @@ class _DashBoardState extends State<DashBoard> {
   final TransactionService transactionService = TransactionService();
   final DepositService depositService = DepositService();
   List<dynamic> searchResults = [];
-
   bool isLoadingStartShift = false;
   bool isLoadingEndShift = false;
 
@@ -64,9 +65,12 @@ class _DashBoardState extends State<DashBoard> {
   void initState() {
     super.initState();
     fuelListFuture = _fetchFuels();
-    _fetchUserData().then((_) => transactions = _fetchTransactions());
-    _fetchUserData().then((_) => deposits = _fetchDeposits());
-    _fetchUserData().then((_) => setupPushNotifications());
+    isDuringShiftFuture = _fetchShiftStatus();
+    _fetchUserData().then((_) {
+      transactions = _fetchTransactions();
+      deposits = _fetchDeposits();
+      setupPushNotifications();
+    });
   }
 
   Future<void> _fetchUserData() async {
@@ -177,14 +181,68 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  Future<bool> _fetchShiftStatus() async {
+    try {
+      bool cachedShiftStatus =
+          Provider.of<ShiftProvider>(context, listen: false).isDuringShift;
+
+      if (cachedShiftStatus != false) {
+        return cachedShiftStatus;
+      } else {
+        final bool isDuringShiftValue = await shiftService.getCurrentShift();
+
+        Provider.of<ShiftProvider>(context, listen: false).isDuringShift =
+            isDuringShiftValue;
+        print("Is During Shift Value: $isDuringShiftValue");
+        return isDuringShiftValue;
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response?.statusCode == 403) {
+        return false;
+      } else {
+        throw Exception('Failed to fetch shift status: ${dioError.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch shift status: $e');
+    }
+  }
+
   Future<void> _refreshfuelPrices() async {
     setState(() {
-      fuelListFuture = fuelService.getAllFuels();
+      fuelListFuture =
+          fuelService.getAllFuels(); // This could be an ongoing operation
     });
 
-    List<Fuel> updatedFuels = await fuelService.getAllFuels();
-    Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels =
-        updatedFuels;
+    // Use Future.wait to run both tasks concurrently
+    await Future.wait([
+      fuelService.getAllFuels().then((updatedFuels) {
+        Provider.of<FuelPricesProvider>(context, listen: false).cachedFuels =
+            updatedFuels;
+      }),
+      shiftService.getCurrentShift().then((isDuringShift) {
+        Provider.of<ShiftProvider>(context, listen: false).isDuringShift =
+            isDuringShift;
+        print("Updated shift status: $isDuringShift");
+      }),
+    ]);
+
+    print("Both fuel prices and shift status have been refreshed.");
+  }
+
+  Future<void> _refreshShiftStatus() async {
+    setState(() {
+      isLoadingStartShift = true;
+    });
+    setState(() {
+      isDuringShiftFuture = shiftService.getCurrentShift();
+    });
+
+    bool updatedShiftStatus = await shiftService.getCurrentShift();
+    Provider.of<ShiftProvider>(context, listen: false).isDuringShift =
+        updatedShiftStatus;
+    setState(() {
+      isLoadingStartShift = false;
+    });
   }
 
   void _startShift() async {
@@ -195,15 +253,12 @@ class _DashBoardState extends State<DashBoard> {
       DateTime startTime = DateTime.now();
 
       await shiftService.startShift(startTime);
-
-      // Provider.of<ShiftProvider>(context, listen: false)
-      //     .setStartShiftTime(DateTime.now().toIso8601String());
-    } catch (e) {
-      print('Error starting shift: $e');
-    } finally {
+      _refreshShiftStatus();
       setState(() {
         isLoadingStartShift = false;
       });
+    } catch (e) {
+      print('Error starting shift: $e');
     }
   }
 
@@ -218,25 +273,8 @@ class _DashBoardState extends State<DashBoard> {
       String endTimeString = endTime.toIso8601String();
       print('End time string: $endTimeString');
 
-      // Provider.of<ShiftProvider>(context, listen: false)
-      //     .setEndShiftTime(endTimeString);
-
-      // List<String> transactionsIds =
-      //     Provider.of<ShiftProvider>(context, listen: false).transactionsIds;
-      // List<String> depositsIds =
-      //     Provider.of<ShiftProvider>(context, listen: false).depositsIds;
-
-      // // Parse the start time from the provider
-      // DateTime startTime = DateTime.parse(
-      //     Provider.of<ShiftProvider>(context, listen: false).startShiftTime);
-
-      // // Create Shift
-      // await shiftService.createShift(
-      //     startTime, endTime, transactionsIds, depositsIds);
-
       await shiftService.endShift(endTimeString);
-
-      // Provider.of<ShiftProvider>(context, listen: false).resetShiftTimes();
+      _refreshShiftStatus();
     } catch (e) {
       print('Error parsing date: $e');
     } finally {
@@ -262,6 +300,7 @@ class _DashBoardState extends State<DashBoard> {
             children: [
               // horizontalGradientBox(context, "Welcome Back\n      Ashraf",
               //     "assets/images/gas-pump.png"),
+
               Padding(
                 padding: const EdgeInsets.only(left: 18, right: 18.0, top: 18),
                 child: widget.operator == null &&
@@ -314,73 +353,151 @@ class _DashBoardState extends State<DashBoard> {
                             SizedBox(
                               height: 15,
                             ),
-                            Row(
+                     Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                  onPressed: isLoadingStartShift
-                                      ? null
-                                      : () {
-                                          _startShift();
-                                        },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromRGBO(72, 177, 126, 1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: isLoadingStartShift
-                                      ? CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            Colors.white,
-                                          ),
-                                        )
-                                      : Text(
-                                          // Provider.of<ShiftProvider>(context,
-                                          //             listen: false)
-                                          //         .isDuringShift
-                                          //     ? 'During Shift..'
-                                              // :
-                                               'Start Shift',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
+                                Provider.of<ShiftProvider>(context,
+                                            listen: false)
+                                        .isDuringShift
+                                    ? ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromRGBO(
+                                              72, 177, 126, 1),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
-                                ),
+                                        child: isLoadingStartShift
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                "Shift In Progress",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: isLoadingStartShift
+                                            ? () {}
+                                            : _startShift,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromRGBO(
+                                              72, 177, 126, 1),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: isLoadingStartShift
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                'Start Shift',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                      ),
                                 SizedBox(width: 15),
-                                ElevatedButton(
-                                  onPressed: isLoadingEndShift
-                                      ? null
-                                      : () {
-                                          _endShift();
-                                        },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromRGBO(255, 73, 73, 1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: isLoadingEndShift
-                                      ? CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            Colors.white,
-                                          ),
-                                        )
-                                      : Text(
-                                          'End Shift',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
+                                Provider.of<ShiftProvider>(context,
+                                            listen: false)
+                                        .isDuringShift
+                                    ? ElevatedButton(
+                                        onPressed: isLoadingEndShift ||
+                                                !Provider.of<ShiftProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .isDuringShift
+                                            ? () {}
+                                            : _endShift,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromRGBO(
+                                              255, 73, 73, 1),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
-                                ),
+                                        child: isLoadingEndShift
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                'End Shift',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromRGBO(
+                                              255, 73, 73, 1),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: isLoadingEndShift
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                'End Shift',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                      ),
                               ],
                             ),
+                        
                           ],
                         ),
                       ),
@@ -478,28 +595,37 @@ class _DashBoardState extends State<DashBoard> {
                               // ),
                             ),
                       widget.operator == null &&
-                              fuelPricesProvider.cachedFuelPrices.isEmpty
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            )
-                          : GestureDetector(
-                              onTap: () async {
-                                push(CarAccess(), context);
-                              },
-                              child: Features(
-                                color: Color.fromRGBO(232, 169, 69, 1),
-                                imageAsset: "assets/images/cars.png",
-                                text: "Start A New Transaction",
-                              ),
-                              // gradientBox(
-                              //   'Start A New Transaction',
-                              //   'assets/images/cars.png',
-                              //   const Color.fromRGBO(232, 169, 69, 1),
-                              //   const Color.fromRGBO(237, 165, 49, .6),
-                              //   context,
-                              // ),
+                            fuelPricesProvider.cachedFuelPrices.isEmpty
+                        ? RoundedContainerWithShimmer(
+                            width: 152,
+                            height: 135,
+                          )
+                        : GestureDetector(
+                            onTap: () async {
+                              Provider.of<ShiftProvider>(context, listen: false)
+                                      .isDuringShift
+                                  ? push(CarAccess(), context)
+                                  : showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return ErrorPopUp(
+                                            text: "Please Start your Shift");
+                                      },
+                                    );
+                            },
+                            child: Features(
+                              color: Color.fromRGBO(232, 169, 69, 1),
+                              imageAsset: "assets/images/cars.png",
+                              text: "Start A New Transaction",
                             ),
+                            // gradientBox(
+                            //   'Start A New Transaction',
+                            //   'assets/images/cars.png',
+                            //   const Color.fromRGBO(232, 169, 69, 1),
+                            //   const Color.fromRGBO(237, 165, 49, .6),
+                            //   context,
+                            // ),
+                          ),
                       // SizedBox(
                       //   width: 10,
                       // ),

@@ -11,7 +11,7 @@ import 'package:company_pages/Screens/Company/HomeScreen.dart';
 import 'package:company_pages/Screens/Company/RewardScreen.dart';
 // import 'package:company_pages/Screens/Company/RewardScreen.dart';
 import 'package:company_pages/Screens/Company/profile.dart';
-import 'package:company_pages/Screens/Operator/Transactions/transaction_provider.dart';
+// import 'package:company_pages/Screens/Operator/Transactions/transaction_provider.dart';
 import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
 import 'package:company_pages/Services/Operator/transaction_service.dart';
 import 'package:company_pages/Services/image_service.dart';
@@ -21,6 +21,7 @@ import 'package:company_pages/Services/Auth/user_service.dart' as User;
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../Provider/transaction_provider.dart';
 import '../../Services/deposit_service.dart';
 
 // import 'AfterLogin/adminHome.dart'; //
@@ -170,8 +171,9 @@ transactionProvider.cachedTransactions=allTransactions;
       setState(() {
         rewards = rewardsList;
       });
-            RewardProvider rewardProvider=RewardProvider();
-      rewardProvider.setRewardList(rewardsList);
+      RewardProvider rewardProvider =
+          Provider.of<RewardProvider>(context, listen: false);
+                rewardProvider.setRewardList(rewardsList);
 
       if (rewards.isNotEmpty) {
         print('Rewards list fetched successfully:');
@@ -222,7 +224,8 @@ transactionProvider.cachedTransactions=allTransactions;
     setState(() {
       cars = carslist;
     });
-    CarProvider carProvider=CarProvider();
+      CarProvider carProvider =
+          Provider.of<CarProvider>(context, listen: false);
 carProvider.setCarList(carslist);
   }
 

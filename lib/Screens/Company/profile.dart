@@ -1,3 +1,7 @@
+import 'package:company_pages/Models/transaction.dart';
+import 'package:company_pages/Provider/car_provider.dart';
+import 'package:company_pages/Provider/deposit_provider.dart';
+import 'package:company_pages/Provider/transaction_provider.dart';
 import 'package:company_pages/Screens/Company/Cars.dart';
 import 'package:company_pages/Screens/Company/Company%20Details.dart';
 // import 'package:company_pages/Widgets/MyCars.dart';
@@ -5,14 +9,16 @@ import 'package:company_pages/Screens/Company/my_transactions.dart';
 import 'package:company_pages/Services/Auth/AuthenticationService.dart';
 //
 import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Services/Manage%20Accounts/vehicle_company_service.dart';
+import 'package:company_pages/Services/deposit_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Widgets/profile/link.dart';
 
-class Profile extends StatelessWidget {
-  AuthenticationService authenticationService = AuthenticationService();
+class Profile extends StatefulWidget {
   dynamic company;
   dynamic imageData;
   dynamic cars;
@@ -24,6 +30,61 @@ class Profile extends StatelessWidget {
       required this.cars,
       required this.mergeAndSorted});
 
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+    @override
+  void initState() {
+    _refreshCombinedData();
+
+  }
+  AuthenticationService authenticationService = AuthenticationService();
+
+ Future<void> _refreshCombinedData() async {
+    print('Refreshing combined data...');
+    try {
+      // Fetch new data
+
+
+      List<Transaction> transactions =
+          Provider.of<TransactionProvider>(context, listen: false)
+              .cachedTransactions;
+      List<DepositReceipt> deposits =
+          Provider.of<DepositProvider>(context, listen: false).cachedDeposits;
+      // Update cached transactions and deposits
+
+      List<dynamic> combinedList = [...transactions, ...deposits];
+      combinedList.sort((a, b) {
+        DateTime aDate = a is Transaction
+            ? DateTime.parse(a.date)
+            : DateTime.parse(a.timestamp);
+        DateTime bDate = b is Transaction
+            ? DateTime.parse(b.date)
+            : DateTime.parse(b.timestamp);
+        return bDate.compareTo(aDate);
+      });
+      setState(() {
+        widget.mergeAndSorted = combinedList;
+      });
+      _getCars();
+      print('Data refreshed successfully');
+    } catch (e) {
+      print('Error refreshing data: $e');
+    }
+  }
+  Future<void> _getCars() async {
+    VehicleCompanyService vehicleService = VehicleCompanyService();
+    final dynamic carslist =
+        await vehicleService.getVehiclesForCompany(widget.company.id);
+    setState(() {
+      widget.cars = carslist;
+    });
+      CarProvider carProvider =
+          Provider.of<CarProvider>(context, listen: false);
+carProvider.setCarList(carslist);
+  }
   @override
   Widget build(BuildContext context) {
     return 
@@ -58,7 +119,7 @@ class Profile extends StatelessWidget {
         ],
       ),
       body:
-    (company == null)
+    (widget.company == null)
         ? Container()
         : SingleChildScrollView(
             child: Column(
@@ -66,16 +127,16 @@ class Profile extends StatelessWidget {
                 SizedBox(
                   height: 40,
                 ),
-                company.imageId == ''
+                widget.company.imageId == ''
                     ? CircleAvatar(
                         backgroundColor: Color(0xffC1BEBE),
                         radius: 62,
                         child:
                             Image.asset("assets/images/buisness_profile.png"))
-                    : imageData != null
+                    : widget.imageData != null
                         ? ClipOval(
                             child: Image.memory(
-                              imageData!,
+                              widget.imageData!,
                               fit: BoxFit.cover,
                               width: 120,
                               height: 120,
@@ -101,7 +162,7 @@ class Profile extends StatelessWidget {
                     // Figma Flutter Generator CompanynameWidget - TEXT
 
                     Text(
-                      company.name,
+                      widget.company.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1),
@@ -115,7 +176,7 @@ class Profile extends StatelessWidget {
                     ),
 
                     Text(
-                      '+961 ${company.phone}',
+                      '+961 ${widget.company.phone}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(0xffA9A9AC),
@@ -159,7 +220,7 @@ class Profile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            company.email,
+                            widget.company.email,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -193,7 +254,7 @@ class Profile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            company.contactName,
+                            widget.company.contactName,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -227,7 +288,7 @@ class Profile extends StatelessWidget {
                                 height: 1),
                           ),
                           Text(
-                            company.location,
+                            widget.company.location,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -264,7 +325,7 @@ class Profile extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      MyCars(company: company, cars: cars),
+                                      MyCars(company: widget.company, cars: widget.cars),
                                 ),
                               );
                             },
@@ -318,8 +379,8 @@ class Profile extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => AllTransactions(
-                                    mergedAndSorted: mergeAndSorted,
-                                    company: company,
+                                    mergedAndSorted: widget.mergeAndSorted,
+                                    company: widget.company,
                                   )));
                     },
   child: Padding(

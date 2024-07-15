@@ -235,17 +235,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   // ),
                   Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left:0.0,right: 0,top: 30,bottom: 30),
-                        child: Container(
-                          height: MediaQuery.sizeOf(context).height*0.43,
-                          width: MediaQuery.sizeOf(context).width*0.8,
-                          child: GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns in the grid
-                          crossAxisSpacing: 20.0, // Spacing between columns
-                          mainAxisSpacing: 20.0, // Spacing between rows
-                        ),  
+                     Padding(
+                    padding: const EdgeInsets.only(left:20.0,right: 20,top: 20),
+                    child: Container(
+                              height: MediaQuery.sizeOf(context).height*0.45,
+                              width: MediaQuery.sizeOf(context).width*0.9,
+                              child: GridView(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // Number of columns in the grid
+                              crossAxisSpacing: 35.0, // Spacing between columns
+                              mainAxisSpacing: 35.0, // Spacing between rows
+                            ),  
                                       children: [
                               // SizedBox(
                               //   width: 18,
@@ -379,42 +379,42 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       ),
                     ],
                   ),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
-                  // Padding(
-                  //   // padding: const EdgeInsets.all(18.0),
-                  //   padding: const EdgeInsets.only(left: 18, right: 18.0),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    // padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.only(left: 20, right: 20.0),
 
-                  //   child:  Align(
-                  //     alignment: Alignment.centerLeft,
-                  //     child: 
-                  //                                     widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                    child:  Align(
+                      alignment: Alignment.centerLeft,
+                      child: 
+                                                      widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
 
-                  // ? Shimmer.fromColors(
-                  //     baseColor: Colors.grey[300]!,
-                  //     highlightColor: Colors.grey[100]!,
-                  //     child: Container(
-                  //       width: 100.64825439453125,
-                  //       height: 20,
-                  //       decoration: BoxDecoration(
-                  //         color: Colors.white,
-                  //         borderRadius: BorderRadius.circular(
-                  //             12.0), // Adjust the radius as needed
-                  //       ),
-                  //       // You can change this color to match your background
-                  //     ),
-                  //   )
-                  // : 
-                  //     Text(
-                  //       "Fuel Prices",
-                  //       style: TextStyle(
-                  //         fontSize: 18,
-                  //         color: Color(0xffA9A7A7),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  ? Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 100.64825439453125,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(
+                              12.0), // Adjust the radius as needed
+                        ),
+                        // You can change this color to match your background
+                      ),
+                    )
+                  : 
+                      Text(
+                        "Fuel Prices",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xffA9A7A7),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left:20.0,right: 20),
                     child:

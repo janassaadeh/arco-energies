@@ -1,5 +1,6 @@
 import 'package:company_pages/Screens/Admin/ManageOperators/shift_details.dart';
 import 'package:company_pages/Screens/Auth/Login.dart';
+import 'package:company_pages/Widgets/Common/confirmation_dialog.dart';
 import 'package:company_pages/Widgets/shift_item.dart';
 import 'package:flutter/material.dart';
 import 'package:company_pages/Models/shift.dart';
@@ -76,6 +77,34 @@ class _ShiftsListState extends State<ShiftsList> {
     });
   }
 
+    void deleteAllNotifications() {
+    showDialog(
+      context: context,
+      builder: (ctx) => ConfirmationDialog(
+        content: 'Delete all notifications?',
+        onCancel: () {
+          Navigator.pop(ctx);
+        },
+        onConfirm: () async {
+          try {
+            Navigator.pop(ctx);
+            // final shifts =
+            //     Provider.of<TransactionProvider>(context, listen: false)
+            //         .cachedShifts;
+          
+            await shiftService.deleteAllShifts();
+
+            Provider.of<TransactionProvider>(context, listen: false)
+                .clearCachedShifts();
+            _refreshShifts();
+          } catch (e) {
+            print('Failed to delete shifts: $e');
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -101,6 +130,7 @@ class _ShiftsListState extends State<ShiftsList> {
                 size: 60,
               )
             ],
+
           ),
         ),
         leading: GestureDetector(
@@ -114,6 +144,18 @@ class _ShiftsListState extends State<ShiftsList> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              deleteAllNotifications();
+            },
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: 28,
+            ),
+          )
+        ],
         backgroundColor: const Color(0xff003D5B),
       ),
       body: Column(

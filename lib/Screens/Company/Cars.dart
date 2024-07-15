@@ -130,28 +130,28 @@ class _MyCarsState extends State<MyCars> with SingleTickerProviderStateMixin {
       ),
       backgroundColor: Color(0xff003D58),
 body: 
-          RefreshIndicator(
-      onRefresh: () => _refreshData(context),
-            child: SingleChildScrollView(
-             
-              child: Stack(clipBehavior: Clip.none,
-                children: [
-                  
-                  
-            
-                  Column(
-                    children: [
-                      Container(
-                        height: 120,
-                        color:Color(0xff003D58)),
-                      Container(
-                          color: Colors.white,
-                          height: 652,
-                        
+          SingleChildScrollView(
+           
+            child: Stack(clipBehavior: Clip.none,
+              children: [
+                
+                
           
+                Column(
+                  children: [
+                    Container(
+                      height: 120,
+                      color:Color(0xff003D58)),
+                    Container(
+                        color: Colors.white,
+                        height: 652,
+                      
+          
+                      child:  RefreshIndicator(
+      onRefresh: () => _refreshData(context),
                         child: ListView.builder(
                             padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
-          
+                                
                           itemCount:filteredCars.length,
                           itemBuilder: (context, index) {
                             
@@ -161,16 +161,16 @@ body:
                           GestureDetector(
                                 onTap: () async {
                                                 // Navigating to CarDetails
-                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ViewCar(car: filteredCars[index], company: widget.company,imageData: imageDataList[index],)),
-                  );
-          
-                  // Handling the returned car object from CarDetails
-                
+                                     Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ViewCar(car: filteredCars[index], company: widget.company,imageData: imageDataList[index],)),
+                                      );
+                                
+                                      // Handling the returned car object from CarDetails
+                                    
                                 },
-          
-            
+                                
+                                
                             child: Padding(
                               padding: EdgeInsets.only(bottom:0.0),
                               child: CarCard(
@@ -187,61 +187,61 @@ body:
                           );}
                         ),
                       ),
+                    ),
           
-                    ],
-                  ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:100.0),
-                        child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                color: Colors.white,
-                                // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
-                              ),),
+                  ],
+                ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:100.0),
+                      child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                              color: Colors.white,
+                              // borderRadius: BorderRadius.only(topLeft:Radius.circular(25),topRight:Radius.circular(25))
+                            ),),
+                    ),
+                            Padding(
+                padding: const EdgeInsets.only(top:15,left:15.0,right:15),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
+                  
+                  child: TextFormField(
+                    // controller: searc,
+                    onChanged: (value) {
+                         setState(() {
+              searchQuery = value;
+              filteredCars = filterCars(); // Update filteredOperators when searchQuery changes
+            });
+            fetchImageForFilteredCars();
+          
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search Cars ...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Mulish',
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                       ),
-                              Padding(
-                  padding: const EdgeInsets.only(top:15,left:15.0,right:15),
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey[200],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 8, top: 12),
-                    
-                    child: TextFormField(
-                      // controller: searc,
-                      onChanged: (value) {
-                           setState(() {
-                searchQuery = value;
-                filteredCars = filterCars(); // Update filteredOperators when searchQuery changes
-              });
-              fetchImageForFilteredCars();
-            
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Search Cars ...",
-                        hintStyle: TextStyle(
-                          color: Colors.grey[500],
-                          fontFamily: 'Mulish',
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom:8.0),
-                          child: Icon(Icons.search, color: Colors.grey[500]),
-                        ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0),
+                        child: Icon(Icons.search, color: Colors.grey[500]),
                       ),
                     ),
                   ),
                 ),
               ),
-              ],
             ),
-                  ),
-          )
+            ],
+          ),
+                )
     );
   }
  Future<void> _showCupertinoLikeDialog(BuildContext context, int index, List<Vehicle> filteredCars) async {

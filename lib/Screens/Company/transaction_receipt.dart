@@ -148,7 +148,7 @@ class TransactionReceipt extends StatelessWidget {
                 receiptDetailPositioned(.57, "Total",
                     "${transaction.pump.currency} ${transaction.quantity * transaction.pump.fuel.fuelPrice}"),
                 receiptDivider(.595),
-                receiptDetailPositioned(.62, "Operator", "Achraf Samir"),
+                receiptDetailPositioned(.62, "Operator", transaction.operator.name),
                 Positioned(
                   top: receiptMaxHeight * .645,
                   left: 0,

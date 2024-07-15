@@ -179,103 +179,103 @@ Future<void> _refreshData(BuildContext context) async {
           ),
         ],
       ),
-      body:  RefreshIndicator(
+      body:  Column(
+        children: [
+          Container(
+            height: 314,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
+              child: Cash(cashBalance: widget.company.balance),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Recent Transactions",
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(
+                            color: Colors.grey.withOpacity(0.5), width: 2)),
+                    height: 50,
+                    // padding: EdgeInsets.only(left: 16),
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search ....',
+                        hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500),
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search,
+                            size: 27, color: Colors.black),
+              
+                        // suffixIcon: Icon(Icons.pr)
+                      ),
+                      onChanged: (value) {
+          
+                        setState(() {
+                        // filteredTransactions = filterItems(value!);
+                            filteredTransactions=searchItems(value,widget.mergedAndSorted??[]);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            // height: filteredTransactions!.length * 122.0,
+            child: Padding(
+              padding: const EdgeInsets.only(left:30,right: 30),
+              child:          RefreshIndicator(
                           onRefresh: () async {
                             await _refreshData(context);
                           },
-        child: Column(
-          children: [
-            Container(
-              height: 314,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 18, right: 18.0, top: 18),
-        child: Cash(cashBalance: widget.company.balance),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Recent Transactions",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0, right: 20),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(
-                              color: Colors.grey.withOpacity(0.5), width: 2)),
-                      height: 50,
-                      // padding: EdgeInsets.only(left: 16),
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search ....',
-                          hintStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.8),
-                              fontWeight: FontWeight.w500),
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.search,
-                              size: 27, color: Colors.black),
-        
-                          // suffixIcon: Icon(Icons.pr)
-                        ),
-                        onChanged: (value) {
-            
-                          setState(() {
-                          // filteredTransactions = filterItems(value!);
-                              filteredTransactions=searchItems(value,widget.mergedAndSorted??[]);
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              // height: filteredTransactions!.length * 122.0,
-              child: Padding(
-                padding: const EdgeInsets.only(left:30,right: 30),
                 child: ListView.builder(
                             padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 50), // Adjust the padding as needed
-        
+                    
                   // physics: NeverScrollableScrollPhysics(),
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: filteredTransactions!.length,
                   itemBuilder: (context, index) {
                     final item = filteredTransactions![index];
                     // if (getType(item.id) == 'Cash') {
-        
+                    
                       return GestureDetector(
-        
+                    
                                              onTap: () {
                         print("hi");
-        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
-          );
-        },
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>(getType(item.id) == 'Cash')? DepositDetails(receipt: item):TransactionReceipt(transaction:item)),
+                      );
+                    },
                         child: Transactions(
                           id: item.id,
                           price: (getType(item.id) == 'Cash')?item.cashAmount:item.quantity * item.pump.fuel.fuelPrice,
@@ -301,8 +301,8 @@ Future<void> _refreshData(BuildContext context) async {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -57,9 +57,9 @@ void main() async {
           create: (_) => RewardProvider(),
         ),
         ChangeNotifierProvider(create: (_) => FuelPricesProvider()),
-        // ChangeNotifierProvider<ShiftProvider>(
-        //   create: (_) => ShiftProvider(),
-        // ),
+        ChangeNotifierProvider<ShiftProvider>(
+          create: (_) => ShiftProvider(),
+        ),
       ],
       child: MyApp(
         authService: authService,
