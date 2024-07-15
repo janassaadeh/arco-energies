@@ -175,7 +175,7 @@ class ShiftService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'http://192.168.0.104:8080/api/shifts/current',
+        'https://arcoenergies.onrender.com/api/shifts/current',
       );
 
       if (response.statusCode == 200) {
