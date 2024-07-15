@@ -106,315 +106,322 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 children: [
                  
                  
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(left: 18, right: 18.0, top: 18),
-                      child: 
-                                         widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-        ? Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      width: 403.64825439453125,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            20.0), // Adjust the radius as needed
-                      ),
-                      // You can change this color to match your background
-                    ),
-                  )
+//                   Padding(
+//                       padding:
+//                           const EdgeInsets.only(left: 18, right: 18.0, top: 18),
+//                       child: 
+//                                          widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+//         ? Shimmer.fromColors(
+//                     baseColor: Colors.grey[300]!,
+//                     highlightColor: Colors.grey[100]!,
+//                     child: Container(
+//                       width: 403.64825439453125,
+//                       height: 130,
+//                       decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(
+//                             20.0), // Adjust the radius as needed
+//                       ),
+//                       // You can change this color to match your background
+//                     ),
+//                   )
                 
-        : 
-                      Container(
-                        height: 130,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color.fromRGBO(2, 91, 135, 1),
-                              Color.fromRGBO(0, 61, 91, .6),
-                            ], // Gradient colors
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
+//         : 
+//                       Container(
+//                         height: 130,
+//                         width: MediaQuery.of(context).size.width,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(20),
+//                           gradient: const LinearGradient(
+//                             begin: Alignment.topLeft,
+//                             end: Alignment.bottomRight,
+//                             colors: [
+//                               Color.fromRGBO(2, 91, 135, 1),
+//                               Color.fromRGBO(0, 61, 91, .6),
+//                             ], // Gradient colors
+//                           ),
+//                         ),
+//                         child: Stack(
+//                           children: [
                             
          
-                            Positioned(
-                              top: 20,
-                              left: 20,
-                              child: Text(
-  widget.admin == null
-    ? ''
-    : 'Hello, ${widget.admin.name.length > 10 ? widget.admin.name.substring(0, 10) + '...' : widget.admin.name}',
-  style: const TextStyle(
-    color: Colors.white,
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-  ),
-),
+//                             Positioned(
+//                               top: 20,
+//                               left: 20,
+//                               child: Text(
+//   widget.admin == null
+//     ? ''
+//     : 'Hello, ${widget.admin.name.length > 10 ? widget.admin.name.substring(0, 10) + '...' : widget.admin.name}',
+//   style: const TextStyle(
+//     color: Colors.white,
+//     fontSize: 24,
+//     fontWeight: FontWeight.bold,
+//   ),
+// ),
 
-                            ),
+//                             ),
 
-                            Positioned(
-                              bottom: 20,
-                              right: 20,
-                              child: widget.admin.imageId == ''
-                                  ? Image.asset("assets/images/User Shield.png")
-                                  : widget.imageData != null
-                                      ? ClipOval(
-                                          child: Image.memory(
-                                            widget.imageData!,
-                                            fit: BoxFit.cover,
-                                            width: 90,
-                                            height: 90,
-                                          ),
-                                        )
-                                      : ClipOval(
-                                          child: Shimmer.fromColors(
-                                            baseColor: Colors.grey[300]!,
-                                            highlightColor: Colors.grey[100]!,
-                                            child: Container(
-                                              width: 90,
-                                              height: 90,
-                                              color: Colors
-                                                  .white, // You can change this color to match your background
-                                            ),
-                                          ),
-                                        ),
-                            ),
-                          ],
-                        ),
-                      )
-                      // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
-                      ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    // padding: const EdgeInsets.all(18.0),
-                    padding: const EdgeInsets.only(left: 18, right: 18.0),
+//                             Positioned(
+//                               bottom: 20,
+//                               right: 20,
+//                               child: widget.admin.imageId == ''
+//                                   ? Image.asset("assets/images/User Shield.png")
+//                                   : widget.imageData != null
+//                                       ? ClipOval(
+//                                           child: Image.memory(
+//                                             widget.imageData!,
+//                                             fit: BoxFit.cover,
+//                                             width: 90,
+//                                             height: 90,
+//                                           ),
+//                                         )
+//                                       : ClipOval(
+//                                           child: Shimmer.fromColors(
+//                                             baseColor: Colors.grey[300]!,
+//                                             highlightColor: Colors.grey[100]!,
+//                                             child: Container(
+//                                               width: 90,
+//                                               height: 90,
+//                                               color: Colors
+//                                                   .white, // You can change this color to match your background
+//                                             ),
+//                                           ),
+//                                         ),
+//                             ),
+//                           ],
+//                         ),
+//                       )
+//                       // horizontalGradientBox(context, widget.admin==null?'':'Hello, ${widget.admin.name}', "assets/images/User Shield.png"),
+//                       ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Padding(
+                  //   // padding: const EdgeInsets.all(18.0),
+                  //   padding: const EdgeInsets.only(left: 18, right: 18.0),
 
-                    child:  Align(
-                      alignment: Alignment.centerLeft,
-                      child:
+                  //   child:  Align(
+                  //     alignment: Alignment.centerLeft,
+                  //     child:
                       
-                       widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                  //      widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
 
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 100.64825439453125,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    )
-                  : 
-                       Text(
-                        "Features",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xffA9A7A7),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  // ? Shimmer.fromColors(
+                  //     baseColor: Colors.grey[300]!,
+                  //     highlightColor: Colors.grey[100]!,
+                  //     child: Container(
+                  //       width: 100.64825439453125,
+                  //       height: 20,
+                  //       decoration: BoxDecoration(
+                  //         color: Colors.white,
+                  //         borderRadius: BorderRadius.circular(
+                  //             12.0), // Adjust the radius as needed
+                  //       ),
+                  //       // You can change this color to match your background
+                  //     ),
+                  //   )
+                  // : 
+                  //      Text(
+                  //       "Features",
+                  //       style: TextStyle(
+                  //         fontSize: 18,
+                  //         color: Color(0xffA9A7A7),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
                   Column(
                     children: [
-                      Container(
-                        height: 135,
-                        width: double.infinity,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(
-                              width: 18,
-                            ),
-                                    widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
-                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                           GestureDetector(
-                        onTap: () async {
-                          var role = await authenticationService.getRole();
-                          print(role);
-                            OperatorProvider operatorProvider =
-          Provider.of<OperatorProvider>(context, listen: false);
-      // operatorProvider.setOperatorList(operators);
-                                  final companies = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>   Operators(
-                                operators: operatorProvider.operatorList,
-                                cars: widget.cars,
-                                pumps: widget.pumps,
-                              ),),
-                    );
-                    if (companies != null) {
-                      setState(() {
-                        widget.operators=companies;
-                         // Add a new TickerProvider
-                      });
-                    }
-                        },
-                              child: Features(
-                                color: const Color.fromRGBO(209, 73, 91, 1),
-                                imageAsset: "assets/images/Online Support.png",
-                                text: "Manage Operator",
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
- widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                            GestureDetector(
-                              onTap: ()async {
-                                // push(
-                                //     Companies(
-                                //       companies: widget.companies,
-                                //       allcars: widget.cars,
-                                //       pumps: widget.pumps,
-                                //     ),
-                                //     context);
-                                CompanyProvider companyProvider =
-          Provider.of<CompanyProvider>(context, listen: false);
+                      Padding(
+                        padding: const EdgeInsets.only(left:0.0,right: 0,top: 30,bottom: 30),
+                        child: Container(
+                          height: MediaQuery.sizeOf(context).height*0.43,
+                          width: MediaQuery.sizeOf(context).width*0.8,
+                          child: GridView(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of columns in the grid
+                          crossAxisSpacing: 20.0, // Spacing between columns
+                          mainAxisSpacing: 20.0, // Spacing between rows
+                        ),  
+                                      children: [
+                              // SizedBox(
+                              //   width: 18,
+                              // ),
+                                      widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                            ? RoundedContainerWithShimmer(
+                                width: 152,
+                                height: 135,
+                              ):
+                             GestureDetector(
+                          onTap: () async {
+                            var role = await authenticationService.getRole();
+                            print(role);
+                              OperatorProvider operatorProvider =
+                                Provider.of<OperatorProvider>(context, listen: false);
+                            // operatorProvider.setOperatorList(operators);
                                     final companies = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Companies(companies:companyProvider.companyList,
-                                      allcars: widget.cars,
-                                      pumps: widget.pumps,)),
-                    );
-                    if (companies != null) {
-                      setState(() {
-                      widget.companies=companies;
-                       // Add a new TickerProvider
-                      });
-                    }
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(237, 174, 73, 1),
-                                imageAsset: "assets/images/Budget.png",
-                                text: "Manage Companies",
+                        context,
+                        MaterialPageRoute(builder: (context) =>   Operators(
+                                  operators: operatorProvider.operatorList,
+                                  cars: widget.cars,
+                                  pumps: widget.pumps,
+                                ),),
+                                          );
+                                          if (companies != null) {
+                        setState(() {
+                          widget.operators=companies;
+                           // Add a new TickerProvider
+                        });
+                                          }
+                          },
+                                child: Features(
+                                  color:  Color.fromRGBO(72, 177, 126, 1),
+                                  imageAsset: "assets/images/Online Support.png",
+                                  text: "Manage Operator",
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
- widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                            GestureDetector(
-                              onTap: () {
-                                push(WriteCarId(), context);
-                              },
-                              child: Features(
-                                color: const Color.fromRGBO(0, 121, 140, 1),
-                                imageAsset: "assets/images/cars.png",
-                                text: "Write Car ID To NFC",
+                              // const SizedBox(
+                              //   width: 10,
+                              // ),
+                       widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
+                                width: 152,
+                                height: 135,
+                              ):
+                              GestureDetector(
+                                onTap: ()async {
+                                  // push(
+                                  //     Companies(
+                                  //       companies: widget.companies,
+                                  //       allcars: widget.cars,
+                                  //       pumps: widget.pumps,
+                                  //     ),
+                                  //     context);
+                                  CompanyProvider companyProvider =
+                                Provider.of<CompanyProvider>(context, listen: false);
+                                      final companies = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Companies(companies:companyProvider.companyList,
+                                        allcars: widget.cars,
+                                        pumps: widget.pumps,)),
+                                          );
+                                          if (companies != null) {
+                        setState(() {
+                        widget.companies=companies;
+                         // Add a new TickerProvider
+                        });
+                                          }
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(237, 174, 73, 1),
+                                  imageAsset: "assets/images/Budget.png",
+                                  text: "Manage Companies",
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            
- widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
-                              width: 152,
-                              height: 135,
-                            ):
-                            GestureDetector(
-                              onTap: ()async {
-                                   RewardProvider rewardProvider =
-          Provider.of<RewardProvider>(context, listen: false);
-      // rewardProvider.setRewardList(rewards);
-                                         final companies = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AllRewards(rewards:rewardProvider.rewardList)),
-                    );
-                    if (companies != null) {
-                      setState(() {
-                      widget.rewards=companies;
-                       // Add a new TickerProvider
-                      });
-                    }
-                                    
-                              },
-                              child: 
+                              // SizedBox(
+                              //   width: 10,
+                              // ),
+                       widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
+                                width: 152,
+                                height: 135,
+                              ):
+                              GestureDetector(
+                                onTap: () {
+                                  push(WriteCarId(), context);
+                                },
+                                child: Features(
+                                  color: const Color.fromRGBO(0, 121, 140, 1),
+                                  imageAsset: "assets/images/cars.png",
+                                  text: "Write Car ID To NFC",
+                                ),
+                              ),
+                              // const SizedBox(
+                              //   width: 10,
+                              // ),
                               
-                              Features(
-                                color: Color.fromRGBO(209, 73, 91, 1),
-                                imageAsset: "assets/images/Gift.png",
-                                text: "Manage Rewards",
+                       widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty                          ? RoundedContainerWithShimmer(
+                                width: 152,
+                                height: 135,
+                              ):
+                              GestureDetector(
+                                onTap: ()async {
+                                     RewardProvider rewardProvider =
+                                Provider.of<RewardProvider>(context, listen: false);
+                            // rewardProvider.setRewardList(rewards);
+                                           final companies = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AllRewards(rewards:rewardProvider.rewardList)),
+                                          );
+                                          if (companies != null) {
+                        setState(() {
+                        widget.rewards=companies;
+                         // Add a new TickerProvider
+                        });
+                                          }
+                                      
+                                },
+                                child: 
+                                
+                                Features(
+                                  color: Color.fromRGBO(209, 73, 91, 1),
+                                  imageAsset: "assets/images/Gift.png",
+                                  text: "Manage Rewards",
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 18,
-                            ),
-                          ],
+                              // const SizedBox(
+                              //   width: 18,
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    // padding: const EdgeInsets.all(18.0),
-                    padding: const EdgeInsets.only(left: 18, right: 18.0),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Padding(
+                  //   // padding: const EdgeInsets.all(18.0),
+                  //   padding: const EdgeInsets.only(left: 18, right: 18.0),
 
-                    child:  Align(
-                      alignment: Alignment.centerLeft,
-                      child: 
-                                                      widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
+                  //   child:  Align(
+                  //     alignment: Alignment.centerLeft,
+                  //     child: 
+                  //                                     widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
 
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        width: 100.64825439453125,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Adjust the radius as needed
-                        ),
-                        // You can change this color to match your background
-                      ),
-                    )
-                  : 
-                      Text(
-                        "Fuel Prices",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xffA9A7A7),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // ? Shimmer.fromColors(
+                  //     baseColor: Colors.grey[300]!,
+                  //     highlightColor: Colors.grey[100]!,
+                  //     child: Container(
+                  //       width: 100.64825439453125,
+                  //       height: 20,
+                  //       decoration: BoxDecoration(
+                  //         color: Colors.white,
+                  //         borderRadius: BorderRadius.circular(
+                  //             12.0), // Adjust the radius as needed
+                  //       ),
+                  //       // You can change this color to match your background
+                  //     ),
+                  //   )
+                  // : 
+                  //     Text(
+                  //       "Fuel Prices",
+                  //       style: TextStyle(
+                  //         fontSize: 18,
+                  //         color: Color(0xffA9A7A7),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(left:20.0,right: 20),
                     child:
                                                       widget.admin == null && fuelPricesProvider.cachedFuelPrices.isEmpty
         ? Column(
           children: [
-            SizedBox(height: 10,),
+            // SizedBox(height: 10,),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Shimmer.fromColors(
@@ -472,7 +479,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 
         : 
                      Container(
-                      height: 350,
+                      height: 300,
                       child: FutureBuilder<List<Fuel>>(
                         future: fuelListFuture,
                         builder: (context, snapshot) {
