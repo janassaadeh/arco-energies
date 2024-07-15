@@ -239,11 +239,11 @@ class Profile extends StatelessWidget {
                     ),
                     SizedBox(height: 15),
 
-                    GestureDetector(
-                      onTap: () {
-                        push(ShiftsList(), context);
-                      },
-                      child: Padding(
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     push(ShiftsList(), context);
+                    //   },
+                    Padding(
                         padding: const EdgeInsets.only(left: 22, right: 22),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -267,7 +267,7 @@ class Profile extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                    
                     SizedBox(height: 20),
 
                     SizedBox(height: 5),

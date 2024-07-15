@@ -244,23 +244,28 @@ class _DashBoardState extends State<DashBoard> {
       isLoadingStartShift = false;
     });
   }
+void _startShift() async {
+  setState(() {
+    isLoadingStartShift = true;
+    Provider.of<ShiftProvider>(context, listen: false).isDuringShift = true; // Set the shift status immediately
+  });
+  try {
+    DateTime startTime = DateTime.now();
 
-  void _startShift() async {
+    await shiftService.startShift(startTime);
+    _refreshShiftStatus();
+  } catch (e) {
+    print('Error starting shift: $e');
+    // If there's an error, revert the shift status
     setState(() {
-      isLoadingStartShift = true;
+      Provider.of<ShiftProvider>(context, listen: false).isDuringShift = false;
     });
-    try {
-      DateTime startTime = DateTime.now();
-
-      await shiftService.startShift(startTime);
-      _refreshShiftStatus();
-      setState(() {
-        isLoadingStartShift = false;
-      });
-    } catch (e) {
-      print('Error starting shift: $e');
-    }
+  } finally {
+    setState(() {
+      isLoadingStartShift = false;
+    });
   }
+}
 
   void _endShift() async {
     setState(() {
@@ -314,7 +319,7 @@ class _DashBoardState extends State<DashBoard> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
-                                20.0), // Adjust the radius as needed
+                                12.0), // Adjust the radius as needed
                           ),
                           // You can change this color to match your background
                         ),
@@ -323,7 +328,7 @@ class _DashBoardState extends State<DashBoard> {
                         height: 80,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(12),
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -548,14 +553,18 @@ class _DashBoardState extends State<DashBoard> {
                               height: 135,
                             )
                           : GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const SelectCompany();
-                                  },
-                                );
-                              },
+                            onTap: () async {
+                              Provider.of<ShiftProvider>(context, listen: false)
+                                      .isDuringShift
+                                  ? push(SelectCompany(), context)
+                                  : showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return ErrorPopUp(
+                                            text: "Please Start your Shift");
+                                      },
+                                    );
+                            },
                               child: Features(
                                 color: Color.fromRGBO(72, 177, 126, 1),
                                 imageAsset: "assets/images/edit-price.png",

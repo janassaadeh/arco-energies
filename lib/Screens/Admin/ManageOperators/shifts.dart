@@ -124,11 +124,11 @@ class _ShiftsListState extends State<ShiftsList> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
-                Icons.abc,
-                color: Color(0xff003D5B),
-                size: 60,
-              )
+              // Icon(
+              //   Icons.abc,
+              //   color: Color(0xff003D5B),
+              //   size: 60,
+              // )
             ],
 
           ),
