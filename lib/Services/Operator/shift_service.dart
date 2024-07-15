@@ -164,7 +164,7 @@ class ShiftService {
     }
   }
 
-  Future<Shift> getCurrentShift() async {
+  Future<bool> getCurrentShift() async {
     try {
       final bool isLoggedIn = await authService.isLoggedIn();
       if (!isLoggedIn) {
@@ -175,15 +175,21 @@ class ShiftService {
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.get(
-        'https://arcoenergies.onrender.com/api/shifts/current',
+        'http://192.168.0.104:8080/api/shifts/current',
       );
 
       if (response.statusCode == 200) {
-        final shiftData = response.data;
-        final shift = Shift.fromJson(shiftData);
-        return shift;
+        return true;
+      } else if (response.statusCode == 403) {
+        return false;
       } else {
         throw Exception('Failed to fetch current shift');
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response?.statusCode == 403) {
+        return false;
+      } else {
+        throw Exception('Failed to fetch current shift: ${dioError.message}');
       }
     } catch (e) {
       throw Exception('Failed to fetch current shift: $e');

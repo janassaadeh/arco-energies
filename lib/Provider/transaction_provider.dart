@@ -136,4 +136,10 @@ class TransactionProvider extends ChangeNotifier {
       }
     }
   }
+
+  void clearCachedShifts() {
+    cachedShifts.clear();
+    notifyListeners();
+  }
+
 }
