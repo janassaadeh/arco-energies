@@ -127,11 +127,6 @@ On Windows, use `mvnw.cmd spring-boot:run` instead.
 - Used **MongoDB** to persist backend data and REST APIs to connect app features.
 - Implemented practical features oriented toward fuel-station operations rather than a purely illustrative demo.
 
-## 👩‍💻 Developer
-
-**Jana Saadeh** — Flutter Developer | Mobile Software Engineer
-
-[Portfolio](https://janasaadeh.com/) · [GitHub](https://github.com/janassaadeh) · [LinkedIn](https://www.linkedin.com/in/jana-saadeh-123j/)
 
 ---
 
