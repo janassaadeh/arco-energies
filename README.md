@@ -94,9 +94,7 @@ This is a high-level illustration of the implemented workflow; specific steps an
 
 ## 📸 Application Screenshots
 
-Add approved screenshots to a `screenshots/` folder on the branch containing this README, then update the filenames below.
-
-<img src="screenshots.png" width="240" alt="Operator interface"> 
+<img src="screenshots.png"  alt="Operator interface"> 
 
 ## ⚙️ Local Setup
 
